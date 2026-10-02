@@ -7,6 +7,7 @@ body{margin:0;background:#f8f8f6}
 .eg-q9p__container{max-width:1320px;margin:0 auto;padding:32px 40px 64px}
 .eg-q9p__topbar{display:flex;justify-content:space-between;align-items:center;gap:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}
 .eg-q9p__topbar-actions{display:flex;gap:10px;align-items:center}
+.eg-q9p__topbar:has(.gl-back) .eg-q9p__topbar-mid{display:none}
 .eg-q9p__logo{font-family:var(--font-head);font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--text)}
 .eg-q9p__nav{display:flex;gap:32px;font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase}
 .eg-q9p__nav a{color:var(--muted);text-decoration:none;transition:color .2s ease;font-weight:500}
