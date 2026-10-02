@@ -151,10 +151,7 @@ a{color:inherit}
 .hb.back:hover{background:#5b17b8;border-color:#5b17b8}
 @media (max-width:900px){.page{padding-inline:16px}.bar{flex-wrap:wrap}}
 @media (max-width:560px){.bar .grp:last-child{width:100%}.hb{flex:1}}
-
-/* контакты за капчей */
 .gl-veil{filter:blur(6px);cursor:pointer;-webkit-user-select:none;user-select:none}
-/* кнопка hh.ru */
 .hh{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:9px 20px 9px 10px;border-radius:999px;background:#d6001c;color:#fff;text-decoration:none;font:700 14px/1 var(--f-body);transition:transform .2s ease,background .2s ease}
 .hh:hover{background:#b00017;transform:translateY(-2px)}
 .hhb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#fff;color:#d6001c;font:800 13px/1 var(--f-display);letter-spacing:-.04em}
@@ -200,9 +197,6 @@ function job(j){var V=S.versions[v],b='';
   else b=ul(sh()?j.shortBullets:j.bullets);
   return '<details class="job" open><summary><span class="role">'+t(j.role)+'</span><span class="meta"><span>'+t(j.place)+'</span>'+(j.period?'<span class="per">'+t(j.period)+'</span>':'')+'</span></summary><div class="jb">'+b+'</div></details>'}
 function early(){return '<div class="early">'+S.early.groups.map(function(g){return '<article class="card er"><h3 class="role">'+t(g.role)+'</h3><div class="meta"><span>'+t(g.place)+'</span>'+(g.period?'<span class="per">'+t(g.period)+'</span>':'')+'</div>'+(sh()?'<p class="ctx">'+t(g.short)+'</p>':ul(g.bullets))+'</article>'}).join('')+'</div>'}
-function feedback(){
-  return '<section class="fb" id="gl-fb"><h2>Есть вопрос по резюме?</h2><p>Напишите мне здесь: сообщение сразу придёт мне в Telegram, отвечу в течение дня.'+(RID?' Номер вашей вакансии подставится автоматически.':'')+'</p>'
-  +'<div class="row"><button type="button" class="btn primary" data-act="fb">Написать сообщение</button><a class="btn" href="#" data-act="tg">Открыть Telegram</a>'+(RID?'<span class="rid">Отклик № '+esc(RID)+'</span>':'')+'</div></section>'}
 function render(){
   var V=S.versions[v],h='';
   h+='<nav class="bar"><div class="grp"><div class="tabs" role="group" aria-label="Версия резюме">'+VK.map(function(k,i){return '<button type="button" data-ver="'+k+'" aria-pressed="'+(k===v)+'"><span class="dot d'+i+'"></span>'+esc(S.versions[k].label)+'</button>'}).join('')+'</div>'
@@ -216,19 +210,13 @@ function render(){
    +sec('Развитие','','<ul class="dl">'+S.dev.map(function(d){return '<li><span class="ttl">'+t(d.title)+'</span>'+(sh()?'':'<span class="tx">'+t(d.text)+'</span>')+'</li>'}).join('')+'</ul>')
    +sec('Навыки','',ul(sh()?V.skills.slice(0,8):V.skills,'pills')+(sh()?'':'<p class="ctx">'+t(S.tools)+'</p>'))
    +sec('Дополнительно','',ul(S.extra));
-  h+='<div class="cols"><div class="main">'+main+'</div><aside class="side">'+side+'</aside></div>'+feedback();
+  h+='<div class="cols"><div class="main">'+main+'</div><aside class="side">'+side+'</aside></div>';
   app.innerHTML='<div class="wrap">'+h+'</div>'}
-function goFeedback(){
-  var a=document.querySelector('a[name="feedback"]')||document.getElementById('feedback');
-  if(a){(a.closest('.r')||a).scrollIntoView({behavior:'smooth',block:'start'});
-    setTimeout(function(){var f=document.querySelector('.t-form textarea, .t-form input[type="text"]');if(f)try{f.focus({preventScroll:true})}catch(e){}},700)}
-  else window.EGP.ask(function(){window.open(window.EGP.val('telegram').href,'_blank','noopener')})}
 app.addEventListener('click',function(e){
   var rv=e.target.closest('[data-rv]');if(rv&&rv.getAttribute('href')==='#'){e.preventDefault();window.EGP.ask(render);return}
   var tg=e.target.closest('[data-act="tg"]');if(tg){e.preventDefault();window.EGP.ask(function(){window.open(window.EGP.val('telegram').href,'_blank','noopener')});return}
   var b=e.target.closest('[data-ver]');if(b){v=b.dataset.ver;ls('gl-ver',v);render();return}
-  b=e.target.closest('[data-mode]');if(b){mode=b.dataset.mode;ls('gl-mode',mode);render();return}
-  b=e.target.closest('[data-act="fb"]');if(b){goFeedback()}});
+  b=e.target.closest('[data-mode]');if(b){mode=b.dataset.mode;ls('gl-mode',mode);render();return}});
 /* реестровый номер -> скрытое поле формы Тильды (имя поля: reg_id) */
 function fill(){document.querySelectorAll('input[name="reg_id"]').forEach(function(i){if(RID&&!i.value)i.value=RID})
   document.querySelectorAll('input[name="resume_version"]').forEach(function(i){i.value=v})}

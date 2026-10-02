@@ -1,5 +1,5 @@
 /* Protection layer (deterrent only): contact veil + math captcha, anti-copy, notices.
-   Contact data is never stored in plain text in the HTML. */
+   Contact data is never stored in plain text in the HTML. Unlock lasts until the page is reloaded or left. */
 (function () {
   'use strict';
   var d = document;
@@ -25,8 +25,9 @@
     return { text: '@' + t, href: 'https://t.me/' + t, blank: true };
   }
 
-  function unlocked() { try { return sessionStorage.getItem('egv') === '1'; } catch (e) { return false; } }
-  function unlock() { try { sessionStorage.setItem('egv', '1'); } catch (e) {} }
+  var UNL = false;
+  function unlocked() { return UNL; }
+  function unlock() { UNL = true; }
 
   /* ---------- styles ---------- */
   var css =
@@ -142,9 +143,6 @@
       e.preventDefault(); ask(reveal);
     }
   });
-  if (d.readyState === 'loading') {
-    d.addEventListener('DOMContentLoaded', function () { if (unlocked()) reveal(); });
-  } else if (unlocked()) { reveal(); }
 
   window.EGP = { ask: ask, val: val, unlocked: unlocked };
 
