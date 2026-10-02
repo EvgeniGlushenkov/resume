@@ -24,6 +24,8 @@ body{margin:0;background:#f8f8f6}
 .eg-q9p__btn--ghost{background:transparent;color:var(--text);border:1px solid var(--line);padding:16px 28px;font-size:12px}
 .eg-q9p__btn--ghost:hover{background:var(--text);color:var(--bg);border-color:var(--text)}
 .eg-q9p__btn--sm{padding:11px 20px;font-size:11px}
+.eg-q9p__topbar-actions a[href="resume.html"]{background:#e11d2e;border-color:#e11d2e;color:#fff}
+.eg-q9p__topbar-actions a[href="resume.html"]:hover{background:#b3121f;border-color:#b3121f;color:#fff}
 .eg-q9p__hero{padding:96px 0 88px;display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:start}
 .eg-q9p__hero-content{display:flex;flex-direction:column;gap:28px}
 .eg-q9p__hero-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
