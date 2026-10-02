@@ -1,5 +1,5 @@
 /* Spotlight effect for the hero block: a solid #9859e6 circle the size of 3 capital letters
-   follows the cursor and lights up the letter shapes. On Chinese pages the circle is half the size.
+   follows the cursor and lights up the letter shapes. Same size on all language versions.
    Self-contained: injects its own CSS. */
 (function () {
   if (!window.matchMedia || window.matchMedia('(hover: none)').matches) return;
@@ -8,9 +8,7 @@
   if (!hero || !name) return;
 
   var lang = (document.documentElement.lang || 'ru').toLowerCase();
-  var isZh = lang.indexOf('zh') === 0;
   var isRu = lang.indexOf('ru') === 0;
-  var scale = isZh ? 0.5 : 1;
 
   var els = Array.prototype.slice.call(hero.querySelectorAll(
     '.eg-q9p__hero-label, .eg-q9p__hero-name, .eg-q9p__accent-blue, .eg-q9p__accent-green, .eg-q9p__hero-desc'
@@ -37,7 +35,7 @@
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
     var capW = ctx.measureText(isRu ? '\u041d' : 'H').width;
-    radius = (capW * 3 / 2) * scale;
+    radius = capW * 3 / 2;
   }
   function init() {
     calcRadius();
