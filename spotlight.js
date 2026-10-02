@@ -1,10 +1,16 @@
-/* Spotlight effect for the hero block: a circle the size of 3 capital letters follows the cursor
-   and lights up the letter shapes. Self-contained: injects its own CSS. */
+/* Spotlight effect for the hero block: a solid #9859e6 circle the size of 3 capital letters
+   follows the cursor and lights up the letter shapes. On Chinese pages the circle is half the size.
+   Self-contained: injects its own CSS. */
 (function () {
   if (!window.matchMedia || window.matchMedia('(hover: none)').matches) return;
   var hero = document.querySelector('.eg-q9p__hero-content');
   var name = document.querySelector('.eg-q9p__hero-name');
   if (!hero || !name) return;
+
+  var lang = (document.documentElement.lang || 'ru').toLowerCase();
+  var isZh = lang.indexOf('zh') === 0;
+  var isRu = lang.indexOf('ru') === 0;
+  var scale = isZh ? 0.5 : 1;
 
   var els = Array.prototype.slice.call(hero.querySelectorAll(
     '.eg-q9p__hero-label, .eg-q9p__hero-name, .eg-q9p__accent-blue, .eg-q9p__accent-green, .eg-q9p__hero-desc'
@@ -12,12 +18,10 @@
 
   var css =
     '@supports (-webkit-background-clip:text) or (background-clip:text){' +
-    '.eg-q9p .eg-hl{--r:0px;--mx:-9999px;--my:-9999px;--base:var(--text);' +
-    '--hl1:#ff3e5b;--hl2:#9859e6;' +
-    'background-image:radial-gradient(circle var(--r) at var(--mx) var(--my),var(--hl1) 0%,var(--hl2) 97%,rgba(152,89,230,0) 100%),linear-gradient(var(--base),var(--base));' +
+    '.eg-q9p .eg-hl{--r:0px;--mx:-9999px;--my:-9999px;--base:var(--text);--hl:#9859e6;' +
+    'background-image:radial-gradient(circle max(var(--r),.01px) at var(--mx) var(--my),var(--hl) 0,var(--hl) 100%,transparent 100%),linear-gradient(var(--base),var(--base));' +
     '-webkit-background-clip:text;background-clip:text;' +
     '-webkit-text-fill-color:transparent;color:transparent}' +
-    '.eg-q9p .eg-hl.eg-q9p__hero-label,.eg-q9p .eg-hl.eg-q9p__hero-desc{--base:currentColor}' +
     '.eg-q9p .eg-hl.eg-q9p__hero-label{--base:var(--muted)}' +
     '.eg-q9p .eg-hl.eg-q9p__accent-blue{--base:var(--blue)}' +
     '.eg-q9p .eg-hl.eg-q9p__accent-green{--base:var(--green)}' +
@@ -32,8 +36,8 @@
     var cs = getComputedStyle(name);
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-    var capW = ctx.measureText('\u041d').width;
-    radius = (capW * 3) / 2;
+    var capW = ctx.measureText(isRu ? '\u041d' : 'H').width;
+    radius = (capW * 3 / 2) * scale;
   }
   function init() {
     calcRadius();
