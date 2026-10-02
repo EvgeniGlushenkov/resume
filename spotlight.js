@@ -1,18 +1,19 @@
-/* Spotlight effect for the hero block: a solid #9859e6 circle the size of 3 capital letters
-   follows the cursor and lights up the letter shapes. Same size on all language versions.
+/* Spotlight effect: a solid #9859e6 circle the size of 3 capital letters follows the cursor
+   and lights up the letter shapes. Works in the hero block and in the "who I am",
+   "how I help" and "ready to talk" blocks. Same logic on all language versions.
    Self-contained: injects its own CSS. */
 (function () {
   if (!window.matchMedia || window.matchMedia('(hover: none)').matches) return;
-  var hero = document.querySelector('.eg-q9p__hero-content');
-  var name = document.querySelector('.eg-q9p__hero-name');
-  if (!hero || !name) return;
+  var d = document;
+  var lang = (d.documentElement.lang || 'ru').toLowerCase();
+  var capChar = lang.indexOf('ru') === 0 ? '\u041d' : 'H';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var lang = (document.documentElement.lang || 'ru').toLowerCase();
-  var isRu = lang.indexOf('ru') === 0;
-
-  var els = Array.prototype.slice.call(hero.querySelectorAll(
-    '.eg-q9p__hero-label, .eg-q9p__hero-name, .eg-q9p__accent-blue, .eg-q9p__accent-green, .eg-q9p__hero-desc'
-  ));
+  var TEXT = [
+    '.eg-q9p__hero-label', '.eg-q9p__hero-name', '.eg-q9p__accent-blue', '.eg-q9p__accent-green', '.eg-q9p__hero-desc',
+    '.eg-q9p__section-eyebrow:not(.eg-q9p__section-eyebrow--solo)', '.eg-q9p__section-title', '.eg-q9p__intro-text',
+    '.eg-q9p__contact-eyebrow', '.eg-q9p__contact-title', '.eg-q9p__contact-title em', '.eg-q9p__contact-text'
+  ].join(',');
 
   var css =
     '@supports (-webkit-background-clip:text) or (background-clip:text){' +
@@ -20,68 +21,84 @@
     'background-image:radial-gradient(circle max(var(--r),.01px) at var(--mx) var(--my),var(--hl) 0,var(--hl) 100%,transparent 100%),linear-gradient(var(--base),var(--base));' +
     '-webkit-background-clip:text;background-clip:text;' +
     '-webkit-text-fill-color:transparent;color:transparent}' +
-    '.eg-q9p .eg-hl.eg-q9p__hero-label{--base:var(--muted)}' +
+    '.eg-q9p .eg-hl.eg-q9p__hero-label,.eg-q9p .eg-hl.eg-q9p__section-eyebrow,.eg-q9p .eg-hl.eg-q9p__contact-eyebrow{--base:var(--muted)}' +
     '.eg-q9p .eg-hl.eg-q9p__accent-blue{--base:var(--blue)}' +
-    '.eg-q9p .eg-hl.eg-q9p__accent-green{--base:var(--green)}' +
-    '.eg-q9p .eg-hl.eg-q9p__hero-desc{--base:var(--text)}' +
+    '.eg-q9p .eg-hl.eg-q9p__accent-green,.eg-q9p .eg-hl.eg-q9p__contact-title em{--base:var(--green)}' +
     '}';
-  var st = document.createElement('style');
+  var st = d.createElement('style');
   st.textContent = css;
-  document.head.appendChild(st);
+  d.head.appendChild(st);
 
-  var radius = 0;
-  function calcRadius() {
-    var cs = getComputedStyle(name);
-    var ctx = document.createElement('canvas').getContext('2d');
-    ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-    var capW = ctx.measureText(isRu ? '\u041d' : 'H').width;
-    radius = capW * 3 / 2;
+  function Block(root, titleSel) {
+    var self = this;
+    this.root = root;
+    this.title = root.querySelector(titleSel);
+    this.els = Array.prototype.slice.call(root.querySelectorAll(TEXT));
+    this.radius = 0;
+    this.tx = 0; this.ty = 0; this.cx = 0; this.cy = 0; this.tr = 0; this.cr = 0;
+    this.raf = null; this.first = true;
+
+    this.calc = function () {
+      if (!self.title) return;
+      var cs = getComputedStyle(self.title);
+      var ctx = d.createElement('canvas').getContext('2d');
+      ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      self.radius = ctx.measureText(capChar).width * 3 / 2;
+    };
+    this.paint = function () {
+      self.els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (self.cx - r.left) + 'px');
+        el.style.setProperty('--my', (self.cy - r.top) + 'px');
+        el.style.setProperty('--r', self.cr + 'px');
+      });
+    };
+    this.tick = function () {
+      var k = reduce ? 1 : 0.2;
+      self.cx += (self.tx - self.cx) * k;
+      self.cy += (self.ty - self.cy) * k;
+      self.cr += (self.tr - self.cr) * k;
+      self.paint();
+      var moving = Math.abs(self.tx - self.cx) > 0.4 || Math.abs(self.ty - self.cy) > 0.4 || Math.abs(self.tr - self.cr) > 0.4;
+      if (moving) {
+        self.raf = requestAnimationFrame(self.tick);
+      } else {
+        self.cx = self.tx; self.cy = self.ty; self.cr = self.tr; self.paint(); self.raf = null;
+      }
+    };
+    this.kick = function () { if (!self.raf) self.raf = requestAnimationFrame(self.tick); };
+
+    root.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch') return;
+      self.tx = e.clientX; self.ty = e.clientY; self.tr = self.radius;
+      if (self.first) { self.cx = self.tx; self.cy = self.ty; self.first = false; }
+      self.kick();
+    });
+    root.addEventListener('pointerleave', function () { self.tr = 0; self.kick(); });
+    window.addEventListener('scroll', function () { if (self.cr > 0.5) self.paint(); }, { passive: true });
+    window.addEventListener('resize', self.calc);
   }
+
+  var blocks = [];
+  function addBlock(sel, titleSel) {
+    Array.prototype.forEach.call(d.querySelectorAll(sel), function (root) {
+      if (root.querySelector(titleSel)) blocks.push(new Block(root, titleSel));
+    });
+  }
+
   function init() {
-    calcRadius();
-    els.forEach(function (el) { el.classList.add('eg-hl'); });
+    addBlock('.eg-q9p__hero-content', '.eg-q9p__hero-name');
+    addBlock('.eg-q9p__section', '.eg-q9p__section-title');
+    addBlock('.eg-q9p__contact', '.eg-q9p__contact-title');
+    blocks.forEach(function (b) {
+      b.calc();
+      b.els.forEach(function (el) { el.classList.add('eg-hl'); });
+    });
   }
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(init);
+
+  if (d.fonts && d.fonts.ready) {
+    d.fonts.ready.then(init);
   } else {
     init();
   }
-  window.addEventListener('resize', calcRadius);
-
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var tx = 0, ty = 0, cx = 0, cy = 0, tr = 0, cr = 0, raf = null, first = true;
-
-  function paint() {
-    els.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', (cx - r.left) + 'px');
-      el.style.setProperty('--my', (cy - r.top) + 'px');
-      el.style.setProperty('--r', cr + 'px');
-    });
-  }
-  function tick() {
-    var k = reduce ? 1 : 0.2;
-    cx += (tx - cx) * k;
-    cy += (ty - cy) * k;
-    cr += (tr - cr) * k;
-    paint();
-    var moving = Math.abs(tx - cx) > 0.4 || Math.abs(ty - cy) > 0.4 || Math.abs(tr - cr) > 0.4;
-    if (moving) {
-      raf = requestAnimationFrame(tick);
-    } else {
-      cx = tx; cy = ty; cr = tr; paint(); raf = null;
-    }
-  }
-  function kick() { if (!raf) raf = requestAnimationFrame(tick); }
-
-  hero.addEventListener('pointermove', function (e) {
-    if (e.pointerType === 'touch') return;
-    tx = e.clientX; ty = e.clientY; tr = radius;
-    if (first) { cx = tx; cy = ty; first = false; }
-    kick();
-  });
-  hero.addEventListener('pointerleave', function () {
-    tr = 0; kick();
-  });
-  window.addEventListener('scroll', function () { if (cr > 0.5) { paint(); } }, { passive: true });
 })();
