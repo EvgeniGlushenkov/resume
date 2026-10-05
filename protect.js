@@ -5,9 +5,9 @@
   var d = document;
   var L = (d.documentElement.lang || 'ru').toLowerCase().slice(0, 2);
   var ALL = {
-    ru: { t: 'Проверка', s: 'Решите пример, чтобы увидеть контакты', qa: 'Чему равен корень из ', p: 'Ответ', ok: 'Показать', no: 'Закрыть', er: 'Неверно. Попробуйте ещё раз', cp: 'Копирование отключено' },
-    en: { t: 'Verification', s: 'Solve the sum to reveal the contact details', qa: 'What is the square root of ', p: 'Answer', ok: 'Show', no: 'Close', er: 'Wrong answer. Try again', cp: 'Copying is disabled' },
-    zh: { t: '验证', s: '请完成计算以查看联系方式', qa: '平方根是多少：', p: '答案', ok: '显示', no: '关闭', er: '答案不对，请再试一次', cp: '已禁用复制' }
+    ru: { t: 'Проверка', s: 'Решите пример, чтобы увидеть контакты', qa: 'Сколько будет ', p: 'Ответ', ok: 'Показать', no: 'Закрыть', er: 'Неверно. Попробуйте ещё раз', cp: 'Копирование отключено' },
+    en: { t: 'Verification', s: 'Solve the sum to reveal the contact details', qa: 'What is ', p: 'Answer', ok: 'Show', no: 'Close', er: 'Wrong answer. Try again', cp: 'Copying is disabled' },
+    zh: { t: '验证', s: '请完成计算以查看联系方式', qa: '计算：', p: '答案', ok: '显示', no: '关闭', er: '答案不对，请再试一次', cp: '已禁用复制' }
   };
   var TX = ALL[L] || ALL.ru;
 
@@ -58,23 +58,27 @@
   st.textContent = css;
   d.head.appendChild(st);
 
-  /* ---------- captcha ---------- */
+  /* ---------- captcha: sum of two numbers, result up to 100 ---------- */
+  function pair() {
+    var a = 5 + Math.floor(Math.random() * 86);
+    var b = 5 + Math.floor(Math.random() * (96 - a));
+    return [a, b];
+  }
   var open = false;
   function ask(cb) {
     if (unlocked()) { cb(); return; }
     if (open) return;
     open = true;
-    var pool = [4, 9, 16, 25, 36, 49, 64, 81, 100];
-    var a = pool[Math.floor(Math.random() * pool.length)];
-    var ans = String(Math.round(Math.sqrt(a)));
+    var p = pair();
+    var ans = String(p[0] + p[1]);
     var prev = d.activeElement;
 
     var ov = d.createElement('div'); ov.className = 'egp-ov';
     var box = d.createElement('div'); box.className = 'egp-box';
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
-    box.setAttribute('aria-label', TX.qa + a + '?');
+    box.setAttribute('aria-label', TX.qa + p[0] + ' + ' + p[1] + '?');
     var eb = d.createElement('div'); eb.className = 'egp-eb'; eb.textContent = TX.t;
-    var q = d.createElement('div'); q.className = 'egp-q'; q.textContent = '\u221a' + a + ' = ?';
+    var q = d.createElement('div'); q.className = 'egp-q'; q.textContent = p[0] + ' + ' + p[1] + ' = ?';
     var s = d.createElement('p'); s.className = 'egp-s'; s.textContent = TX.s;
     var inp = d.createElement('input'); inp.className = 'egp-in'; inp.type = 'text';
     inp.inputMode = 'numeric'; inp.autocomplete = 'off'; inp.placeholder = TX.p; inp.maxLength = 3;
@@ -97,10 +101,10 @@
       if (inp.value.trim() === ans) { unlock(); close(); cb(); return; }
       er.textContent = TX.er; inp.value = '';
       box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
-      a = pool[Math.floor(Math.random() * pool.length)];
-      ans = String(Math.round(Math.sqrt(a)));
-      q.textContent = '\u221a' + a + ' = ?';
-      box.setAttribute('aria-label', TX.qa + a + '?');
+      p = pair();
+      ans = String(p[0] + p[1]);
+      q.textContent = p[0] + ' + ' + p[1] + ' = ?';
+      box.setAttribute('aria-label', TX.qa + p[0] + ' + ' + p[1] + '?');
       inp.focus();
     }
     function onKey(e) {
