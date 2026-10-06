@@ -41,7 +41,7 @@ button:focus-visible,summary:focus-visible,.ed:focus-visible{outline:2px solid v
 .hl{margin:12px 0 0;color:var(--muted);font-size:15px;max-width:48ch}
 .side-head{display:grid;gap:14px;min-width:0}
 .photo{margin:0;width:min(100%,300px);aspect-ratio:1/0.92;border-radius:58% 42% 55% 45%/48% 56% 44% 52%;overflow:hidden;background:var(--c-blue)}
-.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+.photo{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.photo img{-webkit-user-drag:none;width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
 .card{background:var(--surface);border-radius:20px;padding:18px 20px}
 .contacts{display:grid;padding-block:6px}
 .crow{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
@@ -235,6 +235,13 @@ function shareMenu(){
 function shToast(m){var o=root.querySelector('.shs');if(o)o.remove();var t=document.createElement('div');t.className='shs';t.textContent=m;root.appendChild(t);setTimeout(function(){t.remove()},4200)}
 function shCopy(u,ok){var d=function(){shToast(ok||'Ссылка скопирована')};try{navigator.clipboard.writeText(u).then(d,function(){window.prompt('Скопируйте ссылку',u)})}catch(e){window.prompt('Скопируйте ссылку',u)}}
 function shClose(){var m=root.querySelector('.shm'),b=root.querySelector('[data-act="share"]');if(m)m.hidden=true;if(b)b.setAttribute('aria-expanded','false')}
+/* скрытый вход в админку: 5 быстрых нажатий по фото или удержание фото 1,5 секунды */
+(function(){var n=0,t0=0,tm=null,go=function(){location.href='admin/'};
+ app.addEventListener('click',function(e){if(!e.target.closest('.photo'))return;var now=Date.now();n=(now-t0>2500)?1:n+1;t0=now;if(n>=5){n=0;go()}});
+ app.addEventListener('pointerdown',function(e){if(!e.target.closest('.photo'))return;clearTimeout(tm);tm=setTimeout(go,1500)});
+ ['pointerup','pointerleave','pointercancel'].forEach(function(ev){app.addEventListener(ev,function(){clearTimeout(tm)})});
+ app.addEventListener('contextmenu',function(e){if(e.target.closest('.photo'))e.preventDefault()});
+})();
 app.addEventListener('click',function(e){
   var sb=e.target.closest('[data-act="share"]');if(sb){e.preventDefault();var sm=root.querySelector('.shm');sm.hidden=!sm.hidden;sb.setAttribute('aria-expanded',String(!sm.hidden));return}
   var si=e.target.closest('[data-sh]');if(si){e.preventDefault();var k=si.dataset.sh,u=shareUrl(),t=shareTitle();shClose();
