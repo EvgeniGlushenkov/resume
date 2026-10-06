@@ -20,6 +20,7 @@ function apply(D){
     var mode=m[3];
     if(mode==='title')document.title=String(v);
     else if(mode==='alt')e.setAttribute('alt',String(v));
+    else if(mode==='all'){Array.prototype.forEach.call(els,function(x){x.textContent=String(v)})}
     else if(mode==='h')e.innerHTML=clean(v);
     else if(mode==='list'){if(!Array.isArray(v))return;e.textContent='';v.forEach(function(x){var li=document.createElement('li');li.textContent=String(x);e.appendChild(li)})}
     else e.textContent=String(v);
