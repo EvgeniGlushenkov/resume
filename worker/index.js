@@ -5,8 +5,8 @@
      GET  /auth/poll?id&secret   -> {status, token?}
      POST /auth/redeem {link}    -> {token}        (прямая ссылка из бота, команда /admin)
      POST /tg                    -> вебхук Telegram
-     GET  /data                  -> {data, sha}    (нужен токен)
-     POST /save {data}           -> {ok, commit}   (нужен токен)
+     GET  /data?f=<файл>          -> {data, sha, file}    (нужен токен)
+     POST /save {f,data,sha}         -> {ok, commit}   (нужен токен)
      GET  /health */
 
 const enc = new TextEncoder();
@@ -73,7 +73,7 @@ const adminUrl = (env) => String(env.ADMIN_URL || '').replace(/\/?$/, '/');
 
 /* ---------- GitHub ---------- */
 const ghHeaders = (env) => ({ Authorization: `Bearer ${env.GH_TOKEN}`, Accept: 'application/vnd.github+json', 'User-Agent': 'resume-admin-worker', 'X-GitHub-Api-Version': '2022-11-28' });
-const ghUrl = (env) => `https://api.github.com/repos/${env.GH_REPO}/contents/${env.DATA_PATH || 'resume-data.json'}`;
+const ghUrl = (env, path) => `https://api.github.com/repos/${env.GH_REPO}/contents/${path}`;
 function utf8ToB64(s) {
   const bytes = enc.encode(s); let bin = '';
   for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -83,8 +83,8 @@ function b64ToUtf8(b64) {
   const bin = atob(b64.replace(/\s/g, '')); const u = Uint8Array.from(bin, (c) => c.charCodeAt(0));
   return new TextDecoder().decode(u);
 }
-async function ghGet(env) {
-  const r = await fetch(`${ghUrl(env)}?ref=${encodeURIComponent(env.GH_BRANCH || 'main')}`, { headers: ghHeaders(env) });
+async function ghGet(env, path) {
+  const r = await fetch(`${ghUrl(env, path)}?ref=${encodeURIComponent(env.GH_BRANCH || 'main')}`, { headers: ghHeaders(env) });
   if (!r.ok) throw new Error('github_get_' + r.status);
   const j = await r.json();
   return { data: JSON.parse(b64ToUtf8(j.content)), sha: j.sha };
@@ -115,6 +115,44 @@ function sanitize(d) {
   out.person = { ...out.person, phone: 'x', email: 'x', telegram: 'x' };
   return out;
 }
+
+/* ---------- файлы сайта, доступные из админки ---------- */
+const FILES = {
+  'resume-data.json': 'resume', 'resume-data.en.json': 'resume', 'resume-data.zh.json': 'resume',
+  'landing-data.json': 'landing', 'landing-data.en.json': 'landing', 'landing-data.zh.json': 'landing'
+};
+const DEFAULT_FILE = 'resume-data.json';
+const LANDING_KEYS = ['title', 'logo', 'nav', 'topbar', 'hero', 'about', 'skills', 'results', 'contact', 'footer'];
+function plain(v, depth = 0) {
+  if (depth > 6) return false;
+  if (typeof v === 'string') return v.length < 4000;
+  if (Array.isArray(v)) return v.length < 100 && v.every((x) => plain(x, depth + 1));
+  if (v && typeof v === 'object') return Object.values(v).every((x) => plain(x, depth + 1));
+  return false;
+}
+function cleanHtml(h) {
+  return String(h).replace(/<(\/?)([a-z0-9]+)([^>]*)>/gi, (m, sl, tag, attrs) => {
+    tag = tag.toLowerCase();
+    if (!['br', 'em', 'strong', 'span'].includes(tag)) return '';
+    if (tag === 'span' && !sl) { const c = /class\s*=\s*"(eg-q9p__accent-(?:blue|green|pink|purple|red))"/i.exec(attrs); return c ? `<span class="${c[1]}">` : '<span>'; }
+    return sl ? `</${tag}>` : `<${tag}>`;
+  }).replace(/<(?![/a-z])/gi, '&lt;');
+}
+function validateLanding(d) {
+  if (!d || typeof d !== 'object' || Array.isArray(d)) return 'data_not_object';
+  for (const k of ['hero', 'about', 'skills', 'results', 'contact']) if (!d[k] || typeof d[k] !== 'object') return 'missing_' + k;
+  if (!plain(d)) return 'bad_values';
+  return null;
+}
+function sanitizeLanding(d) {
+  const out = {};
+  for (const k of LANDING_KEYS) if (k in d) out[k] = d[k];
+  if (out.hero && typeof out.hero.name === 'string') out.hero = { ...out.hero, name: cleanHtml(out.hero.name) };
+  if (out.contact && typeof out.contact.title === 'string') out.contact = { ...out.contact, title: cleanHtml(out.contact.title) };
+  return out;
+}
+function validateFile(f, d) { return FILES[f] === 'landing' ? validateLanding(d) : validate(d); }
+function sanitizeFile(f, d) { return FILES[f] === 'landing' ? sanitizeLanding(d) : sanitize(d); }
 
 /* ---------- обработчики ---------- */
 async function authStart(env, req) {
@@ -199,7 +237,9 @@ async function telegramHook(env, req) {
 
 async function getData(env, req) {
   if (!(await checkToken(env, req))) return json(env, req, { error: 'unauthorized' }, 401);
-  try { return json(env, req, await ghGet(env)); } catch (e) { return json(env, req, { error: String(e.message || e) }, 502); }
+  const f = new URL(req.url).searchParams.get('f') || DEFAULT_FILE;
+  if (!FILES[f]) return json(env, req, { error: 'bad_file' }, 400);
+  try { return json(env, req, { ...(await ghGet(env, f)), file: f }); } catch (e) { return json(env, req, { error: String(e.message || e) }, 502); }
 }
 
 async function save(env, req) {
@@ -207,19 +247,21 @@ async function save(env, req) {
   const text = await req.text();
   if (text.length > MAX_BODY) return json(env, req, { error: 'too_large' }, 413);
   let body; try { body = JSON.parse(text); } catch (e) { return json(env, req, { error: 'bad_json' }, 400); }
-  const bad = validate(body.data);
+  const f = body.f || DEFAULT_FILE;
+  if (!FILES[f]) return json(env, req, { error: 'bad_file' }, 400);
+  const bad = validateFile(f, body.data);
   if (bad) return json(env, req, { error: 'invalid_data', detail: bad }, 422);
-  const data = sanitize(body.data);
+  const data = sanitizeFile(f, body.data);
   let cur;
-  try { cur = await ghGet(env); } catch (e) { return json(env, req, { error: String(e.message || e) }, 502); }
+  try { cur = await ghGet(env, f); } catch (e) { return json(env, req, { error: String(e.message || e) }, 502); }
   if (body.sha && body.sha !== cur.sha) return json(env, req, { error: 'conflict', detail: 'Файл на сайте изменился. Обновите админку.' }, 409);
-  const r = await fetch(ghUrl(env), {
+  const r = await fetch(ghUrl(env, f), {
     method: 'PUT', headers: { ...ghHeaders(env), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: 'Админка: обновление резюме', content: utf8ToB64(JSON.stringify(data, null, 1) + '\n'), sha: cur.sha, branch: env.GH_BRANCH || 'main' })
+    body: JSON.stringify({ message: 'Админка: обновление ' + f, content: utf8ToB64(JSON.stringify(data, null, 1) + '\n'), sha: cur.sha, branch: env.GH_BRANCH || 'main' })
   });
   if (!r.ok) return json(env, req, { error: 'github_put_' + r.status }, 502);
   const j = await r.json();
-  return json(env, req, { ok: true, commit: j.commit && j.commit.sha, sha: j.content && j.content.sha, data });
+  return json(env, req, { ok: true, file: f, commit: j.commit && j.commit.sha, sha: j.content && j.content.sha, data });
 }
 
 export default {
@@ -241,4 +283,4 @@ export default {
     }
   }
 };
-export { validate, sanitize };
+export { validate, sanitize, validateFile, sanitizeFile, FILES };

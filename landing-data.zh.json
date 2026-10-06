@@ -1,0 +1,149 @@
+{
+ "title": "叶夫根尼·格卢申科夫",
+ "logo": "叶夫根尼·格卢申科夫",
+ "nav": [
+  "关于我",
+  "能力"
+ ],
+ "topbar": {
+  "resume": "简历",
+  "contact": "联系我"
+ },
+ "hero": {
+  "label": "个人简介 / 2026",
+  "name": "连接<br/><span class=\"eg-q9p__accent-blue\">销售</span>、产品<br/>与<span class=\"eg-q9p__accent-green\">AI。</span>",
+  "desc": "大客户经理。帮助 B2B 产品真正落地到实际业务中，并带来可衡量的成果。",
+  "btn1": "洽谈项目",
+  "btn2": "查看简历",
+  "loc": "圣彼得堡 · 办公室 / 混合 / 远程",
+  "alt": "叶夫根尼·格卢申科夫",
+  "badges": [
+   "SENIOR KAM",
+   "PROJECT MANAGER",
+   "AI ADOPTION & DIGITAL OPERATIONS MANAGER"
+  ]
+ },
+ "about": {
+  "eyebrow": "关于我",
+  "title": "我从两个角度理解业务。",
+  "intro": "一方面是商业成果、合同以及与企业主的关系；另一方面是落地实施、培训、数字化流程和真实用户。",
+  "cards": [
+   {
+    "num": "18+ 年",
+    "label": "深耕汽车行业与创业"
+   },
+   {
+    "num": "5+ 年",
+    "label": "在 Avito Auto 生态"
+   },
+   {
+    "num": "3 500+",
+    "label": "名用户和员工接受培训"
+   },
+   {
+    "num": "250+",
+    "label": "家经销商中心与合作伙伴"
+   }
+  ],
+  "roles": [
+   {
+    "num": "01",
+    "title": "SENIOR KAM",
+    "desc": "在 Avito 的 5 年间，我全程负责 B2B 客户——从与高管层的谈判到公司最大的合同，并实现业绩持续增长。我把一次性交易转化为长期合作：制定并捍卫预算，维护并拓展客户组合。"
+   },
+   {
+    "num": "02",
+    "title": "PROJECT MANAGER",
+    "desc": "在客户网络中落地并推广产品——从流程到用户培训。担任功能负责人：产品访谈、调研，并把需求纳入产品路线图。"
+   },
+   {
+    "num": "03",
+    "title": "AI ADOPTION & DIGITAL OPERATIONS MANAGER",
+    "desc": "推广 AI 工具并推进流程数字化——从新人引导到业务自动化。无需 IT 团队，独立搭建了业务数字化体系：网站、CRM、文档流转。日常使用 Claude、Perplexity、GigaChat、Alisa AI。"
+   }
+  ]
+ },
+ "skills": {
+  "eyebrow": "我的价值",
+  "title": "让产品真正跑起来。",
+  "intro": "我不止于销售。我会深入了解客户情境，搭建流程，帮助团队达成结果。",
+  "pillars": [
+   {
+    "title": "大客户与销售",
+    "desc": "大客户管理（KAM）、B2B 销售、增购与交叉销售、与企业主和高管层谈判、预算、客户留存与流失管理。"
+   },
+   {
+    "title": "项目与落地",
+    "desc": "B2B SaaS 落地与产品使用率提升、向分支网络上线与规模化、流程、培训与新手引导、无直接管理权的团队协调。"
+   },
+   {
+    "title": "AI 落地",
+    "desc": "日常工作中的 AI 助手、智能体与技能、提示词、日常事务自动化（Google 表格、Telegram 机器人）、知识库、无代码。"
+   },
+   {
+    "title": "工具",
+    "chips": [
+     "Bitrix24",
+     "Jira",
+     "Confluence",
+     "Redash",
+     "1C",
+     "Excel",
+     "Google Workspace",
+     "Miro",
+     "Zoom",
+     "Teams",
+     "Claude",
+     "Perplexity",
+     "GigaChat",
+     "Alisa AI",
+     "Telegram 机器人"
+    ],
+    "note": "基础水平：Tableau、Power BI、Yandex Metrica、Google Analytics。"
+   }
+  ]
+ },
+ "results": {
+  "eyebrow": "成果",
+  "items": [
+   {
+    "num": "1 → 43",
+    "label": "个中心完成经销商集团推广"
+   },
+   {
+    "num": "12% → 4%",
+    "label": "客户组合年流失率"
+   },
+   {
+    "num": "38% → 74%",
+    "label": "核心功能使用率"
+   },
+   {
+    "num": "92%",
+    "label": "新人引导完成率"
+   },
+   {
+    "num": "98",
+    "label": "项目提交给产品团队"
+   },
+   {
+    "num": "4.8 / 5",
+    "label": "培训评分"
+   }
+  ]
+ },
+ "contact": {
+  "eyebrow": "期待交流",
+  "title": "我们<em>聊聊。</em>",
+  "text": "无论是大客户、经验、B2B 产品发展还是 AI 落地——我都乐意分享已完成的项目、案例，也乐于与需要加速前进的团队合作。",
+  "labels": [
+   "电话",
+   "Email",
+   "Telegram"
+  ]
+ },
+ "footer": [
+  "© 叶夫根尼·格卢申科夫",
+  "B2B · SaaS · AI · Automotive"
+ ]
+}

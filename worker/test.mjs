@@ -8,13 +8,13 @@ const AUTH = { get: async (k) => kv.get(k) ?? null, put: async (k, v) => { kv.se
 const env = { AUTH, TG_BOT_TOKEN: 'T', TG_WEBHOOK_SECRET: 'whs', OWNER_TG_ID: '111', GH_TOKEN: 'G', GH_REPO: 'o/r', GH_BRANCH: 'main', DATA_PATH: 'resume-data.json', SESSION_SECRET: 'sess-secret', ALLOWED_ORIGIN: 'https://site.example', ADMIN_URL: 'https://site.example/resume/admin/' };
 
 const real = JSON.parse(fs.readFileSync(new URL('../resume-data.json', import.meta.url), 'utf8'));
-let ghFile = { data: real, sha: 'sha1' }; const tgCalls = []; const ghPuts = [];
+let ghFile = { data: real, sha: 'sha1' }; const tgCalls = []; const ghPuts = []; const ghUrls = [];
 globalThis.fetch = async (url, init = {}) => {
   url = String(url);
   if (url.startsWith('https://api.telegram.org/')) { tgCalls.push({ m: url.split('/').pop(), b: JSON.parse(init.body) }); return new Response(JSON.stringify({ ok: true })); }
   if (url.startsWith('https://api.github.com/')) {
     if ((init.method || 'GET') === 'GET') return new Response(JSON.stringify({ sha: ghFile.sha, content: Buffer.from(JSON.stringify(ghFile.data)).toString('base64') }));
-    const body = JSON.parse(init.body); ghPuts.push(body);
+    const body = JSON.parse(init.body); ghPuts.push(body); ghUrls.push(url);
     ghFile = { data: JSON.parse(Buffer.from(body.content, 'base64').toString('utf8')), sha: 'sha' + (ghPuts.length + 1) };
     return new Response(JSON.stringify({ commit: { sha: 'c' + ghPuts.length }, content: { sha: ghFile.sha } }));
   }
@@ -73,6 +73,21 @@ assert.equal(saved.person.phone, 'x'); assert.equal(saved.person.email, 'x'); as
 r = await J(await call('/save', { method: 'POST', headers: auth, body: { data: edit, sha: 'sha1' } })); assert.equal(r.s, 409); ok('save: устаревшая версия -> conflict');
 r = await J(await call('/save', { method: 'POST', headers: auth, body: { data: { person: {} } } })); assert.equal(r.s, 422); ok('save: битые данные отклоняются');
 assert.equal((await call('/save', { method: 'POST', body: { data: edit } })).status, 401); ok('save без токена -> 401');
+
+/* 7b. остальные файлы сайта: главная (RU/EN/ZH) и резюме EN/ZH */
+const landing = JSON.parse(fs.readFileSync(new URL('../landing-data.en.json', import.meta.url), 'utf8'));
+ghFile = { data: landing, sha: 'L1' };
+r = await J(await call('/data?f=landing-data.en.json', { headers: auth })); assert.equal(r.s, 200); assert.equal(r.j.file, 'landing-data.en.json'); ok('/data?f= отдаёт файл главной');
+const le = structuredClone(landing); le.hero.desc = 'New text'; le.hero.name = 'A<script>alert(1)</script><br><span class="eg-q9p__accent-blue" onclick="x">B</span> <b>C</b>'; le.evil = 'x';
+r = await J(await call('/save', { method: 'POST', headers: auth, body: { f: 'landing-data.en.json', data: le, sha: 'L1' } })); assert.equal(r.s, 200, JSON.stringify(r.j));
+assert.match(ghUrls.at(-1), /contents\/landing-data\.en\.json$/); assert.equal(ghFile.data.hero.desc, 'New text'); assert.equal(ghFile.data.evil, undefined);
+assert.equal(ghFile.data.hero.name, 'Aalert(1)<br><span class="eg-q9p__accent-blue">B</span> C'); ok('save главной: верный файл, чужие ключи и опасная разметка вычищены');
+for (const f of ['../.github/x.yml', 'worker/index.js', 'resume-data.json/../x']) { r = await J(await call('/save', { method: 'POST', headers: auth, body: { f, data: le } })); assert.equal(r.s, 400); }
+assert.equal((await J(await call('/data?f=admin/admin.js', { headers: auth }))).s, 400); ok('файлы вне белого списка отклоняются');
+r = await J(await call('/save', { method: 'POST', headers: auth, body: { f: 'landing-data.json', data: { hero: 1 } } })); assert.equal(r.s, 422); ok('битая главная отклоняется');
+const rz = JSON.parse(fs.readFileSync(new URL('../resume-data.zh.json', import.meta.url), 'utf8')); ghFile = { data: rz, sha: 'Z1' };
+r = await J(await call('/save', { method: 'POST', headers: auth, body: { f: 'resume-data.zh.json', data: rz, sha: 'Z1' } })); assert.equal(r.s, 200, JSON.stringify(r.j)); assert.match(ghUrls.at(-1), /resume-data\.zh\.json$/); ok('save резюме ZH');
+ghFile = { data: real, sha: 'sha1' };
 
 /* 8. CORS и чужой Origin */
 const bad = await worker.fetch(new Request('https://w.example/auth/start', { method: 'POST', headers: { Origin: 'https://evil.example' } }), env); assert.equal(bad.status, 403);

@@ -1,4 +1,4 @@
-/* Админка резюме: вход через Telegram, правка resume-data.json, сохранение на сайт через Worker. */
+/* Админка сайта: вход через Telegram, правка resume-data.json, сохранение на сайт через Worker. */
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
@@ -74,13 +74,23 @@
     edu: 'Образование', school: 'Учебное заведение', year: 'Год / специальность',
     dev: 'Развитие и обучение', tools: 'Инструменты (текстом)', extra: 'Дополнительно', site: 'Адрес сайта для PDF'
   };
+  var LANDING_SECTIONS = ['title', 'logo', 'nav', 'topbar', 'hero', 'about', 'skills', 'results', 'contact', 'footer'];
+  var LL = {
+    logo: 'Имя в шапке', nav: 'Меню (пункты)', topbar: 'Кнопки в шапке', resume: 'Кнопка «Резюме»', hero: 'Первый экран',
+    label: 'Метка над заголовком', name: 'Заголовок (<br> — перенос строки, <span class="eg-q9p__accent-blue">слово</span> — цветное: blue / green / pink / purple / red)',
+    desc: 'Описание', btn1: 'Первая кнопка', btn2: 'Вторая кнопка', loc: 'Локация и формат', alt: 'Подпись к фото', badges: 'Плашки на фото',
+    about: 'Блок «Обо мне»', eyebrow: 'Надпись над заголовком', intro: 'Вступление', cards: 'Карточки с цифрами', num: 'Цифра / номер',
+    roles: 'Роли', skills: 'Блок «Компетенции»', pillars: 'Направления', chips: 'Инструменты (плашки)', note: 'Примечание',
+    results: 'Результаты', items: 'Показатели', contact: 'Блок «Контакты»', labels: 'Подписи карточек контактов', footer: 'Подвал'
+  };
+  var isLanding = function () { return /^landing-/.test(FILE); };
   var SECTIONS = ['person', 'versions', 'items', 'jobs', 'early', 'edu', 'dev', 'tools', 'extra', 'site'];
   var LONG = { text: 1, short: 1, about: 1, aboutShort: 1, bullets: 1, shortBullets: 1, context: 1, contextShort: 1, tools: 1, footer: 1, headline: 1 };
   var openSet = {};
 
   function getAt(path) { return path.reduce(function (o, k) { return o[k]; }, D); }
   function setAt(path, v) { var p = getAt(path.slice(0, -1)); p[path[path.length - 1]] = v; changed(); }
-  function lab(k) { return LABELS[k] || k; }
+  function lab(k) { return (isLanding() && LL[k]) || LABELS[k] || k; }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function blank(v) {
     if (Array.isArray(v)) return [];
@@ -123,19 +133,20 @@
   function arrayField(path, key, arr, redraw) {
     var w = el('div', 'fld'); w.appendChild(el('label', '', lab(key)));
     var list = el('div', 'list'); w.appendChild(list);
+    var fixed = isLanding() && key !== 'chips';
     var objs = arr.length && typeof arr[0] === 'object';
     arr.forEach(function (v, i) {
       var p = path.concat(i);
       if (objs) {
-        var c = el('div', 'card'), hd = el('div', 'hd'); hd.appendChild(el('b', '', cardTitle(v, i))); hd.appendChild(ctl(path, i, arr.length, redraw)); c.appendChild(hd);
+        var c = el('div', 'card'), hd = el('div', 'hd'); hd.appendChild(el('b', '', cardTitle(v, i))); if (!fixed) hd.appendChild(ctl(path, i, arr.length, redraw)); c.appendChild(hd);
         c.appendChild(objBody(p, v, redraw)); list.appendChild(c);
       } else {
-        var r = el('div', 'row'); r.appendChild(strField(p, key === 'order' ? 'order' : 'bullets', v)); r.appendChild(ctl(path, i, arr.length, redraw)); list.appendChild(r);
+        var r = el('div', 'row'); r.appendChild(strField(p, key === 'order' ? 'order' : 'bullets', v)); if (!fixed) r.appendChild(ctl(path, i, arr.length, redraw)); list.appendChild(r);
       }
     });
     var add = el('button', 'btn sm', '+ Добавить'); add.type = 'button';
     add.addEventListener('click', function () { arr.push(objs ? blank(arr[0]) : ''); changed(); redraw(); });
-    w.appendChild(add); return w;
+    if (!fixed) w.appendChild(add); return w;
   }
   function objBody(path, obj, redraw) {
     var b = el('div', 'body');
@@ -173,14 +184,34 @@
   }
   function draw() {
     var f = $('form'); f.textContent = '';
-    SECTIONS.forEach(function (k) { var s = section(k, draw); if (s) f.appendChild(s); });
+    (isLanding() ? LANDING_SECTIONS : SECTIONS).forEach(function (k) { var s = section(k, draw); if (s) f.appendChild(s); });
+    if (isLanding()) { var tt = f.querySelector('details[data-p="title"] > summary'); if (tt) tt.textContent = 'Название вкладки браузера'; }
   }
 
   /* ---------------- предпросмотр ---------------- */
   var pvReady = false, pvTimer = null;
   function sendPreview() { var w = $('pv').contentWindow; if (w && pvReady) w.postMessage({ glData: D }, location.origin); }
   window.addEventListener('message', function (e) { if (e.origin === location.origin && e.data && e.data.glReady) { pvReady = true; sendPreview(); } });
-  function initPreview() { pvReady = false; $('pv').src = '../resume.html?preview=1&v=kam&m=long'; }
+  var FILES = {
+    'resume-data.json': ['Резюме (RU)', '../resume.html?preview=1&v=kam&m=long'],
+    'resume-data.en.json': ['Resume (EN)', '../resume-en.html?preview=1&v=kam&m=long'],
+    'resume-data.zh.json': ['简历 (中文)', '../resume-zh.html?preview=1&v=kam&m=long'],
+    'landing-data.json': ['Главная (RU)', '../index.html?preview=1'],
+    'landing-data.en.json': ['Главная (EN)', '../en.html?preview=1'],
+    'landing-data.zh.json': ['Главная (中文)', '../zh.html?preview=1']
+  };
+  var FILE = (function () { var f = null; try { f = sessionStorage.getItem('adm-file'); } catch (e) {} return FILES[f] ? f : 'resume-data.json'; })();
+  (function () {
+    var sel = $('file'); if (!sel) return;
+    Object.keys(FILES).forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = FILES[k][0]; sel.appendChild(o); });
+    sel.value = FILE;
+    sel.addEventListener('change', function () {
+      if (dirty && !confirm('Есть несохранённые правки. Перейти к другому файлу и потерять их?')) { sel.value = FILE; return; }
+      FILE = sel.value; try { sessionStorage.setItem('adm-file', FILE); } catch (e) {}
+      loadData();
+    });
+  })();
+  function initPreview() { pvReady = false; $('pv').src = FILES[FILE][1]; }
 
   /* ---------------- состояние ---------------- */
   function setStatus(msg, cls) { var s = $('status'); s.textContent = msg || ''; s.className = cls || ''; }
@@ -192,7 +223,7 @@
   }
   function loadData() {
     setStatus('Загружаю…');
-    api('/data').then(function (r) {
+    api('/data?f=' + encodeURIComponent(FILE)).then(function (r) {
       if (r.status === 401) { store(TOKEN_KEY, null); showLogin('Сессия закончилась. Войдите снова.'); return; }
       if (r.status !== 200) { setStatus('Не удалось загрузить данные: ' + (r.json.error || r.status), 'bad'); return; }
       D = r.json.data; SHA = r.json.sha; ORIG = JSON.stringify(D); draw(); initPreview(); changed(); setStatus('Данные загружены');
@@ -201,7 +232,7 @@
   $('undo').addEventListener('click', function () { if (!confirm('Отбросить все несохранённые правки?')) return; D = JSON.parse(ORIG); draw(); changed(); });
   $('save').addEventListener('click', function () {
     $('save').disabled = true; setStatus('Сохраняю на сайт…');
-    api('/save', { method: 'POST', body: { data: D, sha: SHA } }).then(function (r) {
+    api('/save', { method: 'POST', body: { f: FILE, data: D, sha: SHA } }).then(function (r) {
       if (r.status === 200) { D = r.json.data; SHA = r.json.sha; ORIG = JSON.stringify(D); draw(); changed(); setStatus('Сохранено. Сайт обновится примерно через минуту.', 'ok'); return; }
       if (r.status === 401) { store(TOKEN_KEY, null); showLogin('Сессия закончилась. Войдите снова — правки в этой вкладке не потеряются, если вернуться без перезагрузки.'); return; }
       if (r.status === 409) setStatus('На сайте уже другая версия. Скачайте JSON со своими правками и обновите страницу.', 'bad');
@@ -212,7 +243,7 @@
   });
   $('dl').addEventListener('click', function () {
     var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(D, null, 1)], { type: 'application/json' }));
-    a.download = 'resume-data.json'; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+    a.download = FILE; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
   });
   $('out').addEventListener('click', function () { if (dirty && !confirm('Есть несохранённые правки. Выйти?')) return; store(TOKEN_KEY, null); location.reload(); });
   window.addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });

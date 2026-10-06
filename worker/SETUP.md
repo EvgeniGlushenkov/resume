@@ -32,7 +32,7 @@
 | `OWNER_TG_ID` | ваш числовой Telegram ID (см. шаг 4) |
 | `GH_REPO` | `EvgeniGlushenkov/resume` |
 | `GH_BRANCH` | `main` |
-| `DATA_PATH` | `resume-data.json` |
+| `DATA_PATH` | больше не используется (файлы выбираются в админке из белого списка в `worker/index.js`), можно оставить как есть |
 | `ALLOWED_ORIGIN` | `https://evgeniglushenkov.github.io` |
 | `ADMIN_URL` | `https://evgeniglushenkov.github.io/resume/admin/` |
 
