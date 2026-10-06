@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
-<title>Админка резюме</title>
+<title>Админка сайта</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
 <style>
 :root{--bg:#f8f8f6;--surface:#fff;--ink:#12140f;--muted:#6a6c66;--line:#e7e7e3;--blue:#aee4f8;--green:#bdf0d2;--pink:#ffc3cc;--lilac:#dcc4f6;--yellow:#f6e8ae;--danger:#b3261e;--acc:#7c2ae8}
@@ -72,7 +72,7 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-
   <div class="lbox">
     <a class="btn sm" href="../resume.html" style="text-decoration:none;color:inherit;display:inline-block;margin-bottom:14px">← На сайт</a>
     <div class="eyebrow">Закрытый раздел</div>
-    <h1>Админка резюме</h1>
+    <h1>Админка сайта</h1>
     <p>Вход подтверждается в Telegram: придёт сообщение с кнопкой. Либо откройте одноразовую ссылку, которую выдаёт бот по команде /admin.</p>
     <div id="lwait" class="wait" hidden></div>
     <div id="lerr" class="err" role="alert"></div>
@@ -82,7 +82,7 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-
 
 <div id="app" hidden>
   <header class="top">
-    <div class="ttl"><a class="btn sm" href="../resume.html" title="Вернуться на сайт">← На главную</a><span id="dot" class="dot"></span>Админка резюме</div>
+    <div class="ttl"><a class="btn sm" href="../resume.html" title="Вернуться на сайт">← На главную</a><span id="dot" class="dot"></span>Админка сайта <select id="file" aria-label="Что редактировать" style="margin-left:10px;font:inherit;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:#fff"></select></div>
     <div class="acts">
       <span id="status" role="status"></span>
       <button class="btn" id="undo" type="button">Отменить правки</button>
@@ -94,7 +94,7 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-
   </header>
   <div class="work">
     <div id="form"></div>
-    <div id="preview"><iframe id="pv" title="Предпросмотр резюме"></iframe></div>
+    <div id="preview"><iframe id="pv" title="Предпросмотр"></iframe></div>
   </div>
 </div>
 <script src="admin.js"></script>

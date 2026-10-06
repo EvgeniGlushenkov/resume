@@ -1,0 +1,149 @@
+{
+ "title": "Evgenii Glushenkov",
+ "logo": "Evgenii Glushenkov",
+ "nav": [
+  "About",
+  "Skills"
+ ],
+ "topbar": {
+  "resume": "Resume",
+  "contact": "Contact"
+ },
+ "hero": {
+  "label": "PROFILE / 2026",
+  "name": "Connecting<br/><span class=\"eg-q9p__accent-blue\">sales</span>, product<br/>and <span class=\"eg-q9p__accent-green\">AI.</span>",
+  "desc": "Key Account Manager. I help B2B products take root in real business and deliver measurable results.",
+  "btn1": "Discuss a project",
+  "btn2": "View resume",
+  "loc": "Saint Petersburg · office / hybrid / remote",
+  "alt": "Evgenii Glushenkov",
+  "badges": [
+   "SENIOR KAM",
+   "PROJECT MANAGER",
+   "AI ADOPTION & DIGITAL OPERATIONS MANAGER"
+  ]
+ },
+ "about": {
+  "eyebrow": "ABOUT ME",
+  "title": "I understand business from both sides.",
+  "intro": "On one side: commercial results, contracts and relationships with owners. On the other: implementation, training, digital processes and the real user.",
+  "cards": [
+   {
+    "num": "18+ years",
+    "label": "in the automotive industry and entrepreneurship"
+   },
+   {
+    "num": "5+ years",
+    "label": "in the Avito Auto ecosystem"
+   },
+   {
+    "num": "3 500+",
+    "label": "users and employees trained"
+   },
+   {
+    "num": "250+",
+    "label": "dealer centers and partners in portfolio"
+   }
+  ],
+  "roles": [
+   {
+    "num": "01",
+    "title": "SENIOR KAM",
+    "desc": "For 5 years at Avito I managed B2B clients through the full cycle — from C-level negotiations to the company's largest contracts and sustained growth. I turn one-off deals into long-term partnerships: I build and defend budgets, retain and grow the client portfolio."
+   },
+   {
+    "num": "02",
+    "title": "PROJECT MANAGER",
+    "desc": "Implementing and scaling a product across client networks — from processes to user training. Acted as feature lead: product interviews, research, turning requirements into the roadmap."
+   },
+   {
+    "num": "03",
+    "title": "AI ADOPTION & DIGITAL OPERATIONS MANAGER",
+    "desc": "Rolling out AI tools and digitalizing processes — from onboarding to business automation. Built a digital business setup without an IT team: website, CRM, document flow. I work with Claude, Perplexity, GigaChat, Alisa AI."
+   }
+  ]
+ },
+ "skills": {
+  "eyebrow": "HOW I HELP",
+  "title": "I make the product work.",
+  "intro": "I don't stop at selling. I dig into the client's context, build the process and help the team reach the result.",
+  "pillars": [
+   {
+    "title": "KAM & sales",
+    "desc": "Key account management (KAM), B2B sales, upsell and cross-sell, negotiations with owners and C-level, budgets, retention and churn management."
+   },
+   {
+    "title": "Projects & implementation",
+    "desc": "B2B SaaS implementation and product usage growth, launch and scaling across a branch network, processes, training and onboarding, leading teams without direct authority."
+   },
+   {
+    "title": "AI Adoption",
+    "desc": "AI assistants, agents and skills in daily work, prompts, routine automation (Google Sheets, Telegram bots), knowledge base, no-code."
+   },
+   {
+    "title": "Tools",
+    "chips": [
+     "Bitrix24",
+     "Jira",
+     "Confluence",
+     "Redash",
+     "1C",
+     "Excel",
+     "Google Workspace",
+     "Miro",
+     "Zoom",
+     "Teams",
+     "Claude",
+     "Perplexity",
+     "GigaChat",
+     "Alisa AI",
+     "Telegram bots"
+    ],
+    "note": "Basic level: Tableau, Power BI, Yandex Metrica, Google Analytics."
+   }
+  ]
+ },
+ "results": {
+  "eyebrow": "RESULTS",
+  "items": [
+   {
+    "num": "1 → 43",
+    "label": "centers in a dealer group rollout"
+   },
+   {
+    "num": "12% → 4%",
+    "label": "annual portfolio churn"
+   },
+   {
+    "num": "38% → 74%",
+    "label": "usage of key features"
+   },
+   {
+    "num": "92%",
+    "label": "onboarding completion"
+   },
+   {
+    "num": "98",
+    "label": "initiatives passed to product"
+   },
+   {
+    "num": "4.8 / 5",
+    "label": "training rating"
+   }
+  ]
+ },
+ "contact": {
+  "eyebrow": "READY TO TALK",
+  "title": "Let's <em>talk.</em>",
+  "text": "About key accounts, experience, B2B product growth and AI adoption — I will share implemented projects, cases and the kind of teams that need to move faster.",
+  "labels": [
+   "Phone",
+   "Email",
+   "Telegram"
+  ]
+ },
+ "footer": [
+  "© Evgenii Glushenkov",
+  "B2B · SaaS · AI · Automotive"
+ ]
+}
