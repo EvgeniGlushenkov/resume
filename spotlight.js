@@ -90,9 +90,25 @@
     addBlock('.eg-q9p__hero-content', '.eg-q9p__hero-name');
     addBlock('.eg-q9p__section', '.eg-q9p__section-title');
     addBlock('.eg-q9p__contact', '.eg-q9p__contact-title');
+    blocks.forEach(function (b) { b.calc(); });
+    mark();
+    // landing.js replaces headings after load (innerHTML). The old nodes lose the eg-hl class and the new
+    // ones would inherit a transparent text fill from the parent, so the coloured words turn black.
+    // Re-mark whenever the page text is rewritten.
+    if (window.MutationObserver) {
+      var pending = false;
+      new MutationObserver(function () {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(function () { pending = false; mark(); });
+      }).observe(d.body, { childList: true, subtree: true });
+    }
+  }
+
+  function mark() {
     blocks.forEach(function (b) {
-      b.calc();
-      b.els.forEach(function (el) { el.classList.add('eg-hl'); });
+      b.els = Array.prototype.slice.call(b.root.querySelectorAll(TEXT));
+      b.els.forEach(function (el) { if (!el.classList.contains('eg-hl')) el.classList.add('eg-hl'); });
     });
   }
 

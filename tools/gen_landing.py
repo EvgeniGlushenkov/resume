@@ -11,7 +11,8 @@ a('topbar.resume',P+'topbar-actions a',0); a('topbar.contact',P+'topbar-actions 
 a('hero.label',P+'hero-label'); a('hero.name',P+'hero-name',0,'h'); a('hero.desc',P+'hero-desc')
 a('hero.btn1',P+'hero-buttons a',0); a('hero.btn2',P+'hero-buttons a',1); a('hero.loc',P+'hero-loc')
 a('hero.alt',P+'hero-photo img',0,'alt')
-for i in range(3): a('hero.badges.%d'%i,P+'hero-badge',i)
+for i in range(4): a('hero.badges.%d'%i,P+'hero-badge',i)
+for i in range(4): a('hero.badges.%d'%i,P+'hero-badge',i+4)  # second copy in the ticker loop
 for s,n in (('about','about'),('skills','skills')):
     a(s+'.eyebrow','#eg-%s %ssection-eyebrow'%(n,P)); a(s+'.title','#eg-%s %ssection-title'%(n,P)); a(s+'.intro','#eg-%s %sintro-text'%(n,P))
 for i in range(4):
