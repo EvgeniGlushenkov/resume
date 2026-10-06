@@ -70,6 +70,7 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-
 <body>
 <div id="login">
   <div class="lbox">
+    <a class="btn sm" href="../resume.html" style="text-decoration:none;color:inherit;display:inline-block;margin-bottom:14px">← На сайт</a>
     <div class="eyebrow">Закрытый раздел</div>
     <h1>Админка резюме</h1>
     <p>Вход подтверждается в Telegram: придёт сообщение с кнопкой. Либо откройте одноразовую ссылку, которую выдаёт бот по команде /admin.</p>
@@ -81,12 +82,12 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:0;border-
 
 <div id="app" hidden>
   <header class="top">
-    <div class="ttl"><span id="dot" class="dot"></span>Админка резюме</div>
+    <div class="ttl"><a class="btn sm" href="../resume.html" title="Вернуться на сайт">← На главную</a><span id="dot" class="dot"></span>Админка резюме</div>
     <div class="acts">
       <span id="status" role="status"></span>
       <button class="btn" id="undo" type="button">Отменить правки</button>
       <button class="btn" id="dl" type="button">Скачать JSON</button>
-      <a class="btn" href="../resume.html" target="_blank" rel="noopener">Открыть сайт</a>
+      <a class="btn" href="../resume.html" target="_blank" rel="noopener">Открыть сайт в новой вкладке</a>
       <button class="btn primary" id="save" type="button">Сохранить на сайт</button>
       <button class="btn" id="out" type="button">Выйти</button>
     </div>
