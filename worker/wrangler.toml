@@ -1,0 +1,17 @@
+# Если деплоите через wrangler (необязательно, можно через панель Cloudflare — см. SETUP.md)
+name = "resume-admin"
+main = "index.js"
+compatibility_date = "2025-01-01"
+
+[[kv_namespaces]]
+binding = "AUTH"
+id = "ВСТАВЬТЕ_ID_KV"
+
+[vars]
+GH_REPO = "EvgeniGlushenkov/resume"
+GH_BRANCH = "main"
+DATA_PATH = "resume-data.json"
+ALLOWED_ORIGIN = "https://evgeniglushenkov.github.io"
+ADMIN_URL = "https://evgeniglushenkov.github.io/resume/admin/"
+# Секреты задаются командой `wrangler secret put ИМЯ`:
+# TG_BOT_TOKEN, TG_WEBHOOK_SECRET, OWNER_TG_ID, GH_TOKEN, SESSION_SECRET
