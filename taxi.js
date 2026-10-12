@@ -198,11 +198,14 @@
     '.sec .job{background:#f7f6f2;box-shadow:none}.pills li{color:#21201f}' +
     '.fb{background:#fce000;border-radius:28px}.tl{border-left-color:#21201f}.tl>li::before{background:#fce000;box-shadow:0 0 0 2px #21201f}' +
     '.hh{display:none!important}.pos{max-width:30ch}.side-head{position:relative}' +
+    '.gl-tx-task{border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;max-width:360px;min-height:56px;margin-top:20px;padding:0 24px;border-radius:18px;background:#fce000;color:#21201f;font:500 18px/1.2 var(--f-body);text-decoration:none;text-align:center;transition:background .15s,transform .1s}.gl-tx-task:hover{background:#ffd21e}.gl-tx-task:active{transform:scale(.98)}.gl-tx-task:focus-visible{outline:2px solid #21201f;outline-offset:3px}' +
+    '.gl-tx-box{display:grid;gap:10px;width:100%;max-width:360px;margin-top:12px;font:400 15px/1.35 var(--f-body);color:#21201f}.gl-tx-box input{box-sizing:border-box;width:100%;min-height:48px;padding:0 16px;border:2px solid #ebe9e3;border-radius:16px;background:#fff;color:#21201f;font:inherit}.gl-tx-box input:focus{outline:none;border-color:#fce000}.gl-tx-box .gl-tx-go{min-height:48px;border:0;border-radius:16px;background:#21201f;color:#fff;font:500 16px/1 var(--f-body);cursor:pointer}.gl-tx-box .gl-tx-go:disabled{opacity:.5;cursor:default}.gl-tx-box .gl-tx-msg{color:#6f6e69}.gl-tx-box .gl-tx-open{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:16px;background:#21201f;color:#fff;font:500 16px/1 var(--f-body);text-decoration:none}' +
     '.gl-tx-rate{position:absolute;z-index:3;display:flex;align-items:center;gap:9px;background:#21201f;color:#fff;border-radius:18px;padding:9px 16px 9px 12px;box-shadow:0 8px 22px rgba(33,32,31,.28)}' +
     '@media (max-width:560px){details.sec{padding:18px}}';
   var BTN_CSS = '.gl-tx-btn{display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:#21201f;border-radius:16px;padding:6px 8px;cursor:pointer;height:34px;opacity:.38;filter:grayscale(1);transition:opacity .2s,filter .2s}.gl-tx-btn:hover{opacity:.7}.gl-tx-btn svg{width:34px;height:auto}.gl-tx-btn[aria-pressed="true"]{opacity:1;filter:none;background:#21201f;padding:6px 12px}.gl-tx-btn[aria-pressed="true"] svg{width:46px}.gl-tx-btn:focus-visible{outline:2px solid #21201f;outline-offset:2px}';
 
   /* ---------- тексты под вакансию «Менеджер по развитию бизнеса в Такси (СПб)» — только в режиме «Такси» ---------- */
+  var TASK_API = 'https://resume-admin.ukeityrjd.workers.dev';   /* тот же Worker, что и у админки */
   var POS = 'Собеседование на позицию | Менеджер по развитию бизнеса в Такси (Санкт-Петербург)';
   function L(a, b) { return '<li><span class="lead">' + a + '</span> ' + b + '</li>'; }
   var JOBS = {
@@ -232,6 +235,52 @@
       L('Цифровой контур без IT-команды.', 'Сайт на Adobe Muse, витрина и приём заказов на Ecwid, домен и сервер, каталог и остатки, статусы заказов, шаблоны документов. Этот проект определил мой интерес к IT-коммерции и SaaS.') + '</ul>'
   };
   var BADGE = '<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 1.8l3 6.3 6.9.9-5 4.8 1.3 6.8L12 17.2 5.8 20.6l1.3-6.8-5-4.8 6.9-.9z" fill="#f2b705" stroke="#c98f00" stroke-width="1" stroke-linejoin="round"/></svg><span style="display:grid;line-height:1.05"><b style="font:800 22px/1 var(--f-display)">5,0</b><i style="font:500 11px/1.2 var(--f-body);font-style:normal;color:#b9b8b3">Рейтинг</i></span>';
+  /* ---------- «Тестовое задание»: доступ по подтверждению в Telegram ---------- */
+  var taskTimer = null;
+  function stopTaskPoll() { if (taskTimer) { clearInterval(taskTimer); taskTimer = null; } }
+  function taskApi(path, opt) {
+    opt = opt || {};
+    return fetch(TASK_API + path, { method: opt.method || 'GET', headers: opt.body ? { 'Content-Type': 'application/json' } : {}, body: opt.body ? JSON.stringify(opt.body) : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, json: j }; }); });
+  }
+  function toggleTaskBox(btn) {
+    var old = SR.querySelector('.gl-tx-box');
+    if (old) { old.remove(); stopTaskPoll(); return; }
+    var box = document.createElement('div'); box.className = 'gl-tx-box';
+    box.innerHTML = '<span class="gl-tx-msg">Тестовое задание открывается после подтверждения в Telegram. Представьтесь, пожалуйста.</span>' +
+      '<input type="text" maxlength="80" placeholder="Имя и компания" aria-label="Имя и компания" autocomplete="organization">' +
+      '<button type="button" class="gl-tx-go">Запросить доступ</button>';
+    btn.insertAdjacentElement('afterend', box);
+    var inp = box.querySelector('input'), go = box.querySelector('.gl-tx-go'), msg = box.querySelector('.gl-tx-msg');
+    inp.focus();
+    function fail(t) { stopTaskPoll(); msg.textContent = t; go.disabled = false; go.textContent = 'Запросить ещё раз'; inp.disabled = false; }
+    function send() {
+      var name = inp.value.trim();
+      if (name.length < 2) { msg.textContent = 'Напишите имя и компанию.'; inp.focus(); return; }
+      go.disabled = true; inp.disabled = true; msg.textContent = 'Отправляю запрос…';
+      taskApi('/task/start', { method: 'POST', body: { name: name } }).then(function (r) {
+        if (r.status === 429) throw new Error('Слишком много запросов. Попробуйте через 10 минут или напишите мне в Telegram.');
+        if (r.status !== 200) throw new Error('Не удалось отправить запрос. Напишите мне в Telegram.');
+        var id = r.json.id, secret = r.json.secret, until = Date.now() + (r.json.ttl || 300) * 1000;
+        msg.textContent = 'Запрос отправлен. Как только я подтвержу его в Telegram, здесь появится ссылка. Страницу можно не закрывать.';
+        go.hidden = true; stopTaskPoll();
+        taskTimer = setInterval(function () {
+          if (Date.now() > until) { go.hidden = false; fail('Время ожидания вышло. Запросите ещё раз или напишите мне в Telegram.'); return; }
+          taskApi('/task/poll?id=' + encodeURIComponent(id) + '&secret=' + encodeURIComponent(secret)).then(function (p) {
+            var st = p.json.status;
+            if (st === 'approved' && /^https:\/\//.test(p.json.url || '')) {
+              stopTaskPoll(); msg.textContent = 'Доступ открыт.';
+              var a = document.createElement('a'); a.className = 'gl-tx-open'; a.href = p.json.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Открыть презентацию';
+              box.appendChild(a);
+            } else if (st === 'denied') { go.hidden = false; fail('В доступе отказано. Если это ошибка, напишите мне в Telegram.'); }
+            else if (st === 'expired') { go.hidden = false; fail('Запрос устарел. Запросите ещё раз.'); }
+          }).catch(function () { });
+        }, 2000);
+      }).catch(function (e) { fail(e.message || 'Ошибка сети'); });
+    }
+    go.addEventListener('click', send);
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
+  }
   function placeBadge() {
     var b = SR.querySelector('.gl-tx-rate'), ph = SR.querySelector('.photo');
     if (!b || !ph) return;
@@ -250,6 +299,13 @@
         for (var k in JOBS) if (role.indexOf(k) === 0) { jb.setAttribute('data-o', jb.innerHTML); jb.innerHTML = JOBS[k]; break; }
       } else if (jb.getAttribute('data-o') !== null) { jb.innerHTML = jb.getAttribute('data-o'); jb.removeAttribute('data-o'); }
     });
+    var task = SR.querySelector('.gl-tx-task'), hl = SR.querySelector('.hl');
+    if (v && hl && !task) {
+      task = document.createElement('button'); task.type = 'button'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
+      task.addEventListener('click', function () { toggleTaskBox(task); });
+      hl.insertAdjacentElement('afterend', task);
+    }
+    if (!v && task) { var bx = SR.querySelector('.gl-tx-box'); if (bx) bx.remove(); stopTaskPoll(); task.remove(); }
     if (v && hh && !badge) {
       badge = document.createElement('div'); badge.className = 'gl-tx-rate'; badge.innerHTML = BADGE; hh.appendChild(badge);
       if (window.ResizeObserver && SR.querySelector('.photo')) new ResizeObserver(placeBadge).observe(SR.querySelector('.photo'));
