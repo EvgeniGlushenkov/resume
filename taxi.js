@@ -278,9 +278,9 @@
     '@media (max-width:560px){details.sec{padding:18px}}';
   var BTN_CSS = '.gl-tx-btn{display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:#21201f;border-radius:16px;padding:6px 8px;cursor:pointer;height:34px;opacity:.38;filter:grayscale(1);transition:opacity .2s,filter .2s}.gl-tx-btn:hover{opacity:.7}.gl-tx-btn svg{width:34px;height:auto}.gl-tx-btn[aria-pressed="true"]{opacity:1;filter:none;background:#21201f;padding:6px 12px}.gl-tx-btn[aria-pressed="true"] svg{width:46px}.gl-tx-btn:focus-visible{outline:2px solid #21201f;outline-offset:2px}';
 
-  /* ---------- тексты под вакансию «Менеджер по развитию бизнеса в Такси (СПб)» — только в режиме «Такси» ---------- */
+  /* ---------- тексты под вакансию «Менеджер по развитию клиентов (таксопарков)», Яндекс Такси, СПб и ЛО — только в режиме «Такси» ---------- */
   var TASK_API = 'https://resume-admin.ukeityrjd.workers.dev';   /* тот же Worker, что и у админки */
-  var POS = 'Собеседование на позицию | Менеджер по развитию бизнеса в Такси (Санкт-Петербург)';
+  var POS = 'Собеседование на позицию | Менеджер по развитию клиентов (таксопарков), Яндекс Такси (Санкт-Петербург и ЛО)';
   function L(a, b) { return '<li><span class="lead">' + a + '</span> ' + b + '</li>'; }
   var JOBS = {
     'Изучение и внедрение AI': '<ul class="bul">' +
