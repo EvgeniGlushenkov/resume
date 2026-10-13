@@ -14,7 +14,7 @@
   var HOST = document.getElementById('gl-resume'), PAGE = document.getElementById('gl-tx-page');   /* PAGE — отдельный лендинг (taxi-test.html): только карта с машинками */
   if (!HOST && !PAGE) return;
   var KEY = 'gl-taxi', NS = 'http://www.w3.org/2000/svg';
-  var SR = null, built = false, on = false, raf = 0, bg, track, ov, world, ymap, proj, ready = false, cars = [], tmo = 0, taps = 0, tapT = 0, GX0 = 0, GY0 = 0, CX = 0, HM = 1;
+  var ps = -1, SR = null, built = false, on = false, raf = 0, bg, track, ov, world, ymap, proj, ready = false, cars = [], tmo = 0, taps = 0, tapT = 0, GX0 = 0, GY0 = 0, CX = 0, HM = 1;
 
   function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   /* ссылка «Резюме» со страницы тестового (resume.html?v=pm&taxi=1) сразу открывает специальное резюме */
@@ -41,7 +41,8 @@
   }
 
   /* ---------- карта: Яндекс Карты (официальный JS API 2.1), север сверху → юг снизу ---------- */
-  var Z = 14, LON_C = 30.32, LAT_TOP = 59.995, LAT_BOT = 59.795;
+  /* на странице тестового карта чуть дальше, машины мельче и их вдвое больше */
+  var Z = PAGE && !HOST ? 13.5 : 14, CS = PAGE && !HOST ? 0.7 : 1, LON_C = 30.32, LAT_TOP = 59.995, LAT_BOT = 59.795;
   function loadYmaps(cb) {
     if (window.ymaps) return window.ymaps.ready(cb);
     var sc = document.createElement('script');
@@ -205,7 +206,7 @@
   }
   function setup() {
     bg.style.display = 'block';
-    ymap = new ymaps.Map(bg.querySelector('#gl-tx-ymap'), { center: [59.9388, LON_C], zoom: Z, controls: [] }, { yandexMapDisablePoiInteractivity: true, suppressMapOpenBlock: false });
+    ymap = new ymaps.Map(bg.querySelector('#gl-tx-ymap'), { center: [59.9388, LON_C], zoom: Z, controls: [] }, { yandexMapDisablePoiInteractivity: true, suppressMapOpenBlock: false, avoidFractionalZoom: false });
     ymap.behaviors.disable(['drag', 'scrollZoom', 'dblClickZoom', 'multiTouch', 'rightMouseButtonMagnifier', 'leftMouseButtonMagnifier']);
     proj = ymap.options.get('projection');
     var o = proj.toGlobalPixels([LAT_TOP, LON_C], Z); GX0 = o[0]; GY0 = o[1];
@@ -213,10 +214,12 @@
     ov.innerHTML = overlayMarkup();
     world = ov.querySelector('#gl-tx-world');
     var layer = ov.querySelector('#gl-tx-cars');
-    FLEET.forEach(function (f) {
+    var fleet = FLEET;
+    if (PAGE && !HOST) fleet = FLEET.concat(FLEET.map(function (f) { return [f[0], f[2], f[1], f[3] === 'gl-ck' ? 'gl-cy' : f[3], f[5] * 0.8, f[5], f[6]]; }));
+    fleet.forEach(function (f) {
       var path = ov.querySelector('#gl-r-' + f[0]); if (!path) return;
       var g = document.createElementNS(NS, 'g'), u = document.createElementNS(NS, 'use');
-      u.setAttribute('href', '#' + f[3]); u.setAttribute('x', -9); u.setAttribute('y', -19); u.setAttribute('width', 18); u.setAttribute('height', 38);
+      u.setAttribute('href', '#' + f[3]); u.setAttribute('x', -9 * CS); u.setAttribute('y', -19 * CS); u.setAttribute('width', 18 * CS); u.setAttribute('height', 38 * CS);
       g.appendChild(u); g.style.display = 'none'; layer.appendChild(g);
       cars.push({ el: g, path: path, len: path.getTotalLength(), f0: f[1], f1: f[2], off: f[4], wp: f[5], lane: f[6] });
     });
@@ -237,7 +240,10 @@
   function frame() {
     raf = 0; if (!on || !ready) return;
     var vw = innerWidth, vh = innerHeight, de = document.documentElement;
-    var L = Math.max(1, de.scrollHeight - vh), p = Math.min(1, Math.max(0, (window.pageYOffset || de.scrollTop) / L));
+    var L = Math.max(1, de.scrollHeight - vh), pt = Math.min(1, Math.max(0, (window.pageYOffset || de.scrollTop) / L));
+    /* плавность: положение догоняет прокрутку за несколько кадров, а не прыгает вместе с колесом */
+    ps = ps < 0 || Math.abs(pt - ps) < 0.0003 ? pt : ps + (pt - ps) * 0.14;
+    var p = ps;
     ymap.setGlobalPixelCenter([GX0, GY0 + vh / 2 + p * (HM - vh)], Z, { duration: 0 });
     var g = ymap.getGlobalPixelCenter();
     world.setAttribute('transform', 'translate(' + (vw / 2 - (g[0] - GX0)).toFixed(1) + ' ' + (vh / 2 - (g[1] - GY0)).toFixed(1) + ')');
@@ -245,14 +251,16 @@
       var u = (p - (c.pc - c.wp)) / (2 * c.wp);
       if (u <= 0 || u >= 1) { c.el.style.display = 'none'; return; }
       var e = 0.5 * u + 0.5 * u * u * (3 - 2 * u), d = c.f0 + (c.f1 - c.f0) * e, sg = c.f1 >= c.f0 ? 1 : -1, l = c.len * d;
-      var a = c.path.getPointAtLength(Math.max(0, Math.min(c.len, l))), b = c.path.getPointAtLength(Math.max(0, Math.min(c.len, l + sg * 4)));
-      var hx = b.x - a.x, hy = b.y - a.y, hl = Math.sqrt(hx * hx + hy * hy) || 1; hx /= hl; hy /= hl;
-      var x = a.x - hy * 4.5 * c.lane, y = a.y + hx * 4.5 * c.lane;
+      /* машина по оси дороги; курс по точкам ±6 px, чтобы на изломах линии не дёргалась */
+      var a = c.path.getPointAtLength(Math.max(0, Math.min(c.len, l))), k = c.path.getPointAtLength(Math.max(0, Math.min(c.len, l - sg * 6))), b = c.path.getPointAtLength(Math.max(0, Math.min(c.len, l + sg * 6)));
+      var hx = b.x - k.x, hy = b.y - k.y, hl = Math.sqrt(hx * hx + hy * hy) || 1; hx /= hl; hy /= hl;
+      var x = a.x, y = a.y;
       c.el.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + (Math.atan2(hy, hx) * 180 / Math.PI + 90).toFixed(1) + ')');
       c.el.style.display = ''; c.el.style.opacity = Math.min(1, u / 0.07, (1 - u) / 0.07).toFixed(2);
     });
     var cr = track.querySelector('.cr'), fill = track.querySelector('b'), eta = track.querySelector('.eta'), n = Math.ceil((1 - p) * 3);
     cr.style.top = (p * 100) + '%'; fill.style.height = (p * 100) + '%'; eta.textContent = p > 0.985 ? 'Приехали' : (n < 1 ? 1 : n) + ' мин';
+    if (ps !== pt) kick();
   }
   function kick() { if (on && !raf) raf = requestAnimationFrame(frame); }
   window.addEventListener('scroll', kick, { passive: true });
