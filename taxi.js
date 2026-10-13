@@ -375,8 +375,8 @@
     });
     var task = SR.querySelector('.gl-tx-task'), hl = SR.querySelector('.hl');
     if (v && hl && !task) {
-      task = document.createElement('button'); task.type = 'button'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
-      task.addEventListener('click', function () { toggleTaskBox(task); });
+      task = document.createElement('a'); task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
+      task.href = 'taxi-test.html'; task.target = '_blank'; task.rel = 'noopener';   /* прямая ссылка на лендинг; toggleTaskBox (вход через Telegram) пока не используется */
       hl.insertAdjacentElement('afterend', task);
     }
     if (!v && task) { var bx = SR.querySelector('.gl-tx-box'); if (bx) bx.remove(); stopTaskPoll(); task.remove(); }
