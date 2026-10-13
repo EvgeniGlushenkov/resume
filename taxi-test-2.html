@@ -11,108 +11,150 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#21201f;--muted:#6f6e69;--line:#e6e4de;--soft:#f6f5f2;--bg:#fafaf8;--mark:#fce000;--f:'Manrope',Arial,sans-serif}
+:root{--ink:#21201f;--muted:#6f6e69;--line:#ebe9e3;--y:#fce000;--soft:#f7f6f2;--card:#fff;--f:'Manrope',Arial,sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.6 var(--f);-webkit-font-smoothing:antialiased}
-main{max-width:860px;margin:0 auto;padding:40px 16px 80px}
-a{color:inherit;text-underline-offset:3px}
-.meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--muted);padding-bottom:16px;border-bottom:1px solid var(--line)}
-h1{font-size:clamp(28px,4.6vw,42px);line-height:1.12;letter-spacing:-.02em;font-weight:800;margin:32px 0 12px}
-.role{color:var(--muted);margin:0 0 28px}
-section{padding:36px 0;border-top:1px solid var(--line)}
-section:first-of-type{border-top:0}
-h2{font-size:clamp(22px,3.4vw,28px);line-height:1.2;letter-spacing:-.01em;font-weight:800;margin:0 0 16px}
-h2 .n{display:inline-block;min-width:1.6em;color:var(--muted)}
-h3{font-size:18px;font-weight:800;margin:24px 0 8px}
+body{margin:0;background:#f4f3ef;color:var(--ink);font:500 16px/1.5 var(--f);-webkit-font-smoothing:antialiased}
+main{max-width:1040px;margin:0 auto;padding:20px 16px 80px}
+a{color:inherit}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border-radius:28px;padding:10px 12px 10px 20px;box-shadow:0 8px 30px rgba(33,32,31,.1)}
+.top b{font-weight:800;font-size:15px}
+.back{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border-radius:14px;background:var(--ink);color:#fff;text-decoration:none;font:700 14px/1 var(--f)}
+.slide{background:var(--card);border-radius:28px;padding:32px 36px;margin-top:20px;box-shadow:0 8px 30px rgba(33,32,31,.08)}
+.hero{padding:44px 36px}
+.eyebrow{display:inline-block;background:var(--y);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.03em;margin:18px 0 14px;font-weight:800;max-width:20ch}
+h2{font-size:clamp(22px,3vw,30px);line-height:1.15;letter-spacing:-.02em;margin:0 0 20px;font-weight:800}
+h3{font-size:17px;line-height:1.3;margin:0 0 8px;font-weight:800}
 p{margin:0 0 12px}
-.lead{font-size:18px;font-weight:600}
-.note{background:var(--soft);border-left:3px solid var(--mark);padding:14px 18px;margin:16px 0;border-radius:0 8px 8px 0}
-.note p:last-child{margin:0}
-.task{background:var(--soft);border-radius:12px;padding:20px 22px;margin:0 0 8px}
-.task ol{margin:8px 0 0;padding-left:22px}
-.small{font-size:14px;color:var(--muted)}
-ul,ol{padding-left:22px;margin:0 0 12px}
-li{margin:6px 0}
-li b{font-weight:800}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin-top:8px}
-.cols > div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
-.cols h3{margin-top:0}
-.tbl{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:12px;background:#fff}
-table{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
-th,td{text-align:left;vertical-align:top;padding:12px 14px;border-top:1px solid var(--line)}
-thead th{border-top:0;background:var(--soft);font-weight:800}
-tbody th{font-weight:700;width:22%}
-sup a{text-decoration:none;font-weight:800;font-size:12px;padding:0 2px}
-.src li{font-size:14px;color:var(--muted)}
-.src li a{color:var(--ink)}
-footer{border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--muted)}
-@media (max-width:640px){.cols{grid-template-columns:1fr}main{padding-top:24px}}
-@media print{body{background:#fff}main{padding:0}.cols > div,.tbl{break-inside:avoid}}
+.sub{color:var(--muted);font-size:17px;margin:0}
+.lead{font-size:17px}
+.ask{display:block;color:var(--muted);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--y);font-weight:800;margin-bottom:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.box{background:var(--soft);border-radius:22px;padding:20px 22px}
+.box p:last-child,.box ul:last-child{margin-bottom:0}
+.box.dark{background:var(--ink);color:#fff}
+.box.y{background:#fff6b8}
+ul,ol{margin:0;padding-left:20px}li{margin-bottom:6px}
+.task{margin-top:22px}
+.task ol{margin-top:8px}
+.pm h3::before{content:attr(data-s);display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;margin-right:8px;background:var(--y);font-size:16px}
+.pm .minus h3::before{background:var(--ink);color:#fff}
+.note{font-size:14px;color:var(--muted);margin-top:16px}
+.note p{margin:0}
+sup{font-size:.65em;line-height:0}
+sup a{text-decoration:none;color:var(--muted)}
+.box.dark sup a{color:#cfcdc6}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:15px;min-width:560px}
+th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}
+thead th{background:var(--ink);color:#fff;font-weight:700}
+thead th:first-child{border-radius:14px 0 0 0;background:transparent;color:var(--ink)}
+thead th:last-child{border-radius:0 14px 0 0}
+tbody th{font-weight:700;width:26%}
+tbody td:nth-child(2){background:#fffbe0}
+.src{font-size:13.5px;color:var(--muted);padding-left:22px}
+.src li{margin-bottom:5px;word-break:break-word}
+.src a{color:var(--ink)}
+.foot{text-align:center;color:var(--muted);font-size:13px;margin-top:28px}
+@media (max-width:860px){.g3,.g5{grid-template-columns:1fr}}
+@media (max-width:640px){.g2{grid-template-columns:1fr}.slide,.hero{padding:24px 20px;border-radius:24px}.top{padding:10px 12px;border-radius:22px}}
+@media print{.slide{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
 <main>
 
-<div class="meta">
-  <span>Евгений Глушенков · тестовое задание · Яндекс Такси</span>
-  <a href="resume.html">Резюме</a>
+<div class="top">
+  <b>Евгений Глушенков · тестовое задание</b>
+  <a class="back" href="resume.html">Резюме</a>
 </div>
 
-<h1>Зарплатный проект и классическая аренда в таксопарке</h1>
-<p class="role">Роль: менеджер по развитию бизнеса в Такси (Санкт-Петербург). Октябрь 2026.</p>
-
-<div class="task">
-  <b>Задание.</b> В Санкт-Петербурге одна из самых больших долей в России таксопарков с водителями на зарплатном проекте. Подготовьте презентацию, отвечающую на три вопроса:
-  <ol>
-    <li>Что это за схема, её плюсы и минусы.</li>
-    <li>Основные отличия от классической схемы аренды автомобиля.</li>
-    <li>Почему схема с классической арендой более популярна, чем зарплатный проект.</li>
-  </ol>
-</div>
-
-<section>
-  <h2>Исходное допущение</h2>
-  <p class="lead">Под зарплатным проектом здесь понимается работа водителя на автомобиле таксопарка с установленным графиком, фиксированной оплатой и премией за результат.</p>
-  <p>Конкретные условия проекта в задании не приведены, поэтому это исходное допущение. Само название «зарплатный проект» ещё не раскрывает условия: многое зависит от того, как оформлены отношения с водителем.</p>
-  <div class="note">
-    <p><b>Как это выглядит в Петербурге на практике.</b> В срезе вакансий водителя такси на hh.ru 60% предложений без аренды: оклад или гарантия за смену в 34%, процент от выручки в 26%<sup><a href="#s1">1</a></sup>. В трёх парках, куда я позвонил, водителя оформляют как самозанятого, а доля водителя 60–80% выручки; трудовой договор не предложил никто<sup><a href="#s1">1</a></sup>. Поэтому ниже я отдельно отмечаю, что меняется при трудовом договоре.</p>
+<!-- Титул -->
+<section class="slide hero">
+  <span class="eyebrow">Тестовое задание · Яндекс Такси · Санкт-Петербург</span>
+  <h1>Зарплатный проект и классическая аренда в таксопарке</h1>
+  <p class="sub">Роль: менеджер по развитию бизнеса в Такси (Санкт-Петербург). Евгений Глушенков, октябрь 2026.</p>
+  <div class="box task">
+    <span class="ask">Задание</span>
+    <p>В Санкт-Петербурге одна из самых больших долей в России таксопарков с водителями на зарплатном проекте. Подготовьте презентацию, отвечающую на три вопроса:</p>
+    <ol>
+      <li>Что это за схема, её плюсы и минусы.</li>
+      <li>Основные отличия от классической схемы аренды автомобиля.</li>
+      <li>Почему схема с классической арендой более популярна, чем зарплатный проект.</li>
+    </ol>
   </div>
 </section>
 
-<section>
-  <h2><span class="n">1</span>Что такое зарплатный проект, его плюсы и минусы</h2>
-  <p>Таксопарк организует работу водителей: предоставляет автомобили, планирует смены, обслуживает машины и выплачивает вознаграждение. Выручка от поездок формирует доход парка, из которого он покрывает расходы, включая оплату труда водителей.</p>
-  <p>Вознаграждение может состоять из фиксированной части и премии, зависящей от выполнения плана и качества работы. Социальные гарантии определяются оформлением отношений: при трудовом договоре возникают соответствующие обязательства работодателя.</p>
+<!-- Допущение -->
+<section class="slide">
+  <span class="ask">Исходное допущение</span>
+  <h2>Что здесь понимается под зарплатным проектом?</h2>
+  <p class="lead">Работа водителя на автомобиле таксопарка с установленным графиком, фиксированной оплатой и премией за результат.</p>
+  <p>Конкретные условия проекта в задании не приведены, поэтому это исходное допущение. Само название «зарплатный проект» ещё не раскрывает условия: многое зависит от того, как оформлены отношения с водителем.</p>
+  <div class="box y">
+    <h3>Как это выглядит в Петербурге на практике</h3>
+    <p>В срезе вакансий водителя такси на hh.ru 60% предложений без аренды: оклад или гарантия за смену в 34%, процент от выручки в 26%<sup><a href="#s1">1</a></sup>. В трёх парках, куда я позвонил, водителя оформляют как самозанятого, а доля водителя 60–80% выручки; трудовой договор не предложил никто<sup><a href="#s1">1</a></sup>.</p>
+  </div>
+</section>
 
-  <div class="cols">
-    <div>
-      <h3>Для водителя: плюсы</h3>
+<!-- Вопрос 1: схема -->
+<section class="slide">
+  <span class="ask">Вопрос задания 1</span>
+  <h2>Как устроен зарплатный проект?</h2>
+  <div class="grid g3">
+    <div class="box">
+      <div class="num">1</div>
+      <h3>Парк организует работу</h3>
+      <p>Предоставляет автомобили, планирует смены, обслуживает машины и выплачивает вознаграждение.</p>
+    </div>
+    <div class="box">
+      <div class="num">2</div>
+      <h3>Выручка идёт парку</h3>
+      <p>Выручка от поездок формирует доход парка, из которого он покрывает расходы, включая оплату труда водителей.</p>
+    </div>
+    <div class="box">
+      <div class="num">3</div>
+      <h3>Водитель получает фикс и премию</h3>
+      <p>Премия зависит от выполнения плана и качества работы. Социальные гарантии определяются оформлением: при трудовом договоре возникают обязательства работодателя.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Вопрос 1: плюсы и минусы -->
+<section class="slide">
+  <span class="ask">Вопрос задания 1</span>
+  <h2>Какие плюсы и минусы у зарплатного проекта?</h2>
+  <div class="grid g2 pm">
+    <div class="box">
+      <h3 data-s="+">Плюсы водителю</h3>
       <ul>
-        <li><b>Более предсказуемый доход.</b> При наличии гарантированной части слабый спрос меньше влияет на заработок.</li>
+        <li><b>Более предсказуемый доход.</b> При гарантированной части слабый спрос меньше влияет на заработок.</li>
         <li><b>Нет фиксированного арендного платежа.</b> Не нужно сначала зарабатывать на аренду машины.</li>
         <li><b>Меньше организационных задач.</b> Обслуживание автомобиля и подготовку к работе в большей степени берёт на себя парк.</li>
-        <li><b>Социальная защищённость при трудоустройстве.</b> В том числе предусмотренные законом отпуск и оплата больничного.</li>
+        <li><b>Социальная защищённость при трудоустройстве.</b> В том числе отпуск и оплата больничного.</li>
       </ul>
     </div>
-    <div>
-      <h3>Для водителя: минусы</h3>
+    <div class="box minus">
+      <h3 data-s="−">Минусы водителю</h3>
       <ul>
         <li><b>Меньше свободы.</b> Нужно соблюдать график и правила парка, согласовывать изменения смен.</li>
         <li><b>Потолок заработка.</b> Он зависит от системы премирования: высокая личная выручка не обязательно полностью отражается на выплате.</li>
       </ul>
     </div>
-    <div>
-      <h3>Для парка: плюсы</h3>
+    <div class="box">
+      <h3 data-s="+">Плюсы парку</h3>
       <ul>
         <li><b>Управление загрузкой автомобилей.</b> Парк может планировать смены, организовывать обучение и поддерживать единые стандарты обслуживания.</li>
         <li><b>Удержание водителей.</b> Если условия привлекательны, модель помогает удерживать водителей.</li>
       </ul>
     </div>
-    <div>
-      <h3>Для парка: минусы</h3>
+    <div class="box minus">
+      <h3 data-s="−">Минусы парку</h3>
       <ul>
         <li><b>Риск недостаточной выручки.</b> Парк принимает на себя большую его часть.</li>
-        <li><b>Нагрузка на управление.</b> Нужно обеспечивать выплаты, организовывать смены, искать замены и контролировать расходы.</li>
+        <li><b>Нагрузка на управление.</b> Выплаты, смены, замены и контроль расходов.</li>
         <li><b>Обязанности работодателя.</b> При трудоустройстве добавляются соответствующие затраты.</li>
         <li><b>Риск убытка.</b> Слабая загрузка машин или непродуманная мотивация могут сделать модель убыточной.</li>
       </ul>
@@ -120,12 +162,21 @@ footer{border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:va
   </div>
 </section>
 
-<section>
-  <h2><span class="n">2</span>Основные отличия от классической аренды</h2>
+<!-- Вопрос 2 -->
+<section class="slide">
+  <span class="ask">Вопрос задания 2</span>
+  <h2>Чем зарплатный проект отличается от классической аренды?</h2>
   <p class="lead">Главное отличие в том, кто несёт риск низкой выручки и кто получает дополнительный доход при высокой загрузке.</p>
-  <p>При классической аренде водитель платит за автомобиль установленную сумму. Его заработок складывается из выручки за вычетом аренды, комиссий, топлива и других расходов по договору. Если заказов мало, арендный платёж обычно сохраняется. Если водитель зарабатывает больше, дополнительный доход после расходов остаётся у него.</p>
-  <p>В зарплатной модели водитель получает согласованное вознаграждение. Финансовый результат поездок в большей степени влияет на прибыль парка, а доход водителя зависит от фиксированной части и правил премирования.</p>
-
+  <div class="grid g2" style="margin-bottom:20px">
+    <div class="box">
+      <h3>Классическая аренда</h3>
+      <p>Водитель платит за автомобиль установленную сумму. Его заработок — выручка за вычетом аренды, комиссий, топлива и других расходов. Если заказов мало, арендный платёж обычно сохраняется; если много, дополнительный доход остаётся у водителя.</p>
+    </div>
+    <div class="box">
+      <h3>Зарплатный проект</h3>
+      <p>Водитель получает согласованное вознаграждение. Финансовый результат поездок в большей степени влияет на прибыль парка, а доход водителя зависит от фиксированной части и правил премирования.</p>
+    </div>
+  </div>
   <div class="tbl">
     <table>
       <thead>
@@ -142,43 +193,93 @@ footer{border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:va
       </tbody>
     </table>
   </div>
-  <p>При этом аренда не освобождает парк от всех рисков. У него остаются расходы на автомобиль, риски ремонта, простоя без арендатора и неплатежей.</p>
   <div class="note">
-    <p><b>Что добавили звонки в парки.</b> На модели без аренды ДТП, штрафы и ремонт парки называли своими расходами<sup><a href="#s1">1</a></sup>. Аренду в TAXINCOME сдают от 7 дней, поэтому она неудобна тому, кто хочет подработать одну смену<sup><a href="#s1">1</a></sup>. Ставки аренды парки публикуют редко; пример с hh.ru: от 4&nbsp;500&nbsp;₽ в сутки за машину бизнес-класса<sup><a href="#s2">2</a></sup>.</p>
+    <p>Аренда не освобождает парк от всех рисков: остаются расходы на автомобиль, ремонт, простой без арендатора и неплатежи. По звонкам в парки, на модели без аренды ДТП, штрафы и ремонт парк берёт на себя, а аренду в TAXINCOME сдают от 7 дней<sup><a href="#s1">1</a></sup>. Ставки аренды публикуют редко; пример с hh.ru: от 4&nbsp;500&nbsp;₽ в сутки за машину бизнес-класса<sup><a href="#s2">2</a></sup>.</p>
   </div>
 </section>
 
-<section>
-  <h2><span class="n">3</span>Почему классическая аренда популярнее</h2>
-  <p>Я объясняю это сочетанием более простой модели для собственника парка и большей самостоятельности для водителя. Это гипотезы, которые стоит проверить на данных и в разговорах с партнёрами.</p>
-  <ol>
-    <li><b>Парку проще прогнозировать поступления.</b> Пока машина сдана и водитель платит вовремя, размер арендного дохода заранее известен. В зарплатной модели результат сильнее зависит от количества поездок, выручки за смену и эффективности управления.</li>
-    <li><b>Аренда требует меньше ежедневного управления водителями.</b> Для зарплатной модели нужно выстроить подбор сотрудников, расписание, замены, учёт рабочего времени и прозрачную систему премирования. Для небольшого парка содержание такой команды может быть существенной нагрузкой.</li>
-    <li><b>Часть водителей ценит свободу и возможность напрямую влиять на заработок.</b> Опытный водитель может предпочитать сам выбирать время работы и сохранять дополнительный доход после покрытия расходов. Зарплатное предложение должно компенсировать ограничения графика понятными преимуществами.</li>
-    <li><b>Зарплатная модель предъявляет более высокие требования к загрузке автомобилей.</b> Парк должен получать достаточно выручки, чтобы покрывать выплаты водителям, содержание машин и управление. При нестабильном спросе или частых простоях это сложнее.</li>
-    <li><b>Привычную модель легче продолжать использовать.</b> У парков уже настроены договоры, учёт и привлечение арендаторов. Переход на зарплатную схему потребует вложений, а его выгода заранее не гарантирована.</li>
-  </ol>
-  <div class="note">
-    <p><b>Почему при этом в Петербурге зарплатных парков много.</b> Моя гипотеза: регулирование сделало водителя и машину из реестра дефицитом, и парку выгоднее держать их под своим контролем. Мигрантам с патентами запрещено работать в такси в СПб до конца 2026 года, обсуждается продление на 2027<sup><a href="#s4">4</a></sup>. У 59% парков РФ не хватает водителей<sup><a href="#s5">5</a></sup>. С 1 марта 2026 года в реестр попадают только машины из перечня Минпромторга, для СПб без отсрочки<sup><a href="#s7">7</a></sup>. С 1 октября 2026 года выделенные полосы в СПб доступны только машинам, закреплённым за перевозчиком<sup><a href="#s6">6</a></sup>. В реестре такси СПб около 67 тыс. машин и почти 9 тыс. перевозчиков<sup><a href="#s3">3</a></sup>.</p>
+<!-- Вопрос 3 -->
+<section class="slide">
+  <span class="ask">Вопрос задания 3</span>
+  <h2>Почему классическая аренда популярнее?</h2>
+  <p class="lead">Сочетание более простой модели для собственника парка и большей самостоятельности для водителя. Это гипотезы, которые стоит проверить на данных и в разговорах с партнёрами.</p>
+  <div class="grid g3">
+    <div class="box">
+      <div class="num">1</div>
+      <h3>Проще прогнозировать поступления</h3>
+      <p>Пока машина сдана и водитель платит вовремя, арендный доход известен заранее. В зарплатной модели результат зависит от числа поездок, выручки за смену и качества управления.</p>
+    </div>
+    <div class="box">
+      <div class="num">2</div>
+      <h3>Меньше ежедневного управления</h3>
+      <p>Зарплатной модели нужны подбор, расписание, замены, учёт рабочего времени и прозрачные премии. Для небольшого парка такая команда может быть существенной нагрузкой.</p>
+    </div>
+    <div class="box">
+      <div class="num">3</div>
+      <h3>Водители ценят свободу</h3>
+      <p>Опытный водитель может предпочитать сам выбирать время работы и сохранять доход после покрытия расходов. Зарплатное предложение должно компенсировать ограничения графика.</p>
+    </div>
+    <div class="box">
+      <div class="num">4</div>
+      <h3>Высокие требования к загрузке</h3>
+      <p>Выручки должно хватать на выплаты водителям, содержание машин и управление. При нестабильном спросе или частых простоях это сложнее.</p>
+    </div>
+    <div class="box">
+      <div class="num">5</div>
+      <h3>Привычную модель легче продолжать</h3>
+      <p>Договоры, учёт и привлечение арендаторов уже настроены. Переход потребует вложений, а выгода заранее не гарантирована.</p>
+    </div>
+    <div class="box dark">
+      <h3>Почему в Петербурге зарплатных всё же много</h3>
+      <p>Моя гипотеза: регулирование сделало водителя и машину из реестра дефицитом, и парку выгоднее держать их под своим контролем.</p>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2>Как я бы проверял это в роли</h2>
-  <p>Как менеджер по развитию бизнеса, я бы проверял зарплатный проект на парках, которые умеют планировать смены и контролировать экономику автомобилей.</p>
-  <h3>Пилот: сопоставимые группы машин в двух моделях</h3>
-  <ul>
-    <li>прибыль на автомобиль за календарный месяц;</li>
-    <li>доход водителя за час;</li>
-    <li>загрузка автомобилей;</li>
-    <li>удержание водителей;</li>
-    <li>качество поездок.</li>
-  </ul>
-  <h3>Критерий масштабирования</h3>
-  <p>Решение принимал бы по тому, даёт ли модель устойчивую экономику парку и привлекательные условия водителю без постоянной дополнительной поддержки.</p>
+<!-- СПб -->
+<section class="slide">
+  <span class="ask">Контекст Петербурга</span>
+  <h2>Что делает водителя и машину дефицитом?</h2>
+  <div class="grid g2">
+    <div class="box">
+      <h3>Нехватка водителей</h3>
+      <p>Мигрантам с патентами запрещено работать в такси в СПб до конца 2026 года, обсуждается продление на 2027<sup><a href="#s4">4</a></sup>. У 59% парков РФ не хватает водителей<sup><a href="#s5">5</a></sup>.</p>
+    </div>
+    <div class="box">
+      <h3>Локализация с 1 марта 2026</h3>
+      <p>В реестр попадают только машины из перечня Минпромторга, для СПб без отсрочки<sup><a href="#s7">7</a></sup>.</p>
+    </div>
+    <div class="box">
+      <h3>Выделенные полосы с 1 октября 2026</h3>
+      <p>В СПб доступны только машинам, закреплённым за перевозчиком<sup><a href="#s6">6</a></sup>.</p>
+    </div>
+    <div class="box">
+      <h3>Масштаб рынка</h3>
+      <p>В реестре такси СПб около 67 тыс. машин и почти 9 тыс. перевозчиков<sup><a href="#s3">3</a></sup>.</p>
+    </div>
+  </div>
 </section>
 
-<section>
+<!-- Пилот -->
+<section class="slide">
+  <span class="ask">Что бы я делал в роли</span>
+  <h2>Как проверить зарплатный проект на практике?</h2>
+  <p class="lead">Пилот на парках, которые умеют планировать смены и контролировать экономику автомобилей. Сравнение сопоставимых групп машин в двух моделях.</p>
+  <div class="grid g5">
+    <div class="box"><h3>Прибыль на авто</h3><p>за календарный месяц</p></div>
+    <div class="box"><h3>Доход водителя</h3><p>за час работы</p></div>
+    <div class="box"><h3>Загрузка</h3><p>автомобилей</p></div>
+    <div class="box"><h3>Удержание</h3><p>водителей</p></div>
+    <div class="box"><h3>Качество</h3><p>поездок</p></div>
+  </div>
+  <div class="box dark" style="margin-top:14px">
+    <h3>Критерий масштабирования</h3>
+    <p>Даёт ли модель устойчивую экономику парку и привлекательные условия водителю без постоянной дополнительной поддержки.</p>
+  </div>
+</section>
+
+<!-- Источники -->
+<section class="slide">
   <h2>Источники</h2>
   <ol class="src">
     <li id="s1">Собственный срез вакансий водителя такси на hh.ru, СПб и ЛО, 12.10.2026 (58 вакансий от 13 парков), и звонки в YouPiter, GDel и TAXINCOME 13.10.2026: <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit">Google Таблица</a>. Срез показывает канал найма, а не долю схем на рынке; три разговора — сверка гипотез, а не статистика.</li>
@@ -191,7 +292,7 @@ footer{border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:va
   </ol>
 </section>
 
-<footer>Евгений Глушенков · тестовое задание · Яндекс Такси, Санкт-Петербург</footer>
+<p class="foot">Евгений Глушенков · тестовое задание · Яндекс Такси, Санкт-Петербург</p>
 
 </main>
 </body>
