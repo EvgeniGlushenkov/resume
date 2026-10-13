@@ -17,6 +17,8 @@
   var SR = null, built = false, on = false, raf = 0, bg, track, ov, world, ymap, proj, ready = false, cars = [], tmo = 0, taps = 0, tapT = 0, GX0 = 0, GY0 = 0, CX = 0, HM = 1;
 
   function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  /* ссылка «Резюме» со страницы тестового (resume.html?v=pm&taxi=1) сразу открывает специальное резюме */
+  if (HOST && /(?:^|&)taxi=1(?:&|$)/.test(location.search.slice(1))) ls(KEY, '1');
 
   /* ---------- иконки ---------- */
   var ICON_SIDE =
@@ -375,8 +377,7 @@
     });
     var task = SR.querySelector('.gl-tx-task'), hl = SR.querySelector('.hl');
     if (v && hl && !task) {
-      task = document.createElement('button'); task.type = 'button'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
-      task.addEventListener('click', function () { toggleTaskBox(task); });
+      task = document.createElement('a'); task.href = 'taxi-test.html'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
       hl.insertAdjacentElement('afterend', task);
     }
     if (!v && task) { var bx = SR.querySelector('.gl-tx-box'); if (bx) bx.remove(); stopTaskPoll(); task.remove(); }
