@@ -11,8 +11,8 @@
  */
 (function () {
   'use strict';
-  var HOST = document.getElementById('gl-resume');
-  if (!HOST) return;
+  var HOST = document.getElementById('gl-resume'), PAGE = document.getElementById('gl-tx-page');   /* PAGE — отдельный лендинг (taxi-test.html): только карта с машинками */
+  if (!HOST && !PAGE) return;
   var KEY = 'gl-taxi', NS = 'http://www.w3.org/2000/svg';
   var SR = null, built = false, on = false, raf = 0, bg, track, ov, world, ymap, proj, ready = false, cars = [], tmo = 0, taps = 0, tapT = 0, GX0 = 0, GY0 = 0, CX = 0, HM = 1;
 
@@ -434,6 +434,7 @@
     new MutationObserver(function () { sync(); }).observe(app, { childList: true });
     sync(); return true;
   }
+  if (!HOST) { on = true; document.documentElement.classList.add('gl-taxi'); build(); return; }
   var tries = 0;
   (function wait() { if (!init() && tries++ < 100) setTimeout(wait, 100); })();
 })();
