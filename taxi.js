@@ -41,8 +41,8 @@
   }
 
   /* ---------- карта: Яндекс Карты (официальный JS API 2.1), север сверху → юг снизу ---------- */
-  /* на странице тестового карта чуть дальше, машины мельче и их вдвое больше */
-  var Z = PAGE && !HOST ? 13.5 : 14, CS = PAGE && !HOST ? 0.7 : 1, LON_C = 30.32, LAT_TOP = 59.995, LAT_BOT = 59.795;
+  /* на странице тестового машины мельче и их вдвое больше */
+  var Z = 14, CS = PAGE && !HOST ? 0.7 : 1, LON_C = 30.32, LAT_TOP = 59.995, LAT_BOT = 59.795;
   function loadYmaps(cb) {
     if (window.ymaps) return window.ymaps.ready(cb);
     var sc = document.createElement('script');
@@ -136,6 +136,45 @@
     }
     return d;
   }
+  /* точная геометрия улиц: маршрут между теми же концами берём из OSRM целиком (overview=full),
+     кешируем в браузере; пока не загрузилось или если сервис недоступен — остаётся упрощённая линия */
+  var RKEY = 'gl-tx-rt1';
+  function enc(c) {
+    var s = [], px = 0, py = 0;
+    c.forEach(function (p, i) { var x = Math.round(p[0] * 1e5), y = Math.round(p[1] * 1e5); s.push(i ? x - px : x, i ? y - py : y); px = x; py = y; });
+    return s.join(',');
+  }
+  function ends(str) {
+    var a = str.split(',').map(Number), x = a[0], y = a[1];
+    for (var i = 2; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; }
+    return [[a[0] / 1e5, a[1] / 1e5], [x / 1e5, y / 1e5]];
+  }
+  function refineRoutes() {
+    var cache = {}; try { cache = JSON.parse(ls(RKEY) || '{}') || {}; } catch (e) { cache = {}; }
+    function apply(k, str) {
+      var path = ov.querySelector('#gl-r-' + k); if (!path) return;
+      path.setAttribute('d', routeD(str));
+      var len = path.getTotalLength();
+      cars.forEach(function (c) { if (c.path === path) c.len = len; });
+    }
+    var todo = [];
+    ROUTES.forEach(function (r, k) { if (cache[k]) apply(k, cache[k]); else todo.push(k); });
+    if (!todo.length || !window.fetch) { layout(); kick(); return; }
+    var busy = 0, done = 0;
+    function next() {
+      if (!todo.length) { if (!busy) { ls(RKEY, JSON.stringify(cache)); layout(); kick(); } return; }
+      var k = todo.shift(), e = ends(ROUTES[k]); busy++;
+      fetch('https://router.project-osrm.org/route/v1/driving/' + e[0][0] + ',' + e[0][1] + ';' + e[1][0] + ',' + e[1][1] + '?overview=full&geometries=geojson')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          var g = j && j.routes && j.routes[0] && j.routes[0].geometry;
+          if (g && g.coordinates && g.coordinates.length > 1) { cache[k] = enc(g.coordinates); apply(k, cache[k]); }
+        })
+        .catch(function () { })
+        .then(function () { busy--; done++; if (done % 12 === 0) { layout(); kick(); } next(); });
+    }
+    for (var i = 0; i < 3; i++) next();
+  }
   function overlayMarkup() {
     var s = '<defs>' + carSym('gl-cy', '#fce000', '#fff3a6', true) + carSym('gl-cw', '#fdfdfb', '#ecebe7', false) + carSym('gl-ck', '#2b2a29', '#444340', false) + carSym('gl-cx', '#fce000', '#ffe86a', true) + '</defs><g id="gl-tx-world">';
     ROUTES.forEach(function (r, k) { s += '<path id="gl-r-' + k + '" d="' + routeD(r) + '" fill="none" stroke="none"/>'; });
@@ -206,7 +245,7 @@
   }
   function setup() {
     bg.style.display = 'block';
-    ymap = new ymaps.Map(bg.querySelector('#gl-tx-ymap'), { center: [59.9388, LON_C], zoom: Z, controls: [] }, { yandexMapDisablePoiInteractivity: true, suppressMapOpenBlock: false, avoidFractionalZoom: false });
+    ymap = new ymaps.Map(bg.querySelector('#gl-tx-ymap'), { center: [59.9388, LON_C], zoom: Z, controls: [] }, { yandexMapDisablePoiInteractivity: true, suppressMapOpenBlock: false });
     ymap.behaviors.disable(['drag', 'scrollZoom', 'dblClickZoom', 'multiTouch', 'rightMouseButtonMagnifier', 'leftMouseButtonMagnifier']);
     proj = ymap.options.get('projection');
     var o = proj.toGlobalPixels([LAT_TOP, LON_C], Z); GX0 = o[0]; GY0 = o[1];
@@ -224,7 +263,7 @@
       cars.push({ el: g, path: path, len: path.getTotalLength(), f0: f[1], f1: f[2], off: f[4], wp: f[5], lane: f[6] });
     });
     bg.style.display = '';
-    ready = true; layout(); kick();
+    ready = true; layout(); kick(); refineRoutes();
   }
 
   function layout() {
