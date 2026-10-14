@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зарплатный проект и аренда · тестовое Яндекс Такси</title>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai, notranslate">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#21201f;--muted:#6f6e69;--line:#e7e5de;--y:#fce000;--y2:#fff6b8;--y3:#fffbe0;--soft:#f6f5f1;--bg:#efeee9;--f:'Manrope',Arial,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.55 var(--f);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+p{margin:0 0 12px}
+ul,ol{margin:0;padding-left:20px}li{margin-bottom:6px}
+h1,h2,h3{font-weight:800;margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.08;letter-spacing:-.03em;max-width:22ch}
+h2{font-size:clamp(22px,2.7vw,29px);line-height:1.18;letter-spacing:-.02em;margin-bottom:18px}
+h3{font-size:17px;line-height:1.3;margin-bottom:8px}
+sup{font-size:.65em;line-height:0}
+sup a{text-decoration:none;color:var(--muted);font-weight:700}
+
+/* каркас: оглавление слева, контент справа */
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 80px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:28px;align-items:start}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border-radius:22px;padding:10px 12px 10px 20px}
+.top b{font-size:15px}
+.btn{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:12px;background:var(--ink);color:#fff;text-decoration:none;font:700 14px/1 var(--f)}
+.toc{position:sticky;top:18px;font-size:14px}
+.toc b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 12px}
+.toc a{display:flex;gap:10px;align-items:center;text-decoration:none;padding:8px 12px;border-radius:12px;color:var(--muted);font-weight:700}
+.toc a i{font-style:normal;flex:0 0 26px;height:26px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink)}
+.toc a:hover,.toc a.on{background:#fff;color:var(--ink)}
+.toc a.on i{background:var(--y)}
+.toc hr{border:0;border-top:1px solid var(--line);margin:10px 12px}
+
+.card{background:#fff;border-radius:26px;padding:32px 36px;margin-bottom:18px;scroll-margin-top:16px}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.tag em{font-style:normal;background:var(--y);color:var(--ink);border-radius:8px;padding:3px 8px;letter-spacing:.02em}
+.lead{font-size:17.5px;max-width:62ch}
+.muted{color:var(--muted)}
+.note{font-size:14px;color:var(--muted);margin:16px 0 0}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.box{background:var(--soft);border-radius:20px;padding:18px 20px}
+.box>:last-child{margin-bottom:0}
+.box.y{background:var(--y2)}
+.box.dark{background:var(--ink);color:#fff}
+.box.dark sup a,.box.dark .muted{color:#cfcdc6}
+.num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--y);font-weight:800;font-size:14px;margin-bottom:10px;color:var(--ink)}
+.big{display:block;font-size:30px;line-height:1.05;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+
+/* титул */
+.hero{padding:40px 36px 36px}
+.hero .sub{color:var(--muted);font-size:17px;margin:14px 0 0}
+.task{margin-top:24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px}
+.task ol{padding-left:22px;margin-top:6px}
+.task ol a{text-decoration:none;border-bottom:1px solid rgba(33,32,31,.3)}
+.thesis{font-size:18px;font-weight:700;line-height:1.4}
+
+/* ответ → доказательство */
+.qa{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border-top:1px solid var(--line)}
+.qa>div{padding:16px 20px 16px 0}
+.qa>div+div{padding:16px 0 16px 20px;border-left:1px solid var(--line)}
+.qa h3{margin-bottom:4px}
+.qa .ev{font-size:14.5px;color:var(--muted)}
+.qa .ev b{color:var(--ink)}
+.qa-head{display:grid;grid-template-columns:1fr 1fr;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-bottom:8px}
+.qa-head span+span{padding-left:20px}
+
+/* таблицы */
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:15px;min-width:600px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line)}
+thead th{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:800;border-bottom:2px solid var(--ink)}
+tbody th{font-weight:800;width:24%}
+td.hl,th.hl{background:var(--y3)}
+table.n td{text-align:right;white-space:nowrap}
+table.n thead th:not(:first-child){text-align:right}
+.who{display:inline-block;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:800}
+.who.p{background:var(--ink);color:#fff}.who.d{background:var(--y)}.who.b{background:#e3e1d9}
+.pm b{display:inline-block;width:14px}
+
+/* полосы */
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(140px,210px) 1fr 40px;align-items:center;gap:12px;font-size:15px}
+.bar i{display:block;height:20px;border-radius:7px;background:linear-gradient(90deg,var(--y) var(--w),var(--soft) var(--w))}
+.bar b{text-align:right}
+
+/* график экономики */
+.chart{display:grid;gap:14px}
+.crow{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}
+.crow>span{font-weight:800;font-size:14.5px}
+.pair{display:grid;gap:5px}
+.pair div{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:700}
+.pair i{display:block;height:16px;border-radius:5px;width:var(--w);min-width:4px}
+.pair .r i{background:var(--ink)}.pair .s i{background:var(--y)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;font-weight:700;color:var(--muted);margin-bottom:14px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px;background:var(--ink)}
+.legend span.s::before{background:var(--y)}
+
+/* свёрнутое */
+details.more{border-top:1px solid var(--line);margin-top:18px}
+details.more>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0 0;font-weight:800}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::after{content:"+";flex:0 0 32px;height:32px;border-radius:50%;background:var(--y);display:inline-flex;align-items:center;justify-content:center;font-size:20px}
+details.more[open]>summary{margin-bottom:16px}
+details.more[open]>summary::after{content:"\2212"}
+details.more>summary small{display:block;font-weight:600;color:var(--muted);font-size:14px}
+summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:8px}
+
+.extra-h{margin:36px 4px 14px}
+.extra-h h2{margin:0 0 4px}
+.src{font-size:13.5px;color:var(--muted);padding-left:22px}
+.src li{margin-bottom:6px;word-break:break-word}
+.src a{color:var(--ink)}
+.foot{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+
+@media (max-width:1000px){.wrap{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+@media (max-width:860px){.g3,.g4{grid-template-columns:repeat(2,1fr)}.task{grid-template-columns:1fr}}
+@media (max-width:640px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .card,.hero{padding:24px 20px;border-radius:22px}
+  .qa,.qa-head{grid-template-columns:1fr}.qa-head span+span{display:none}
+  .qa>div{padding:14px 0 4px}.qa>div+div{padding:0 0 14px;border-left:0}
+  .bar{grid-template-columns:1fr 36px}.bar span{grid-column:1/-1}
+  .crow{grid-template-columns:1fr}
+  .big{font-size:25px}
+}
+@media print{body{background:#fff}.toc,.top .btn{display:none}.wrap{grid-template-columns:1fr}.card{break-inside:avoid;padding:20px 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+  <b>Евгений Глушенков · тестовое задание</b>
+  <a class="btn" href="resume.html?v=pm&amp;taxi=1">Резюме</a>
+</div>
+
+<nav class="toc" aria-label="Содержание">
+  <b>Содержание</b>
+  <a href="#top"><i>·</i>Задание и вывод</a>
+  <a href="#q1"><i>1</i>Что это за схема</a>
+  <a href="#q1pm"><i>1</i>Плюсы и минусы</a>
+  <a href="#q2"><i>2</i>Отличия от аренды</a>
+  <a href="#q3"><i>3</i>Почему аренда популярнее</a>
+  <hr>
+  <a href="#calc"><i>₽</i>Экономика машины</a>
+  <a href="#role"><i>→</i>Что я сделаю в роли</a>
+  <a href="#src"><i>i</i>Источники</a>
+</nav>
+
+<main>
+
+<!-- Титул: задание и вывод одним экраном -->
+<section class="card hero" id="top">
+  <span class="tag"><em>Тестовое</em> Яндекс Такси · Санкт-Петербург</span>
+  <h1>Зарплатный проект и классическая аренда в таксопарке</h1>
+  <p class="sub">Роль: менеджер по развитию бизнеса в Такси (Санкт-Петербург). Октябрь 2026.</p>
+  <div class="task">
+    <div class="box">
+      <span class="tag" style="margin-bottom:4px">Задание</span>
+      <p>В Санкт-Петербурге одна из самых больших долей в России таксопарков с водителями на зарплатном проекте. Подготовьте презентацию, отвечающую на три вопроса:</p>
+      <ol>
+        <li><a href="#q1">Что это за схема, её плюсы и минусы</a></li>
+        <li><a href="#q2">Основные отличия от классической схемы аренды автомобиля</a></li>
+        <li><a href="#q3">Почему схема с классической арендой более популярна, чем зарплатный проект</a></li>
+      </ol>
+    </div>
+    <div class="box dark">
+      <span class="tag" style="color:#cfcdc6;margin-bottom:6px">Вывод</span>
+      <p class="thesis">Аренда проще и предсказуемее для собственника. Работа без аренды догоняет её по деньгам только там, где машину загружают на две смены.</p>
+      <p class="muted" style="font-size:14.5px">В Петербурге «зарплатный проект» чаще всего означает процент от выручки на машине парка, а не оклад. Предлагаю проверить две смены пилотом с 2–3 крупными парками.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Вопрос 1 -->
+<section class="card" id="q1">
+  <span class="tag"><em>Вопрос 1</em> Что это за схема</span>
+  <h2>Под одним названием три схемы, и в Петербурге чаще всего это процент</h2>
+  <p class="lead">«Зарплатный проект» — работа на машине парка без арендного платежа. Водитель получает либо фикс с премией, либо гарантию за смену, либо долю выручки. Парк даёт машину, обслуживание и, как правило, смены.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Схема</th><th>Как считается доход водителя</th><th>Пример из вакансий СПб</th></tr></thead>
+      <tbody>
+        <tr><th>Оклад или фикс + премия</th><td>Фикс за месяц или смену, премия по плану</td><td>210 000 ₽ в месяц от 22 смен<sup><a href="#s2">2</a></sup></td></tr>
+        <tr><th>Гарантированный минимум</th><td>Не меньше гарантии за смену, выше — по формуле</td><td>5 500–7 000 ₽ за смену<sup><a href="#s2">2</a></sup></td></tr>
+        <tr><th class="hl">Процент без аренды</th><td class="hl">Доля выручки минус свои расходы</td><td class="hl">60–80% водителю; в одном парке 60/40 до 7 500 ₽ за смену и 80/20 сверх<sup><a href="#s2">2</a></sup></td></tr>
+        <tr><th>Для сравнения: аренда</th><td>Выручка минус аренда, топливо, налог</td><td>3 300 ₽ в сутки за Комфорт+, 4 500–5 500 ₽ за бизнес<sup><a href="#s2">2</a></sup></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g2" style="margin-top:18px;align-items:start">
+    <div>
+      <h3>Что предлагают 13 работодателей с вакансиями на hh.ru</h3>
+      <div class="bars">
+        <div class="bar"><span>Без аренды в любом виде</span><i style="--w:84.6%"></i><b>11</b></div>
+        <div class="bar"><span>Процент</span><i style="--w:69.2%"></i><b>9</b></div>
+        <div class="bar"><span>Аренда</span><i style="--w:61.5%"></i><b>8</b></div>
+        <div class="bar"><span>Оклад или гарантия</span><i style="--w:23.1%"></i><b>3</b></div>
+      </div>
+      <p class="note">Срез на 12.10.2026, считаю по работодателям<sup><a href="#s1">1</a></sup>. Это канал найма, а не доля схем на рынке: арендные парки ищут водителей в основном не через hh.</p>
+    </div>
+    <div class="box y">
+      <h3>Оформление схему не различает</h3>
+      <p>Почти везде самозанятость или ИП. Штат упоминают 2 из 13 работодателей, в трёх звонках трудовой договор не предлагали<sup><a href="#s1">1</a></sup>. Отпуск и больничный есть только при трудовом договоре, поэтому «соцгарантии» не стоит записывать в плюсы схемы по умолчанию.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Вопрос 1: плюсы и минусы -->
+<section class="card" id="q1pm">
+  <span class="tag"><em>Вопрос 1</em> Плюсы и минусы</span>
+  <h2>Плюсы и минусы зависят от схемы, а не от слова «зарплатный»</h2>
+  <div class="tbl">
+    <table class="pm">
+      <thead><tr><th></th><th>Водителю</th><th>Парку</th></tr></thead>
+      <tbody>
+        <tr><th>Оклад, гарантия</th><td><b>+</b> предсказуемый доход, не нужно сначала «отбивать» аренду<br><b>−</b> график и правила парка, потолок дохода</td><td><b>+</b> контроль выхода на линию и стандартов<br><b>−</b> весь риск слабой выручки; фиксированная оплата самозанятому — вопрос к юристу</td></tr>
+        <tr><th class="hl">Процент</th><td class="hl"><b>+</b> нет платы за вход и в слабый день, ремонт и ДТП на парке<br><b>−</b> отдаёт парку 20–50% выручки, сильному водителю аренда выгоднее</td><td class="hl"><b>+</b> доход растёт с загрузкой, можно планировать смены и удерживать водителей<br><b>−</b> делит риск спроса, нужны диспетчер, учёт и замены</td></tr>
+        <tr><th>Аренда</th><td><b>+</b> весь сильный день его, свободный график<br><b>−</b> платит и в слабый день, и в выходной, если машина у него</td><td><b>+</b> предсказуемый поток, меньше управления<br><b>−</b> простой без арендатора, износ, неплатежи</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Про процент я не пишу «стабильный доход»: стабильность даёт только гарантированная часть.</p>
+</section>
+
+<!-- Вопрос 2 -->
+<section class="card" id="q2">
+  <span class="tag"><em>Вопрос 2</em> Отличия от аренды</span>
+  <h2>Главное отличие: кто платит за слабый день и кому достаётся сильный</h2>
+  <p class="lead">В аренде водитель покупает у парка сутки машины и забирает всё сверх. Без аренды парк покупает у водителя время и делит с ним выручку.</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th></th><th>Оклад, гарантия</th><th>Процент</th><th>Аренда</th></tr></thead>
+      <tbody>
+        <tr><th>Доход парка</th><td>Выручка минус выплаты</td><td>Доля выручки 20–50%</td><td>Аренда за каждые сутки</td></tr>
+        <tr><th>Топливо</th><td>По договору: от полной оплаты до 21–41%</td><td>Чаще водитель</td><td>Водитель</td></tr>
+        <tr><th>ДТП и штрафы</th><td>Парк, удержания по договору</td><td>По звонкам парк</td><td>В основном водитель</td></tr>
+        <tr><th>График</th><td>Парка</td><td>Согласуется с парком</td><td>Свой</td></tr>
+        <tr><th>Слабый спрос</th><td><span class="who p">парк</span></td><td><span class="who b">оба</span></td><td><span class="who d">водитель</span></td></tr>
+        <tr><th>Сильный день</th><td><span class="who p">в основном парк</span></td><td><span class="who b">оба</span></td><td><span class="who d">водитель</span></td></tr>
+        <tr><th>Простой без водителя</th><td><span class="who p">парк</span></td><td><span class="who p">парк</span></td><td><span class="who p">парк</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Аренда перекладывает на водителя риск спроса, но не риск пустой машины. Ремонт, ТО и страховки почти везде на парке в любой схеме<sup><a href="#s1">1</a></sup>.</p>
+</section>
+
+<!-- Вопрос 3 -->
+<section class="card" id="q3">
+  <span class="tag"><em>Вопрос 3</em> Почему аренда популярнее</span>
+  <h2>Аренда проще собственнику и даёт свободу водителю</h2>
+  <div class="qa-head"><span>Причина</span><span>Чем подтверждаю</span></div>
+  <div class="qa">
+    <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">1</span>Парку проще прогнозировать доход</h3><p class="muted" style="margin:0">Пока машина сдана, поступления известны заранее. На проценте они зависят от числа поездок и выручки за смену.</p></div>
+    <div class="ev">Доход от аренды зависит только от оплаченных суток: <b>3 300 ₽ × 29 суток</b>. Доля парка на проценте растёт и падает вместе с выручкой водителя<sup><a href="#calc">₽</a></sup>.</div>
+  </div>
+  <div class="qa">
+    <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">2</span>Меньше ежедневного управления</h3><p class="muted" style="margin:0">Без аренды нужны подбор, расписание, замены, учёт времени и понятные правила премий. Небольшому парку такая команда не по силам.</p></div>
+    <div class="ev">Парки на проценте в звонках сразу называли требования к смене: <b>от 10 часов</b> в YouPiter, <b>около 13 часов</b> в TAXINCOME<sup><a href="#s1">1</a></sup>.</div>
+  </div>
+  <div class="qa">
+    <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">3</span>Опытный водитель выбирает свободу</h3><p class="muted" style="margin:0">Он сам решает, когда работать, и оставляет себе всё сверх аренды и расходов.</p></div>
+    <div class="ev">По деньгам аренда выгоднее водителю только при выручке выше <b>~1 260 ₽ в час</b>. При средней загрузке процент даёт ему больше: <b>420 против 291 ₽ в час</b><sup><a href="#calc">₽</a></sup>. Значит, в аренде держит прежде всего самостоятельность.</div>
+  </div>
+  <div class="qa">
+    <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">4</span>Без аренды нужна высокая загрузка</h3><p class="muted" style="margin:0">Выручки должно хватать на выплаты, содержание машин и управление. При простоях это сложнее.</p></div>
+    <div class="ev">При одной смене вклад парка на проценте <b>21,4 тыс. ₽</b> против <b>53,7 тыс. ₽</b> на аренде. Сравниваются они только при двух сменах на машине<sup><a href="#calc">₽</a></sup>.</div>
+  </div>
+  <div class="qa" style="border-bottom:1px solid var(--line)">
+    <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">5</span>Привычную модель проще продолжать</h3><p class="muted" style="margin:0">Договоры, учёт и поток арендаторов уже настроены. Переход требует вложений, а выгода не гарантирована.</p></div>
+    <div class="ev">Аренду предлагают <b>8 из 13</b> работодателей на hh.ru, и это без парков, которые ищут арендаторов вне hh<sup><a href="#s1">1</a></sup>.</div>
+  </div>
+  <div class="box y" style="margin-top:18px">
+    <h3>Почему в Петербурге работы без аренды всё же много</h3>
+    <p>Гипотеза: регулирование сделало водителя и машину из реестра дефицитом, и парку выгоднее держать их под своим контролем.</p>
+    <ul>
+      <li><b>Запрет для мигрантов с патентами</b> (СПб с 28.07.2025, ЛО с 19.08.2024)<sup><a href="#s4">4</a></sup>: парки снижают порог входа для новых водителей.</li>
+      <li><b>Локализация без отсрочки с 01.03.2026</b><sup><a href="#s7">7</a></sup>: новые машины дороже, 70% опрошенных НСТ компаний говорят, что водители неохотно их арендуют<sup><a href="#s5">5</a></sup>.</li>
+      <li><b>Выделенные полосы с 26.10.2026</b> только для машин, закреплённых за перевозчиком в реестре СПб<sup><a href="#s6">6</a></sup>: час такой машины может стоить дороже.</li>
+    </ul>
+    <p class="note" style="color:var(--ink);opacity:.7">Выделенки и локализация касаются и арендных машин, поэтому сами по себе схему не выбирают. Это проверяю на данных, а не принимаю на веру.</p>
+  </div>
+  <details class="more">
+    <summary><span>Регулирование: что действует, где и с какого числа<small>Шесть норм, которые меняют экономику парков в СПб и ЛО</small></span></summary>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Норма</th><th>Что меняет</th></tr></thead>
+        <tbody>
+          <tr><th>580-ФЗ, с 01.09.2023, РФ</th><td>Возить можно только на машине из реестра у перевозчика с разрешением; служба заказа передаёт заказы только им</td></tr>
+          <tr><th>116-ФЗ, с 01.03.2026, РФ</th><td>Новые машины в реестр — только локализованные. СПб и ЛО без отсрочки<sup><a href="#s7">7</a></sup></td></tr>
+          <tr><th>Квота для самозанятых до 2033</th><td>До 25% нелокализованных машин в реестре, только самозанятые на своих машинах</td></tr>
+          <tr><th>60-пг от 28.07.2025, СПб</th><td>Запрет привлекать иностранцев с патентами к работе в такси, продлён на 2026; проект на 2027 опубликован 10.08.2026<sup><a href="#s4">4</a></sup></td></tr>
+          <tr><th>Постановление от 19.08.2024, ЛО</th><td>Аналогичный запрет в Ленобласти<sup><a href="#s4">4</a></sup></td></tr>
+          <tr><th>Выделенные полосы, СПб</th><td>С 26.10.2026 только такси из реестра такси и реестра перевозчиков СПб; старт 01.10.2026 перенесён<sup><a href="#s6">6</a></sup></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">В реестре такси СПб около 67 тыс. машин и почти 9 тыс. перевозчиков<sup><a href="#s3">3</a></sup>; 59% из 100 опрошенных НСТ компаний говорят о нехватке водителей<sup><a href="#s5">5</a></sup>.</p>
+  </details>
+</section>
+
+<div class="extra-h">
+  <h2>На чём держатся ответы и что дальше</h2>
+  <p class="muted" style="margin:0">Не входит в три вопроса задания: расчёт, факты и план для роли. Детали раскрываются по кнопке «+».</p>
+</div>
+
+<!-- Экономика -->
+<section class="card" id="calc">
+  <span class="tag"><em>Расчёт</em> Машина Комфорт+ за 30 дней</span>
+  <h2>При одной смене аренда даёт парку в 2,5 раза больше, при двух сменах схемы сравниваются</h2>
+  <div class="grid g2" style="align-items:start">
+    <div>
+      <h3>Вклад парка до платежа за машину, тыс. ₽</h3>
+      <div class="legend"><span>Аренда 3 300 ₽/сут</span><span class="s">Процент 70/30</span></div>
+      <div class="chart">
+        <div class="crow"><span>Слабая загрузка</span><div class="pair"><div class="r"><i style="--w:72%"></i>42,6</div><div class="s"><i style="--w:5%"></i>3,0</div></div></div>
+        <div class="crow"><span>Базовая</span><div class="pair"><div class="r"><i style="--w:91%"></i>53,7</div><div class="s"><i style="--w:36%"></i>21,4</div></div></div>
+        <div class="crow"><span>Высокая</span><div class="pair"><div class="r"><i style="--w:91%"></i>53,7</div><div class="s"><i style="--w:73%"></i>42,8</div></div></div>
+        <div class="crow"><span>Две смены</span><div class="pair"><div class="r" style="color:var(--muted)">аренда от смен не зависит</div><div class="s"><i style="--w:90%"></i>52,9</div></div></div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="box"><b class="big">~19 суток</b><p class="muted">оплаченной аренды из 30: ниже этого процент выгоднее парку</p></div>
+      <div class="box"><b class="big">~1 200 ₽/ч</b><p class="muted">выручки после комиссии, при которой парку всё равно (одна смена); или доля водителя 55%</p></div>
+      <div class="box"><b class="big">~1 260 ₽/ч</b><p class="muted">выручки, выше которой водителю выгоднее аренда</p></div>
+    </div>
+  </div>
+  <p class="note"><b>Иллюстративный расчёт, не данные конкретного парка.</b> Ставка аренды и доля водителя взяты из вакансий, остальное — допущения. Если считать 80/20 из объявления буквально, парку почти ничего не остаётся: значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p>
+  <details class="more">
+    <summary><span>Полная таблица и формулы<small>Часы, выручка, расходы, доход водителя за час</small></span></summary>
+    <div class="tbl">
+      <table class="n">
+        <thead><tr><th>₽ за 30 дней</th><th>Слабая</th><th>Базовая</th><th>Высокая</th><th>2 смены</th></tr></thead>
+        <tbody>
+          <tr><th>Часы на линии</th><td>220</td><td>286</td><td>336</td><td>572</td></tr>
+          <tr><th>Выручка после комиссии, ₽/ч</th><td>650</td><td>800</td><td>950</td><td>800</td></tr>
+          <tr><th>Стоимость поездок для пассажиров</th><td>178 750</td><td>286 000</td><td>399 000</td><td>572 000</td></tr>
+          <tr><th>Комиссия сервиса (условно 20%)</th><td>35 750</td><td>57 200</td><td>79 800</td><td>114 400</td></tr>
+          <tr><th>Выручка после комиссии</th><td>143 000</td><td>228 800</td><td>319 200</td><td>457 600</td></tr>
+          <tr><th>Топливо (водитель)</th><td>23 364</td><td>30 373</td><td>35 683</td><td>60 746</td></tr>
+          <tr><th>Резерв на ремонт (парк)</th><td>9 900</td><td>12 870</td><td>15 120</td><td>25 740</td></tr>
+          <tr><th>Медосмотры, путевые листы (парк)</th><td>5 500</td><td>6 500</td><td>7 000</td><td>13 000</td></tr>
+          <tr><th>ДТП и штрафы, всего</th><td>5 940</td><td>7 722</td><td>9 072</td><td>15 444</td></tr>
+          <tr><th>Оплаченных суток аренды</th><td>24</td><td>29</td><td>30</td><td>—</td></tr>
+          <tr><th>Вклад парка: аренда</th><td>42 563</td><td>53 658</td><td>53 672</td><td>—</td></tr>
+          <tr><th>Вклад парка: процент 70/30</th><td>2 986</td><td>21 430</td><td>42 822</td><td>52 859</td></tr>
+          <tr><th>Доход водителя за час: аренда</th><td>125</td><td>291</td><td>472</td><td>—</td></tr>
+          <tr><th>Доход водителя за час: процент</th><td>322</td><td>420</td><td>519</td><td>420</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul style="margin-top:14px;font-size:14.5px">
+      <li>Вклад парка на аренде = аренда × (1 − 6% налога) − ремонт − страховка 10 000 ₽ − медосмотры − управление 5 000 ₽ − 25% ущерба.</li>
+      <li>Вклад парка на проценте = 30% выручки × (1 − 6%) − ремонт − страховка − медосмотры − 6 000 ₽ на водителя − весь ущерб.</li>
+      <li>Доход водителя = выручка или его доля × (1 − 6% НПД) − топливо (− аренда и 75% ущерба в аренде).</li>
+      <li>Лизинг (условно 55 000 ₽ в месяц) одинаков в обеих схемах и выбор не меняет, поэтому в сравнение не входит.</li>
+    </ul>
+  </details>
+</section>
+
+<!-- Роль -->
+<section class="card" id="role">
+  <span class="tag"><em>Что я сделаю в роли</em> Гипотеза и пилот</span>
+  <h2>Не продвигать одну схему, а дать паркам расчёт и проверить две смены на практике</h2>
+  <p class="lead">Интерес платформы — больше часов на линии из того же реестра. Пополнять реестр дорого, водителей меньше, поэтому расти можно за счёт часов уже существующих машин, если это выгодно парку и водителю.</p>
+  <div class="grid g3">
+    <div class="box"><div class="num">1</div><h3>С кем начинать</h3><p>Крупные парки Комфорт+ и выше с диспетчером и учётом по машине и дню. Машины, которые простаивают без арендатора больше ~10 суток в месяц.</p></div>
+    <div class="box"><div class="num">2</div><h3>Что проверяем</h3><p>Процент с двумя плановыми сменами против аренды на парах похожих машин. 4–6 недель базы, 8–12 недель сравнения, 15–30 машин в группе.</p></div>
+    <div class="box"><div class="num">3</div><h3>Что измеряем</h3><p><b>Главное:</b> часы на линии на машину в целевые окна. <b>Защитные:</b> вклад машины для парка, доход водителя за час, рейтинг и жалобы, ДТП, удержание на 30-й день.</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="box y"><h3>Масштабировать</h3><p>Часы выросли на согласованный порог в 2 из 3 парков, защитные показатели в норме.</p></div>
+    <div class="box"><h3>Доработать</h3><p>Часы выросли, но не прошёл один защитный показатель: меняем долю или схему смен.</p></div>
+    <div class="box dark"><h3>Остановить</h3><p>Часы не выросли или упали качество либо доход водителя.</p></div>
+  </div>
+  <details class="more">
+    <summary><span>Паспорт пилота<small>Роли, риски, данные и первые шаги</small></span></summary>
+    <div class="grid g2">
+      <div class="box"><h3>Первые шаги</h3><ol><li>Договориться с 2–3 парками о данных по машине и дню.</li><li>Посчитать экономику их машин вместо моих допущений и найти, где аренда простаивает.</li><li>До старта согласовать целевые окна и пороги решения с руководителем и парками.</li></ol></div>
+      <div class="box"><h3>Кто что делает</h3><p><b>Сам:</b> отбор парков, расчёт с собственником, дизайн и ведение пилота, еженедельный разбор.</p><p><b>Согласую с другими командами:</b> стимулы, тарифы и распределение заказов, данные качества, типовые договоры.</p></div>
+      <div class="box"><h3>Какие данные запросить у парка</h3><p>Выручку до и после комиссии по машине и дню, часы и смены, оплаченные сутки и простой, точную формулу доли и бонусов, топливо, ремонты, ДТП и штрафы, страховки, лизинг, затраты на управление, налоговый режим, стаж и уход водителей.</p></div>
+      <div class="box"><h3>Риски</h3><p>Это не A/B-тест: водителей нельзя случайно распределить по схемам, поэтому сравниваю пары машин одной модели и пробега относительно базового периода. Ещё риски: самоотбор водителей, сезон, малая выборка, юридические риски фиксированной оплаты.</p></div>
+    </div>
+  </details>
+</section>
+
+<!-- Факты и источники -->
+<section class="card" id="src">
+  <span class="tag"><em>Источники</em> и ограничения</span>
+  <h2>На чём держатся цифры</h2>
+  <div class="grid g3" style="margin-bottom:18px">
+    <div class="box"><b class="big">58</b><p class="muted">вакансий водителя такси на hh.ru, СПб и ЛО, 12.10.2026; 35 уникальных текстов</p></div>
+    <div class="box"><b class="big">13</b><p class="muted">работодателей, все в СПб; один дал 15 объявлений, поэтому считаю по работодателям</p></div>
+    <div class="box"><b class="big">3</b><p class="muted">звонка в парки 13.10.2026 — примеры практики, а не статистика</p></div>
+  </div>
+  <details class="more">
+    <summary><span>Что сказали в трёх парках<small>YouPiter, GDel, TAXINCOME</small></span></summary>
+    <div class="grid g3">
+      <div class="box"><h3>YouPiter</h3><p>Водителю 70–80%, смена от 10 часов, самозанятость или ИП. ДТП, штрафы, ремонт и простой на парке.</p></div>
+      <div class="box"><h3>GDel</h3><p>60/40 в пользу водителя, четыре тарифа от Эконома до Бизнеса. ДТП и штрафы на парке.</p></div>
+      <div class="box"><h3>TAXINCOME</h3><p>Обе схемы: на проценте 65/35 и около 13 часов на линии, аренда от 7 дней, поэтому для подработки она неудобна.</p></div>
+    </div>
+  </details>
+  <details class="more">
+    <summary><span>Список источников<small>Семь источников со ссылками</small></span></summary>
+    <ol class="src">
+      <li id="s1">Собственный срез вакансий водителя такси на hh.ru, СПб и ЛО: 12.10.2026, тексты перечитаны 13.10.2026; 58 вакансий, 35 уникальных текстов, 13 работодателей. Звонки в YouPiter, GDel и TAXINCOME 13.10.2026: <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit">Google Таблица</a>. Срез показывает канал найма, а не долю схем; три разговора — примеры практики.</li>
+      <li id="s2">Вакансии со ставками: <a href="https://spb.hh.ru/vacancy/138306300">процент и аренда 3 300 ₽, Комфорт+</a>, <a href="https://spb.hh.ru/vacancy/138179737">аренда от 4 500 ₽, бизнес</a>, <a href="https://spb.hh.ru/vacancy/138086094">60/40 и 80/20 сверх</a>, <a href="https://spb.hh.ru/vacancy/137423900">оклад 210 000 ₽</a>, <a href="https://spb.hh.ru/vacancy/138212308">гарантия 5 500–7 000 ₽ за смену</a>.</li>
+      <li id="s3">Реестр такси СПб, около 67 тыс. машин и почти 9 тыс. перевозчиков (это разрешения, не водители): <a href="https://www.dp.ru/a/2026/08/06/v-peterburge-pochti-vtroe-viroslo">«Деловой Петербург», 06.08.2026</a>.</li>
+      <li id="s4">Запрет для мигрантов с патентами: <a href="https://www.vedomosti.ru/strana/northwestern/news/2025/12/10/1162106-beglov-prodlil-zapret">«Ведомости», 10.12.2025</a>; проект на 2027: <a href="https://spb.vedomosti.ru/society/articles/2026/08/10/1220119-smolnii-planiruet-prodlit-zapret-na-rabotu-migrantov-v-taksi-i-dostavke-na-2027-god">«Ведомости. Северо-Запад», 10.08.2026</a>; ЛО: <a href="https://www.dp.ru/a/2024/08/22/vlasti-lenoblasti-zapretili">«Деловой Петербург», 22.08.2024</a>.</li>
+      <li id="s5">Опрос Национального совета такси, май 2026, 100 компаний РФ: 59% говорят о нехватке водителей, 70% — что водители неохотно арендуют машины из перечня. <a href="https://www.autonews.ru/news/6a146c709a7947f5e26be169">Autonews, 26.05.2026</a>. Мнение опрошенных, не доля всех парков.</li>
+      <li id="s6">Выделенные полосы: <a href="https://spb.vedomosti.ru/society/news/2026/09/02/1225757-peterburgskim-taksi-s-1-oktyabrya-ogranichat-dostup-k-videlennim-polosam">«Ведомости. Северо-Запад», 02.09.2026</a>; перенос на 26.10.2026: <a href="https://spb.aif.ru/society/v-peterburge-prodlili-perehodnyy-period-dlya-taksi-na-vydelennyh-polosah">АиФ Петербург</a>.</li>
+      <li id="s7">Федеральный закон от 23.05.2025 № 116-ФЗ о локализации такси: <a href="https://ppt.ru/obzory/vstupaet-v-silu/federalnyy-zakon-23-05-2025-116-fz">обзор ppt.ru</a>.</li>
+    </ol>
+  </details>
+  <p class="note">Чего нет в открытых данных: доли схем по рынку, числа водителей такси в СПб, реестра ЛО, реальной экономики парков. Поэтому расчёт иллюстративный, а следующий шаг — данные партнёров.</p>
+</section>
+
+<p class="foot">Евгений Глушенков · тестовое задание · Яндекс Такси, Санкт-Петербург</p>
+</main>
+</div>
+<script>
+(function(){
+  function openTo(h){
+    var el=h&&h.length>1&&document.getElementById(decodeURIComponent(h.slice(1)));
+    if(!el)return;
+    var d=el.closest('details');if(d)d.open=true;
+  }
+  document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)openTo(a.getAttribute('href'));});
+  window.addEventListener('beforeprint',function(){[].forEach.call(document.querySelectorAll('details.more'),function(d){d.open=true;});});
+  if(location.hash)openTo(location.hash);
+  // подсветка текущего раздела в оглавлении
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  if('IntersectionObserver' in window&&links.length){
+    var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(e.isIntersecting){links.forEach(function(a){a.classList.remove('on');});var a=map[e.target.id];if(a)a.classList.add('on');}
+    });},{rootMargin:'-30% 0px -60% 0px'});
+    Object.keys(map).forEach(function(id){var s=document.getElementById(id);if(s)io.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
