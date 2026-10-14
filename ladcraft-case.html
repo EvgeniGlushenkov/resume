@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Глушенков для Ladcraft: кейс-знакомство</title>
+<meta name="description" content="Партнёрский канал Ladcraft: как я понимаю продукт и программу, расчёт воронки и план первых 90 дней. Менеджер по работе с партнёрами (AI).">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+<style>
+/* Токены взяты с ladcraft.ru: цвета, радиусы, пара «заголовочный гротеск + Inter».
+   Soyuz Grotesk (шрифт сайта) недоступен как веб-шрифт, поэтому запасной — Manrope. */
+:root{
+  --font-heading:"Soyuz Grotesk","Manrope",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#FFFFFF; --bg-subtle:#F9F9F8; --text:#282828; --muted:#6B6B6B; --border:#E8E8E5;
+  --coral:#FB8760; --coral-ink:#B8461F; --coral-soft:#FFF0EA;
+  --purple:#9274DC; --purple-ink:#5E43B5; --purple-soft:#F1EDFB;
+  --btn:#2B2B2B;
+  --r-sm:8px; --r-md:12px; --r-lg:20px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 var(--font-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--purple-ink)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:6px}
+.wrap{max-width:900px;margin:0 auto}
+
+/* верхняя панель */
+.bar{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));flex-wrap:wrap}
+.who{font:700 15px var(--font-heading)}
+.who span{font:400 14px var(--font-body);color:var(--muted)}
+.bar nav{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:500 14px/1 var(--font-body);padding:11px 16px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--btn);color:#fff;border-color:var(--btn)}
+.btn:hover{border-color:var(--purple)}
+
+/* шапка: градиент как на главной ladcraft.ru */
+.hero{position:relative;overflow:hidden;color:#fff;border-radius:var(--r-lg);margin:20px 0 0;
+  padding:64px clamp(20px,5vw,56px) 48px;
+  background:linear-gradient(160deg,#5F49B8 0%,#8068CF 38%,#9274DC 62%,#C98FBF 100%)}
+.hero>*{position:relative;z-index:1}
+.badge{display:inline-block;font:500 13px/1 var(--font-body);padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35)}
+h1{font:800 clamp(30px,5.2vw,48px)/1.12 var(--font-heading);letter-spacing:-.015em;margin:20px 0 18px;text-wrap:balance;max-width:20ch}
+h1 em{font-style:normal;color:#FFD2BF}
+.lead{font-size:19px;max-width:60ch;margin:0;color:rgba(255,255,255,.95)}
+.chips{margin-top:26px;display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px/1 var(--font-body);padding:9px 13px;border-radius:999px;background:#fff;color:var(--text)}
+.float{position:absolute;z-index:0;width:56px;height:56px;border-radius:16px;background:#fff;box-shadow:0 10px 30px rgba(40,20,90,.25);display:grid;place-items:center}
+.float svg{width:26px;height:26px}
+.f1{right:6%;top:14%;transform:rotate(8deg)}
+.f2{right:16%;bottom:12%;transform:rotate(-8deg)}
+.f3{right:3%;bottom:34%;transform:rotate(-4deg)}
+@media (max-width:760px){.float{display:none}}
+
+/* содержание */
+.toc{padding:24px 0 8px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px 24px;counter-reset:t}
+.toc li{counter-increment:t;font-size:15px}
+.toc li::before{content:counter(t,decimal-leading-zero);font:600 12px var(--font-body);color:var(--coral-ink);margin-right:10px}
+.toc a{color:var(--text);text-decoration:none}
+.toc a:hover{color:var(--purple-ink)}
+
+/* разделы */
+section{padding-block:48px;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.num{font:700 13px var(--font-body);color:#fff;background:var(--coral-ink);border-radius:999px;padding:4px 9px;flex:none}
+h2{font:700 clamp(22px,3.4vw,32px)/1.2 var(--font-heading);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h3{font:700 18px var(--font-heading);margin:26px 0 8px}
+p{margin:0 0 14px;max-width:68ch}
+.note{font-size:14px;color:var(--muted)}
+.key{border-radius:var(--r-md);background:var(--purple-soft);padding:16px 20px;margin:20px 0;max-width:72ch}
+.key b{display:block;font:600 12px var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--purple-ink);margin-bottom:4px}
+.key.warm{background:var(--coral-soft)}
+.key.warm b{color:var(--coral-ink)}
+
+/* цифры */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.stat{background:var(--bg-subtle);border:1px solid var(--border);border-radius:var(--r-md);padding:18px;min-width:0}
+.stat .v{font:800 28px/1.1 var(--font-heading);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:15px;color:var(--muted);font-weight:600}
+.stat .k{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.4}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* таблицы */
+.tbl{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:var(--r-md)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:600px}
+th,td{text-align:left;vertical-align:top;padding:13px 16px;border-bottom:1px solid var(--border)}
+th{font:600 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg-subtle)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;width:32%}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* воронка */
+.funnel{display:grid;gap:6px;margin:20px 0}
+.fstep{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-sm);background:#fff;border:1px solid var(--border);position:relative;overflow:hidden}
+.fstep::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--purple-soft)}
+.fstep>*{position:relative}
+.fstep .r{font:700 16px var(--font-heading);font-variant-numeric:tabular-nums}
+.conv{font-size:13px;color:var(--muted);padding-left:16px}
+
+/* три фазы */
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+.phase{border:1px solid var(--border);border-radius:var(--r-md);padding:18px;min-width:0;background:#fff}
+.phase .d{font:600 12px var(--font-body);color:var(--coral-ink);letter-spacing:.08em}
+.phase h3{margin:6px 0 8px}
+.phase ul{margin:0;padding-left:18px;font-size:15px}
+.phase li+li{margin-top:6px}
+.phase .out{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px}
+@media (max-width:760px){.phases{grid-template-columns:1fr}}
+
+ul.clean,ol.q{padding-left:22px;margin:0 0 14px}
+ul.clean li+li,ol.q li+li{margin-top:8px}
+ol.q li{padding-left:6px}
+
+details{margin:14px 0;border:1px solid var(--border);border-radius:var(--r-md);background:#fff}
+summary{cursor:pointer;padding:13px 16px;font-weight:600;font-size:15px}
+details .in{padding:0 16px 14px;font-size:15px}
+details .tbl{margin:8px 0 0}
+
+footer{padding-block:28px 56px;color:var(--muted);font-size:14px;border-top:1px solid var(--border)}
+
+/* режим презентации: каждый раздел занимает экран */
+.deckbar{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:6;display:none;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px;box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.deckbar .c{font:600 13px var(--font-body);padding:0 8px;font-variant-numeric:tabular-nums}
+.deckbar button{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--bg-subtle);color:var(--text);cursor:pointer;font-size:16px}
+body.deck .deckbar{display:flex}
+body.deck section,body.deck .hero{min-height:calc(100dvh - 80px);display:flex;flex-direction:column;justify-content:center}
+body.deck .toc{display:none}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media print{.bar,.deckbar{display:none}.hero{color:#000;background:none;border:1px solid #ccc}h1 em{color:#B8461F}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="who">Евгений Глушенков <span>· кейс для Ladcraft</span></div>
+    <nav>
+      <button class="btn primary" id="deckToggle" type="button">Режим презентации</button>
+      <a class="btn" href="https://evgeniglushenkov.github.io/resume/" target="_blank" rel="noopener">Резюме</a>
+    </nav>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <header class="hero" id="start" data-slide>
+    <span class="float f1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#9274DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v10H4z"/><path d="m4 8 8 6 8-6"/></svg></span>
+    <span class="float f2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#FB8760" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4M16 8l4 4-4 4"/></svg></span>
+    <span class="float f3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#9274DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M15 15c3 0 6 1.5 6 4"/></svg></span>
+    <span class="badge">Ladcraft · Менеджер по работе с партнёрами (AI)</span>
+    <h1>Партнёрский канал Ladcraft начну с <em>первой сделки</em> каждого партнёра, а не с договора</h1>
+    <p class="lead">Пять лет вёл B2B-клиентов в Авито Авто: развернул продукт с 1 до 43 дилерских центров и обучил больше 3 500 человек. Ниже: как я понимаю Ladcraft, что из моего опыта работает в этой роли и что сделаю за первые 90 дней.</p>
+    <div class="chips">
+      <span class="chip">Авито Авто, 5+ лет</span>
+      <span class="chip">Внедрение B2B SaaS</span>
+      <span class="chip">Обучение и онбординг</span>
+      <span class="chip">Санкт-Петербург · удалённо или гибрид</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Содержание">
+    <ol>
+      <li><a href="#verdict">Вывод</a></li>
+      <li><a href="#fit">Роль и мой опыт</a></li>
+      <li><a href="#product">Что продаёт партнёр</a></li>
+      <li><a href="#program">Партнёрская программа</a></li>
+      <li><a href="#math">Расчёт воронки</a></li>
+      <li><a href="#pilot">Первые 90 дней</a></li>
+      <li><a href="#ai">ИИ в моей работе</a></li>
+      <li><a href="#limits">Источники и ограничения</a></li>
+      <li><a href="#questions">Вопросы к вам</a></li>
+    </ol>
+  </nav>
+
+  <section id="verdict" data-slide>
+    <div class="sec-head"><span class="num">01</span><h2>Вывод</h2></div>
+    <p>Программа у Ladcraft уже есть: пять ролей, комиссии от 20 до 50%, защита сделок. Моя гипотеза: узкое место канала не набор партнёров, а активация. Партнёр подписал договор и не принёс ни одной сделки.</p>
+    <p>Эту проблему я знаю по дилерским сетям. Предлагаю три шага:</p>
+    <ol class="q">
+      <li>Брать партнёров, у которых уже есть клиенты на 1С, Bitrix24 или amoCRM.</li>
+      <li>Первую сделку каждого партнёра вести вместе с ним: демо, пилот на 4–6 недель, замер «до» и «после».</li>
+      <li>На 90-й день решить по данным: масштабировать набор, поменять обучение или пересмотреть сегмент.</li>
+    </ol>
+    <div class="key"><b>Что проверю в первые 30 дней</b>Гипотезу об активации. Если у вас уже есть данные по подписанным партнёрам и первым сделкам, проверю на них. Если нет, начну их собирать.</div>
+  </section>
+
+  <section id="fit" data-slide>
+    <div class="sec-head"><span class="num">02</span><h2>Роль и мой опыт</h2></div>
+    <p>Работаю с дилерскими сетями на стороне вендора. Для роли это близко, но не то же самое. Что закрываю и чего не хватает, ниже.</p>
+    <div class="stats">
+      <div class="stat"><div class="v">250+</div><div class="k">дилерских центров и партнёров в портфеле</div></div>
+      <div class="stat"><div class="v">1 → 43</div><div class="k">центра в rollout дилерской группы</div></div>
+      <div class="stat"><div class="v">3 500+</div><div class="k">пользователей и сотрудников обучено</div></div>
+      <div class="stat"><div class="v">12 → 4<small>%</small></div><div class="k">годовой отток портфеля</div></div>
+      <div class="stat"><div class="v">38 → 74<small>%</small></div><div class="k">использование ключевых функций</div></div>
+      <div class="stat"><div class="v">92<small>%</small></div><div class="k">завершают онбординг</div></div>
+      <div class="stat"><div class="v">4,8<small> / 5</small></div><div class="k">оценка обучения</div></div>
+      <div class="stat"><div class="v">98</div><div class="k">инициатив передано в продукт</div></div>
+    </div>
+    <div class="key"><b>Что это значит для канала</b>Я довожу подключённых до регулярного использования. А 98 инициатив в продукт показывают, что я умею возвращать обратную связь партнёров разработчикам.</div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Из вакансии</th><th>Мой опыт</th></tr></thead>
+        <tbody>
+          <tr><td>Искать, привлекать и подключать партнёров</td><td>Развернул продукт с 1 до 43 центров группы, онбординг завершают 92%.</td></tr>
+          <tr><td>Сопровождать партнёров на сделках</td><td>Вёл ключевых клиентов до крупнейших контрактов компании, делал upsell и cross-sell. Готов к командировкам.</td></tr>
+          <tr><td>Опыт переговоров с корпоративными клиентами</td><td>Переговоры с собственниками и C-level, формирование и защита бюджетов.</td></tr>
+          <tr><td>Обучение и сертификация партнёров</td><td>Обучил больше 3 500 человек, оценка 4,8 из 5.</td></tr>
+          <tr><td>Долгосрочные отношения</td><td>Годовой отток портфеля снизил с 12% до 4%.</td></tr>
+          <tr><td>Задачи с помощью ИИ</td><td>Claude, Perplexity, GigaChat, Алиса AI, Telegram-боты. Собрал сайт, CRM и документооборот без ИТ-команды.</td></tr>
+          <tr><td>Интеграции продукта</td><td>Bitrix24 и 1С есть в моём списке рабочих инструментов.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details>
+      <summary>Чего у меня нет</summary>
+      <div class="in">Я не работал в партнёрском отделе ИТ-вендора. С партнёрской сетью работал в Авито Авто: дилеры были там и клиентами, и каналом. Механика близкая: отбор, онбординг, обучение, совместные продажи, удержание. Но условия партнёрских договоров, MDF и регистрацию сделок придётся освоить на месте.</div>
+    </details>
+  </section>
+
+  <section id="product" data-slide>
+    <div class="sec-head"><span class="num">03</span><h2>Что продаёт партнёр</h2></div>
+    <p>Ladcraft (до марта 2026 года GPTZATOR) делает платформу автономных ИИ-агентов. Агент получает задачу, сам строит план и выполняет шаги в 1С, Bitrix24, amoCRM, Яндекс Трекере, Gmail и Telegram. Продукт принадлежит ООО «Лад-Эйр», группа Lad.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Свойство продукта</th><th>Что это значит для клиента партнёра</th></tr></thead>
+        <tbody>
+          <tr><td>Агент выполняет действия, а не только отвечает</td><td>Задача доходит до результата в рабочей системе, а не заканчивается советом в чате.</td></tr>
+          <tr><td>Глубина 1С: Бухгалтерия, ЗУП, УТ, ERP, УНФ, Документооборот</td><td>Партнёр с экспертизой по 1С продаёт то, что уже понимает.</td></tr>
+          <tr><td>On-premise или private cloud на российских серверах, выбор LLM</td><td>Данные остаются в контуре заказчика. Это снимает частое возражение службы ИБ.</td></tr>
+          <tr><td>Human Approval Gate, журнал действий, права по RBAC</td><td>Человек подтверждает решения выше заданного порога, и каждое действие агента можно проверить.</td></tr>
+          <tr><td>Пилот 4–6 недель: процесс, ROI до, прототип, сравнение после, решение</td><td>Клиент решает по замеру, а не по обещанию. Партнёру проще согласовать первый шаг.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Источник: ladcraft.ru, 14 октября 2026. Возможности «в планах» не учитываю.</p>
+  </section>
+
+  <section id="program" data-slide>
+    <div class="sec-head"><span class="num">04</span><h2>Партнёрская программа и с кого начать</h2></div>
+    <p>На ladcraft.ru/partnery описаны пять ролей. Комиссия растёт вместе с долей работы партнёра в сделке.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Роль</th><th>Что делает</th><th>Доход по сайту</th></tr></thead>
+        <tbody>
+          <tr><td>Агент</td><td>Передаёт квалифицированные лиды</td><td>SaaS 20%</td></tr>
+          <tr><td>Аккаунт</td><td>Ведёт сделку от начала до конца</td><td>SaaS 40%, On-Prem 40%, рекомендуется 10% с проектов</td></tr>
+          <tr><td>Интегратор</td><td>Продаёт, внедряет, поддерживает</td><td>SaaS 50%, On-Prem 50%, проекты и работы 100%</td></tr>
+          <tr><td>Разработчик</td><td>Создаёт отраслевых агентов для магазина Ladcraft</td><td>до 75% с продаж своих агентов</td></tr>
+          <tr><td>Дистрибьютор</td><td>Строит собственную партнёрскую сеть</td><td>вознаграждение с оборота сети</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>С кого начну</h3>
+    <p>С ролей «Интегратор» и «Аккаунт»: франчайзи 1С и интеграторы Bitrix24 и amoCRM. У них уже есть клиенты с нужными системами, они умеют внедрять и получают самую высокую долю. Роль «Разработчик» оставлю на вторую волну: ей нужно время, чтобы собрать первых отраслевых агентов.</p>
+    <p class="note">Условия взяты с сайта. В договоре они могут отличаться. Для роли «Агент» условия по on-premise на странице не смотрел.</p>
+  </section>
+
+  <section id="math" data-slide>
+    <div class="sec-head"><span class="num">05</span><h2>Расчёт воронки</h2></div>
+    <p>Считаю от плана к числу встреч. Это иллюстрация логики: план, чек и конверсии условные. Настоящие числа хочу взять у вас.</p>
+    <div class="funnel" role="list">
+      <div class="fstep" role="listitem" style="--w:10%"><span>План продаж через канал за год</span><span class="r">12 млн ₽</span></div>
+      <div class="conv">÷ средний чек 600 тыс. ₽</div>
+      <div class="fstep" role="listitem" style="--w:20%"><span>Сделок за год</span><span class="r">20</span></div>
+      <div class="conv">÷ 2 сделки на активного партнёра</div>
+      <div class="fstep" role="listitem" style="--w:35%"><span>Активных партнёров</span><span class="r">10</span></div>
+      <div class="conv">активируется каждый третий</div>
+      <div class="fstep" role="listitem" style="--w:60%"><span>Подписанных партнёров</span><span class="r">30</span></div>
+      <div class="conv">из встречи в договор 25%</div>
+      <div class="fstep" role="listitem" style="--w:100%"><span>Встреч с кандидатами, около 10 в месяц</span><span class="r">120</span></div>
+    </div>
+    <div class="key warm"><b>Вывод из расчёта</b>Из 30 подписанных партнёров продаёт только каждый третий. Поэтому два рычага важнее числа встреч: качество отбора и скорость первой сделки.</div>
+    <details>
+      <summary>Допущения и формулы</summary>
+      <div class="in">
+        <div class="tbl">
+          <table>
+            <thead><tr><th>Допущение</th><th>Значение</th><th>Откуда</th></tr></thead>
+            <tbody>
+              <tr><td>План на год</td><td class="n">12 млн ₽</td><td>условно, нужен ваш план</td></tr>
+              <tr><td>Средний чек</td><td class="n">600 тыс. ₽</td><td>условно, нужен ваш чек</td></tr>
+              <tr><td>Сделок на активного партнёра</td><td class="n">2 в год</td><td>условно</td></tr>
+              <tr><td>Доля активных среди подписанных</td><td class="n">1 из 3</td><td>условно</td></tr>
+              <tr><td>Из встречи в договор</td><td class="n">25%</td><td>условно</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Формулы: 12 млн ÷ 0,6 млн = 20 сделок. 20 ÷ 2 = 10 активных. 10 × 3 = 30 подписанных. 30 ÷ 0,25 = 120 встреч. 120 ÷ 12 = 10 встреч в месяц. За 90 дней это около 30 встреч и 7–8 договоров.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="pilot" data-slide>
+    <div class="sec-head"><span class="num">06</span><h2>Первые 90 дней</h2></div>
+    <p>Цель квартала: проверить гипотезу об активации на пяти–семи партнёрах и получить первые закрытые сделки.</p>
+    <div class="phases">
+      <div class="phase">
+        <div class="d">ДНИ 1–30</div>
+        <h3>Разобраться</h3>
+        <ul>
+          <li>Продукт до уровня демо</li>
+          <li>Данные по партнёрам и сделкам</li>
+          <li>Профиль идеального партнёра</li>
+        </ul>
+        <div class="out">Итог: список из 50 кандидатов, первые из сети группы Lad</div>
+      </div>
+      <div class="phase">
+        <div class="d">ДНИ 31–60</div>
+        <h3>Запустить</h3>
+        <ul>
+          <li>Договоры с 5–7 партнёрами</li>
+          <li>Обучение и демо-стенд</li>
+          <li>Первый партнёрский вебинар</li>
+        </ul>
+        <div class="out">Итог: у каждого партнёра выбран клиент для пилота</div>
+      </div>
+      <div class="phase">
+        <div class="d">ДНИ 61–90</div>
+        <h3>Получить результат</h3>
+        <ul>
+          <li>3–5 пилотов с замером «до» и «после»</li>
+          <li>Первые закрытые сделки</li>
+          <li>Уровни партнёров и регистрация сделок</li>
+        </ul>
+        <div class="out">Итог: правила программы на основе реальных пилотов</div>
+      </div>
+    </div>
+    <h3>Как приму решение на 90-й день</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Что видим</th><th>Решение</th></tr></thead>
+        <tbody>
+          <tr><td>3 и больше партнёров из 5–7 ведут клиента в пилот</td><td>Масштабировать набор в тех же сегментах</td></tr>
+          <tr><td>1–2 партнёра дошли до пилота</td><td>Оставить сегмент, изменить обучение и сопровождение первой сделки</td></tr>
+          <tr><td>Ни один не дошёл до пилота</td><td>Пересмотреть сегмент партнёров и роль в программе</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Метрики: активные партнёры (хотя бы одна сделка за квартал), сумма партнёрской воронки, выручка через канал, дни от договора до первой сделки. Пороги предлагаю как стартовые и согласую с вами.</p>
+  </section>
+
+  <section id="ai" data-slide>
+    <div class="sec-head"><span class="num">07</span><h2>ИИ в моей работе</h2></div>
+    <p>Партнёру проще поверить в агентов, когда менеджер сам ими пользуется и за пять минут показывает живой пример.</p>
+    <ul class="clean">
+      <li>Каждый день работаю с Claude, Perplexity, GigaChat и Алисой AI.</li>
+      <li>Собрал без ИТ-команды сайт, CRM и документооборот.</li>
+      <li>Делаю Telegram-ботов и автоматизирую рутину.</li>
+      <li>Эту страницу собрал с помощью Claude. Факты сверил с ladcraft.ru, вакансией и своим резюме.</li>
+    </ul>
+  </section>
+
+  <section id="limits" data-slide>
+    <div class="sec-head"><span class="num">08</span><h2>Источники и ограничения</h2></div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Что</th><th>Статус</th></tr></thead>
+        <tbody>
+          <tr><td>Продукт, безопасность, пилот</td><td>Проверено по ladcraft.ru, 14 октября 2026.</td></tr>
+          <tr><td>Роли и комиссии партнёров</td><td>Проверено по ladcraft.ru/partnery. Условия договора могут отличаться.</td></tr>
+          <tr><td>Требования роли</td><td>Взято из вакансии на hh.ru.</td></tr>
+          <tr><td>Цифры обо мне</td><td>Взяты из моего резюме.</td></tr>
+          <tr><td>Рыночные цифры на странице партнёров (Gartner, MegaResearch и другие)</td><td>Не проверял и в расчётах не использую.</td></tr>
+          <tr><td>Расчёт воронки</td><td>Иллюстрация. План, средний чек и конверсии условные.</td></tr>
+          <tr><td>План продаж, число партнёров и сделок, разделение прямых и партнёрских продаж</td><td>Не знаю. Спрошу на встрече.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="questions" data-slide>
+    <div class="sec-head"><span class="num">09</span><h2>Вопросы к вам</h2></div>
+    <ol class="q">
+      <li>Какой результат через год будет для вас успехом этой роли?</li>
+      <li>Сколько партнёров и сделок через них уже есть, или канал строится с нуля?</li>
+      <li>Кто типичный клиент Ladcraft сейчас и какой у него средний чек?</li>
+      <li>Можно ли опираться на партнёрскую сеть группы Lad по 1С?</li>
+      <li>Как разделены прямые и партнёрские продажи?</li>
+      <li>Какие следующие шаги и сроки по решению?</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Евгений Глушенков · кейс для Ladcraft · 14 октября 2026. Источники: <a href="https://ladcraft.ru/" target="_blank" rel="noopener">ladcraft.ru</a>, <a href="https://ladcraft.ru/partnery/" target="_blank" rel="noopener">партнёрская программа</a>, <a href="https://hh.ru/vacancy/137655253" target="_blank" rel="noopener">вакансия на hh.ru</a>, <a href="https://evgeniglushenkov.github.io/resume/" target="_blank" rel="noopener">резюме</a>.</div>
+</footer>
+
+<div class="deckbar" aria-label="Навигация по слайдам">
+  <button type="button" id="prev" aria-label="Предыдущий слайд">↑</button>
+  <span class="c" id="count">1 / 10</span>
+  <button type="button" id="next" aria-label="Следующий слайд">↓</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('[data-slide]'));
+  var toggle=document.getElementById('deckToggle');
+  var count=document.getElementById('count');
+  function current(){
+    var y=window.scrollY+window.innerHeight*0.35,i=0;
+    slides.forEach(function(s,k){if(s.getBoundingClientRect().top+window.scrollY<=y)i=k;});
+    return i;
+  }
+  function label(i){count.textContent=(i+1)+' / '+slides.length;}
+  function go(i){i=Math.max(0,Math.min(slides.length-1,i));slides[i].scrollIntoView({block:'start'});label(i);}
+  toggle.addEventListener('click',function(){
+    var on=document.body.classList.toggle('deck');
+    toggle.textContent=on?'Обычный вид':'Режим презентации';
+    if(on)go(0);
+  });
+  document.getElementById('prev').addEventListener('click',function(){go(current()-1);});
+  document.getElementById('next').addEventListener('click',function(){go(current()+1);});
+  document.addEventListener('keydown',function(e){
+    if(!document.body.classList.contains('deck'))return;
+    if(['ArrowDown','ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();go(current()+1);}
+    if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();go(current()-1);}
+    if(e.key==='Escape'){toggle.click();}
+  });
+  window.addEventListener('scroll',function(){if(document.body.classList.contains('deck'))label(current());},{passive:true});
+  label(0);
+})();
+</script>
+</body>
+</html>
