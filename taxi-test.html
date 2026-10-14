@@ -97,6 +97,11 @@ table.pmt td b{display:inline-block;width:14px}
 .why .ev{font-size:14.5px;color:var(--muted);border-left:3px solid var(--y);padding-left:10px}
 @media (max-width:640px){.why li{padding:16px 18px 16px 58px}.why li::before{left:14px;top:16px;width:30px;height:30px}}
 #gl-tx-page{position:relative;z-index:1}
+.extra{background:var(--card);border-radius:28px;padding:30px 36px 20px;margin-top:20px;box-shadow:0 8px 30px rgba(33,32,31,.08)}
+.extra .more{margin:0 0 6px}
+.extra .fold{margin:0;padding:18px 0;border-radius:0;box-shadow:none;background:transparent;border-top:1px solid var(--line)}
+.extra .fold:first-of-type{margin-top:14px}
+@media (max-width:640px){.extra{padding:24px 20px 12px;border-radius:24px}.extra .fold{padding:16px 0}}
 </style>
 </head>
 <body>
@@ -228,6 +233,7 @@ table.pmt td b{display:inline-block;width:14px}
   <div class="note"><p><b>Иллюстративный расчёт, не данные конкретного парка и не прогноз рынка.</b> Полная модель в приложении<sup><a href="#a1">А1</a></sup>. Если считать 80/20 из объявления буквально, парку до платежа за машину почти ничего не остаётся. Значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p></div>
 </section>
 
+<div class="extra">
 <div class="more"><h2>Дополнительно</h2><p>Не входит в три вопроса задания. Нажмите на заголовок, чтобы раскрыть.</p></div>
 
 <section class="slide fold"><details>
@@ -409,6 +415,7 @@ table.pmt td b{display:inline-block;width:14px}
   </ol>
   <div class="note"><p>Чего нет в открытых данных: доли схем по рынку, числа водителей такси в СПб, реестра ЛО, реальной экономики парков. Поэтому расчёт иллюстративный, а следующий шаг — данные партнёров.</p></div>
 </details></section>
+</div>
 
 <p class="foot">Евгений Глушенков · тестовое задание · Яндекс Такси, Санкт-Петербург</p>
 </main>
