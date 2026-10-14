@@ -30,6 +30,8 @@ sup a{text-decoration:none;color:var(--muted);font-weight:700}
 .top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border-radius:22px;padding:10px 12px 10px 20px}
 .top b{font-size:15px}
 .btn{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:12px;background:var(--ink);color:#fff;text-decoration:none;font:700 14px/1 var(--f)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .toc{position:sticky;top:18px;font-size:14px}
 .toc b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 12px}
 .toc a{display:flex;gap:10px;align-items:center;text-decoration:none;padding:8px 12px;border-radius:12px;color:var(--muted);font-weight:700}
@@ -126,13 +128,31 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
 @media (max-width:640px){
   .g2,.g3,.g4{grid-template-columns:1fr}
   .card,.hero{padding:24px 20px;border-radius:22px}
+  .top{flex-wrap:wrap}
   .qa,.qa-head{grid-template-columns:1fr}.qa-head span+span{display:none}
   .qa>div{padding:14px 0 4px}.qa>div+div{padding:0 0 14px;border-left:0}
   .bar{grid-template-columns:1fr 36px}.bar span{grid-column:1/-1}
   .crow{grid-template-columns:1fr}
   .big{font-size:25px}
 }
-@media print{body{background:#fff}.toc,.top .btn{display:none}.wrap{grid-template-columns:1fr}.card{break-inside:avoid;padding:20px 0}}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;font-size:13px}
+  .toc,.top .btns,.extra-h p,details.more>summary::after{display:none}
+  .wrap{display:block;padding:0;max-width:none}
+  .top{padding:0 0 8px;border-radius:0}
+  .card{padding:14px 0 6px;margin:0;border-radius:0;border-top:1px solid var(--line)}
+  .hero{border-top:0}
+  h1{font-size:30px}h2{font-size:20px;margin-bottom:10px;break-after:avoid}h3{font-size:14.5px}
+  .lead{font-size:14px}.note,.qa .ev{font-size:12px}
+  table{min-width:0;font-size:12px}th,td{padding:6px 8px}
+  .box,.qa,tr,.bar,.crow,.chart,.legend{break-inside:avoid}
+  details.more>summary,h3{break-after:avoid}
+  .box{padding:12px 14px}
+  details.more>summary{padding-top:10px}
+  .big{font-size:22px}
+  .extra-h{margin:18px 0 6px}
+}
 </style>
 </head>
 <body>
@@ -140,7 +160,7 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
 
 <div class="top">
   <b>Евгений Глушенков · тестовое задание</b>
-  <a class="btn" href="resume.html?v=pm&amp;taxi=1">Резюме</a>
+  <span class="btns"><a class="btn ghost" href="test-yandex-taxi.pdf" download="Глушенков_тестовое_Яндекс_Такси.pdf">Скачать PDF</a><a class="btn" href="resume.html?v=pm&amp;taxi=1">Резюме</a></span>
 </div>
 
 <nav class="toc" aria-label="Содержание">
