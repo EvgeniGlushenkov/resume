@@ -424,7 +424,7 @@
     });
     var task = SR.querySelector('.gl-tx-task'), hl = SR.querySelector('.hl');
     if (v && hl && !task) {
-      task = document.createElement('a'); task.href = 'taxi-test.html'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
+      task = document.createElement('a'); task.href = 'test-yandex-taxi.html'; task.className = 'gl-tx-task'; task.textContent = 'Тестовое задание';
       hl.insertAdjacentElement('afterend', task);
     }
     if (!v && task) { var bx = SR.querySelector('.gl-tx-box'); if (bx) bx.remove(); stopTaskPoll(); task.remove(); }

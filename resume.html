@@ -208,10 +208,10 @@ function render(){
   var main=sec('Обо мне','',ul(sh()?V.aboutShort:V.about,'paras'))
    +sec('Ключевой опыт','',S.jobs.map(job).join(''))
    +sec('Ранний опыт',S.early.period,early());
-  var side=sec('Образование','','<ul class="tl">'+S.edu.map(function(e){return '<li><span class="sch">'+t(e.school)+'</span><span class="yr">'+t(e.year)+'</span>'+(sh()?'':'<span class="tx">'+t(e.text)+'</span>')+'</li>'}).join('')+'</ul>')
-   +sec('Развитие','','<ul class="dl">'+S.dev.map(function(d){return '<li><span class="ttl">'+t(d.title)+'</span>'+(sh()?'':'<span class="tx">'+t(d.text)+'</span>')+'</li>'}).join('')+'</ul>')
+  var edu=sec('Образование','','<ul class="tl">'+S.edu.map(function(e){return '<li><span class="sch">'+t(e.school)+'</span>'+(e.year?'<span class="yr">'+t(e.year)+'</span>':'')+(sh()?'':'<span class="tx">'+t(e.text)+'</span>')+'</li>'}).join('')+'</ul>',false);
+  var side=sec('Развитие','','<ul class="dl">'+S.dev.map(function(d){return '<li><span class="ttl">'+t(d.title)+'</span>'+(sh()?'':'<span class="tx">'+t(d.text)+'</span>')+'</li>'}).join('')+'</ul>')
    +sec('Навыки','',ul(sh()?V.skills.slice(0,8):V.skills,'pills')+(sh()?'':'<p class="ctx">'+t(S.tools)+'</p>'))
-   +sec('Дополнительно','',ul(S.extra));
+   +edu+sec('Дополнительно','',ul(S.extra),false);
   h+='<div class="cols"><div class="main">'+main+'</div><aside class="side">'+side+'</aside></div>';
   app.innerHTML='<div class="wrap">'+h+'</div>'}
 
