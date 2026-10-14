@@ -82,13 +82,13 @@ table.pmt td b{display:inline-block;width:14px}
 .task ol a{text-decoration:none;border-bottom:1px solid rgba(33,32,31,.3)}
 .more{margin:44px 4px 4px}.more h2{margin:0 0 6px}.more p{color:var(--muted);margin:0}
 .fold{padding-top:24px;padding-bottom:24px}
-.fold summary{list-style:none;cursor:pointer;position:relative;padding-right:56px}
-.fold summary::-webkit-details-marker{display:none}
-.fold summary h2{margin:0}
-.fold summary::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font:800 24px/1 var(--f)}
-.fold details[open] summary{margin-bottom:20px}
-.fold details[open] summary::after{content:"\2212"}
-.fold summary:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:8px}
+.fold>details>summary{list-style:none;cursor:pointer;position:relative;padding-right:56px}
+.fold>details>summary::-webkit-details-marker{display:none}
+.fold>details>summary h2{margin:0}
+.fold>details>summary::after{content:"+";position:absolute;right:0;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--y);display:flex;align-items:center;justify-content:center;font:800 24px/1 var(--f)}
+.fold>details[open]>summary{margin-bottom:20px}
+.fold>details[open]>summary::after{content:"\2212"}
+.fold>details>summary:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:8px}
 .slide{scroll-margin-top:12px}
 .why{list-style:none;padding:0;margin:0;display:grid;gap:12px;counter-reset:w}
 .why li{counter-increment:w;background:var(--soft);border-radius:22px;padding:18px 22px 18px 70px;position:relative;margin:0}
@@ -102,6 +102,13 @@ table.pmt td b{display:inline-block;width:14px}
 .extra .fold{margin:0;padding:18px 0;border-radius:0;box-shadow:none;background:transparent;border-top:1px solid var(--line)}
 .extra .fold:first-of-type{margin-top:14px}
 @media (max-width:640px){.extra{padding:24px 20px 12px;border-radius:24px}.extra .fold{padding:16px 0}}
+.hint{font-size:14.5px;color:var(--muted);margin:8px 0 0;max-width:68ch}
+.sub{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.sub>summary{cursor:pointer;font-weight:800;font-size:16px;list-style:none;display:flex;align-items:center;gap:10px}
+.sub>summary::-webkit-details-marker{display:none}
+.sub>summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--soft);font-weight:800}
+.sub[open]>summary::before{content:"\2212"}
+.sub[open]>summary{margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -230,15 +237,16 @@ table.pmt td b{display:inline-block;width:14px}
     <div class="box"><b class="big">~19 суток</b><p>оплаченной аренды из 30: ниже этого процент выгоднее парку</p></div>
   </div>
   <div class="box dark" style="margin-top:14px"><p>Сильнее всего результат меняют доля водителя, оплаченные сутки аренды и часы на линии. Ремонт, страховка и лизинг одинаковы в обеих схемах и выбор не меняют.</p></div>
-  <div class="note"><p><b>Иллюстративный расчёт, не данные конкретного парка и не прогноз рынка.</b> Полная модель в приложении<sup><a href="#a1">А1</a></sup>. Если считать 80/20 из объявления буквально, парку до платежа за машину почти ничего не остаётся. Значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p></div>
+  <div class="note"><p><b>Иллюстративный расчёт, не данные конкретного парка и не прогноз рынка.</b> Полная модель — в блоке «Расчёт»<sup><a href="#a1">А1</a></sup>. Если считать 80/20 из объявления буквально, парку до платежа за машину почти ничего не остаётся. Значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p></div>
 </section>
 
 <div class="extra">
-<div class="more"><h2>Дополнительно</h2><p>Не входит в три вопроса задания. Нажмите на заголовок, чтобы раскрыть.</p></div>
+<div class="more"><h2>Факты, гипотезы и расчёты</h2><p>Не входит в три вопроса задания, но показывает, на чём держатся ответы и что делать дальше. Нажмите на заголовок, чтобы раскрыть.</p></div>
 
 <section class="slide fold"><details>
-  <summary><span class="ask">Что я проверил</span>
-  <h2>В найме через hh парки чаще предлагают работу без аренды, но это не доля рынка</h2></summary>
+  <summary><span class="ask">Факты · вакансии и звонки</span>
+  <h2>В найме через hh парки чаще предлагают работу без аренды, но это не доля рынка</h2>
+  <p class="hint">Показывает, какие схемы парки реально предлагают водителям. Подкрепляет ответы на вопросы 1 и 3, но не даёт долю рынка.</p></summary>
   <div class="grid g3 funnel">
     <div class="box"><b class="big">58</b><p>вакансий водителя такси на hh.ru, СПб и ЛО, 12.10.2026</p></div>
     <div class="box"><b class="big">35</b><p>уникальных текстов: остальное повторы, один работодатель дал 15 объявлений</p></div>
@@ -260,9 +268,63 @@ table.pmt td b{display:inline-block;width:14px}
   <div class="note"><p>Считаю по работодателям, срез на одну дату<sup><a href="#s1">1</a></sup>. Арендные парки нанимают в основном не через hh, поэтому цифры описывают канал найма. Звонки в три парка 13.10.2026 — примеры практики, а не статистика<sup><a href="#s1">1</a></sup>.</p></div>
 </details></section>
 
+<section class="slide fold" id="a1"><details>
+  <summary><span class="ask">А1 · Расчёт</span>
+  <h2>Модель машины Комфорт+ за 30 дней</h2>
+  <p class="hint">Сравнивает аренду и процент на одной машине при слабой, базовой и высокой загрузке. Отсюда цифры в ответе на вопрос 3 и пороги, при которых одна схема выгоднее другой.</p></summary>
+  <p class="note" style="margin-top:0"><b>Иллюстративный расчёт, не данные конкретного парка и не прогноз рынка.</b> Ставка аренды и доля водителя взяты из вакансий, остальное — условные допущения.</p>
+  <h3>Итог по сценариям</h3>
+  <div class="tbl">
+    <table class="num-t">
+      <thead><tr><th>₽ за 30 дней</th><th>Слабая</th><th>Базовая</th><th>Высокая</th><th>2 смены</th></tr></thead>
+      <tbody>
+        <tr><th>Выручка после комиссии, ₽/ч</th><td>650</td><td>800</td><td>950</td><td>800</td></tr>
+        <tr class="sec"><th colspan="5">Вклад парка до платежа за машину</th></tr>
+        <tr><th>Аренда 3 300 ₽/сут</th><td>42 563</td><td>53 658</td><td>53 672</td><td>—</td></tr>
+        <tr><th>Процент 70/30</th><td>2 986</td><td>21 430</td><td>42 822</td><td>52 859</td></tr>
+        <tr class="sec"><th colspan="5">Доход водителя за час</th></tr>
+        <tr><th>Аренда</th><td>125</td><td>291</td><td>472</td><td>—</td></tr>
+        <tr><th>Процент</th><td>322</td><td>420</td><td>519</td><td>420</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <details class="sub"><summary>Выручка и общие расходы</summary>
+  <div class="tbl">
+    <table class="num-t">
+      <thead><tr><th>₽ за 30 дней</th><th>Слабая</th><th>Базовая</th><th>Высокая</th><th>2 смены</th></tr></thead>
+      <tbody><tr><th>Часы на линии</th><td>220</td><td>286</td><td>336</td><td>572</td></tr><tr><th>Стоимость поездок для пассажиров</th><td>178 750</td><td>286 000</td><td>399 000</td><td>572 000</td></tr><tr><th>Комиссия сервиса (условно 20%)</th><td>35 750</td><td>57 200</td><td>79 800</td><td>114 400</td></tr><tr><th>Выручка после комиссии</th><td>143 000</td><td>228 800</td><td>319 200</td><td>457 600</td></tr><tr><th>Топливо (водитель)</th><td>23 364</td><td>30 373</td><td>35 683</td><td>60 746</td></tr><tr><th>Резерв на ремонт (парк)</th><td>9 900</td><td>12 870</td><td>15 120</td><td>25 740</td></tr><tr><th>Медосмотры, путевые листы (парк)</th><td>5 500</td><td>6 500</td><td>7 000</td><td>13 000</td></tr><tr><th>ДТП и штрафы, всего</th><td>5 940</td><td>7 722</td><td>9 072</td><td>15 444</td></tr></tbody>
+    </table>
+  </div>
+  </details>
+  <details class="sub"><summary>Аренда и денежный поток после лизинга</summary>
+  <div class="tbl">
+    <table class="num-t">
+      <thead><tr><th>₽ за 30 дней</th><th>Слабая</th><th>Базовая</th><th>Высокая</th><th>2 смены</th></tr></thead>
+      <tbody>
+        <tr><th>Оплаченных суток аренды</th><td>24</td><td>29</td><td>30</td><td>—</td></tr>
+        <tr><th>Аренда: после лизинга 55 000 ₽</th><td>−12 437</td><td>−1 342</td><td>−1 328</td><td>—</td></tr>
+        <tr><th>Процент: после лизинга 55 000 ₽</th><td>−52 014</td><td>−33 570</td><td>−12 178</td><td>−2 141</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Лизинг одинаков в обеих схемах и выбор не меняет. Для прибыли вместо него берут амортизацию и проценты.</p>
+  </details>
+  <details class="sub"><summary>Как считается</summary>
+  <ul>
+    <li>Вклад парка на аренде = аренда × (1 − 6% налога) − ремонт − страховка 10 000 ₽ − медосмотры − управление 5 000 ₽ − 25% ущерба.</li>
+    <li>Вклад парка на проценте = 30% выручки × (1 − 6%) − ремонт − страховка − медосмотры − 6 000 ₽ на водителя − весь ущерб.</li>
+    <li>Доход водителя = выручка или его доля × (1 − 6% НПД) − топливо (− аренда и 75% ущерба в аренде).</li>
+  </ul>
+  </details>
+  <details class="sub"><summary>Что запросить у парка</summary>
+  <p>Выручку до и после комиссии по машине и дню, часы и смены, оплаченные сутки и простой, точную формулу доли и бонусов, кто платит топливо, пробег, ремонты, ДТП и штрафы, страховки, лизинг, затраты на управление, налоговый режим, стаж и уход водителей.</p>
+  </details>
+</details></section>
+
 <section class="slide fold"><details>
-  <summary><span class="ask">Где это работает</span>
-  <h2>Альтернатива аренде перспективна в трёх сегментах парков</h2></summary>
+  <summary><span class="ask">Гипотеза 1 · где работает альтернатива</span>
+  <h2>Альтернатива аренде перспективна в трёх сегментах парков</h2>
+  <p class="hint">Отвечает, с какими парками начинать. Определяет выбор партнёров для пилота.</p></summary>
   <div class="grid g3">
     <div class="box"><div class="num">1</div><h3>Крупные парки с планированием смен</h3><p>Машины Комфорт+ и выше в реестре СПб, закреплены за перевозчиком, есть диспетчер, учёт по машине и дню. Могут дать две смены — условие, при котором процент догоняет аренду.</p></div>
     <div class="box"><div class="num">2</div><h3>Машины, которые плохо сдаются</h3><p>Новые машины из перечня с простоем без арендатора больше ~10 суток в месяц. Процент выигрывает, когда аренда оплачена меньше ~19 суток.</p></div>
@@ -272,8 +334,9 @@ table.pmt td b{display:inline-block;width:14px}
 </details></section>
 
 <section class="slide fold"><details>
-  <summary><span class="ask">Интерес платформы и пилот</span>
-  <h2>Больше часов на линии из того же реестра, если это выгодно парку и водителю</h2></summary>
+  <summary><span class="ask">Гипотеза 2 · интерес платформы</span>
+  <h2>Больше часов на линии из того же реестра, если это выгодно парку и водителю</h2>
+  <p class="hint">Объясняет, зачем это платформе: больше часов на линии без новых машин. Задаёт цель и показатели пилота.</p></summary>
   <p class="lead">Гипотеза: больше часов на линии в целевые часы и районы при устойчивой экономике парка, приемлемом доходе водителя и сохранении качества. Пополнять реестр дорого, водителей меньше, поэтому расти можно за счёт часов уже существующих машин.</p>
   <div class="grid g2">
     <div class="box">
@@ -291,73 +354,13 @@ table.pmt td b{display:inline-block;width:14px}
       <p><b>Согласую с другими командами:</b> любые стимулы, тарифы и распределение заказов, данные качества, типовые договоры.</p>
     </div>
   </div>
-  <div class="note"><p>Это не A/B-тест: водителей нельзя случайно распределить по схемам. Поэтому сравниваю пары машин одной модели и пробега, которые работают одновременно, относительно базового периода. Паспорт пилота в приложении<sup><a href="#a2">А2</a></sup>.</p></div>
-</details></section>
-
-<section class="slide fold"><details>
-  <summary><span class="ask">Решение</span>
-  <h2>Не продвигать одну схему, а дать паркам расчёт и проверить две смены на практике</h2></summary>
-  <div class="grid g3">
-    <div class="box"><div class="num">1</div><h3>Данные</h3><p>Договориться с 2–3 парками о данных по машине и дню.</p></div>
-    <div class="box"><div class="num">2</div><h3>Расчёт</h3><p>Посчитать экономику их машин вместо моих допущений и найти, где аренда простаивает.</p></div>
-    <div class="box"><div class="num">3</div><h3>Пороги</h3><p>До старта согласовать целевые окна и пороги решения с руководителем и парками.</p></div>
-  </div>
-  <div class="grid g3" style="margin-top:14px">
-    <div class="box y"><h3>Масштабировать</h3><p>Часы выросли на согласованный порог в 2 из 3 парков, защитные показатели в норме.</p></div>
-    <div class="box"><h3>Доработать</h3><p>Часы выросли, но не прошёл один защитный показатель: меняем долю или схему смен.</p></div>
-    <div class="box dark"><h3>Остановить</h3><p>Часы не выросли или упали качество либо доход водителя.</p></div>
-  </div>
-</details></section>
-
-<section class="slide fold" id="a1"><details>
-  <summary><span class="ask">Приложение А1</span>
-  <h2>Модель машины Комфорт+ за 30 дней</h2></summary>
-  <p class="note" style="margin-top:0"><b>Иллюстративный расчёт, не данные конкретного парка и не прогноз рынка.</b> Ставка аренды и доля водителя — из вакансий; остальное — условные допущения. Расчёт сделан в таблице с формулами.</p>
-  <div class="tbl">
-    <table class="num-t">
-      <thead><tr><th>₽ за 30 дней</th><th>Слабая</th><th>Базовая</th><th>Высокая</th><th>2 смены</th></tr></thead>
-      <tbody>
-        <tr><th>Выручка после комиссии, ₽/ч</th><td>650</td><td>800</td><td>950</td><td>800</td></tr>
-        <tr><th>Часы на линии</th><td>220</td><td>286</td><td>336</td><td>572</td></tr>
-        <tr><th>Стоимость поездок для пассажиров</th><td>178 750</td><td>286 000</td><td>399 000</td><td>572 000</td></tr>
-        <tr><th>Комиссия сервиса (условно 20%)</th><td>35 750</td><td>57 200</td><td>79 800</td><td>114 400</td></tr>
-        <tr><th>Выручка после комиссии</th><td>143 000</td><td>228 800</td><td>319 200</td><td>457 600</td></tr>
-        <tr><th>Топливо (водитель)</th><td>23 364</td><td>30 373</td><td>35 683</td><td>60 746</td></tr>
-        <tr><th>Резерв на ремонт (парк)</th><td>9 900</td><td>12 870</td><td>15 120</td><td>25 740</td></tr>
-        <tr><th>Медосмотры, путевые листы (парк)</th><td>5 500</td><td>6 500</td><td>7 000</td><td>13 000</td></tr>
-        <tr><th>ДТП и штрафы, всего</th><td>5 940</td><td>7 722</td><td>9 072</td><td>15 444</td></tr>
-        <tr class="sec"><th colspan="5">Аренда 3 300 ₽/сут</th></tr>
-        <tr><th>Оплаченных суток</th><td>24</td><td>29</td><td>30</td><td>—</td></tr>
-        <tr><th>Вклад парка до платежа за машину</th><td>42 563</td><td>53 658</td><td>53 672</td><td>—</td></tr>
-        <tr><th>После лизинга 55 000 ₽ (денежный поток)</th><td>−12 437</td><td>−1 342</td><td>−1 328</td><td>—</td></tr>
-        <tr><th>Доход водителя за час</th><td>125</td><td>291</td><td>472</td><td>—</td></tr>
-        <tr class="sec"><th colspan="5">Процент 70/30 без аренды</th></tr>
-        <tr><th>Вклад парка до платежа за машину</th><td>2 986</td><td>21 430</td><td>42 822</td><td>52 859</td></tr>
-        <tr><th>После лизинга 55 000 ₽ (денежный поток)</th><td>−52 014</td><td>−33 570</td><td>−12 178</td><td>−2 141</td></tr>
-        <tr><th>Доход водителя за час</th><td>322</td><td>420</td><td>519</td><td>420</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="grid g2" style="margin-top:16px">
-    <div class="box">
-      <h3>Как считается</h3>
-      <ul>
-        <li>Вклад парка на аренде = аренда × (1 − 6% налога) − ремонт − страховка 10 000 ₽ − медосмотры − управление 5 000 ₽ − 25% ущерба.</li>
-        <li>Вклад парка на проценте = 30% выручки × (1 − 6%) − ремонт − страховка − медосмотры − 6 000 ₽ на водителя − весь ущерб.</li>
-        <li>Доход водителя = выручка или его доля × (1 − 6% НПД) − топливо (− аренда и 75% ущерба в аренде).</li>
-        <li>Лизинг одинаков в обеих схемах. Для прибыли вместо него берут амортизацию и проценты.</li>
-      </ul>
-    </div>
-    <div class="box">
-      <h3>Что запросить у парка</h3>
-      <p>Выручку до и после комиссии по машине и дню, часы и смены, оплаченные сутки и простой, точную формулу доли и бонусов, кто платит топливо, пробег, ремонты, ДТП и штрафы, страховки, лизинг, затраты на управление, налоговый режим, стаж и уход водителей.</p>
-    </div>
-  </div>
+  <div class="note"><p>Это не A/B-тест: водителей нельзя случайно распределить по схемам. Поэтому сравниваю пары машин одной модели и пробега, которые работают одновременно, относительно базового периода. Паспорт пилота — в блоке «Проверка»<sup><a href="#a2">А2</a></sup>.</p></div>
 </details></section>
 
 <section class="slide fold" id="a2"><details>
-  <summary><span class="ask">Приложение А2</span>
-  <h2>Паспорт пилота</h2></summary>
+  <summary><span class="ask">А2 · Проверка</span>
+  <h2>Паспорт пилота</h2>
+  <p class="hint">Как проверить гипотезы на практике: партнёры, дизайн, показатели и правила решения. Снижает риск масштабировать то, что не работает.</p></summary>
   <div class="grid g2">
     <div class="box"><div class="num">1</div><h3>Что проверяем</h3><ul>
       <li><b>Проблема:</b> часть машин работает одну смену или простаивает, а пополнять реестр дорого.</li>
@@ -383,8 +386,25 @@ table.pmt td b{display:inline-block;width:14px}
 </details></section>
 
 <section class="slide fold"><details>
-  <summary><span class="ask">Приложение А3</span>
-  <h2>Регулирование: что действует, где и с какого числа</h2></summary>
+  <summary><span class="ask">Предложение · что делать</span>
+  <h2>Не продвигать одну схему, а дать паркам расчёт и проверить две смены на практике</h2>
+  <p class="hint">Первые шаги и пороги, по которым решение масштабируют, дорабатывают или останавливают.</p></summary>
+  <div class="grid g3">
+    <div class="box"><div class="num">1</div><h3>Данные</h3><p>Договориться с 2–3 парками о данных по машине и дню.</p></div>
+    <div class="box"><div class="num">2</div><h3>Расчёт</h3><p>Посчитать экономику их машин вместо моих допущений и найти, где аренда простаивает.</p></div>
+    <div class="box"><div class="num">3</div><h3>Пороги</h3><p>До старта согласовать целевые окна и пороги решения с руководителем и парками.</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="box y"><h3>Масштабировать</h3><p>Часы выросли на согласованный порог в 2 из 3 парков, защитные показатели в норме.</p></div>
+    <div class="box"><h3>Доработать</h3><p>Часы выросли, но не прошёл один защитный показатель: меняем долю или схему смен.</p></div>
+    <div class="box dark"><h3>Остановить</h3><p>Часы не выросли или упали качество либо доход водителя.</p></div>
+  </div>
+</details></section>
+
+<section class="slide fold"><details>
+  <summary><span class="ask">А3 · Контекст</span>
+  <h2>Регулирование: что действует, где и с какого числа</h2>
+  <p class="hint">Нормы, которые меняют экономику парков в СПб и ЛО. Объясняют, почему в Петербурге могут расти схемы без аренды.</p></summary>
   <div class="tbl">
     <table class="pass">
       <thead><tr><th>Норма</th><th>Что меняет</th></tr></thead>
@@ -403,7 +423,8 @@ table.pmt td b{display:inline-block;width:14px}
 
 <section class="slide fold" id="src"><details>
   <summary><span class="ask">Источники и ограничения</span>
-  <h2>На чём держатся цифры</h2></summary>
+  <h2>На чём держатся цифры</h2>
+  <p class="hint">Откуда взяты цифры и чего нет в открытых данных. Помогает отличить факт от допущения.</p></summary>
   <ol class="src">
     <li id="s1">Собственный срез вакансий водителя такси на hh.ru, СПб и ЛО: 12.10.2026, тексты перечитаны 13.10.2026; 58 вакансий, 35 уникальных текстов, 13 работодателей. Звонки в YouPiter, GDel и TAXINCOME 13.10.2026: <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit">Google Таблица</a>. Срез показывает канал найма, а не долю схем; три разговора — примеры практики.</li>
     <li id="s2">Вакансии со ставками: <a href="https://spb.hh.ru/vacancy/138306300">процент и аренда 3 300 ₽, Комфорт+</a>, <a href="https://spb.hh.ru/vacancy/138179737">аренда от 4 500 ₽, бизнес</a>, <a href="https://spb.hh.ru/vacancy/138086094">60/40 и 80/20 сверх</a>, <a href="https://spb.hh.ru/vacancy/137423900">оклад 210 000 ₽</a>, <a href="https://spb.hh.ru/vacancy/138212308">гарантия 5 500–7 000 ₽ за смену</a>.</li>
