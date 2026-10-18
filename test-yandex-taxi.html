@@ -127,6 +127,17 @@ details.more>summary::after{content:"+";flex:0 0 32px;height:32px;border-radius:
 details.more[open]>summary{margin-bottom:16px}
 details.more[open]>summary::after{content:"\2212"}
 details.more>summary small{display:block;font-weight:600;color:var(--muted);font-size:14px}
+/* пометки «i» */
+.i{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:6px;padding:0;border:0;border-radius:50%;background:var(--y);color:var(--ink);font:800 12px/1 var(--f);font-style:italic;letter-spacing:0;text-transform:none;vertical-align:.12em;cursor:pointer;position:relative}
+.i::after{content:"";position:absolute;inset:-10px}
+.i[aria-expanded="true"]{background:var(--ink);color:#fff}
+.i:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.big .i{vertical-align:.45em}
+.hint{position:relative;margin:10px 0 0;padding:12px 14px 12px 40px;border-radius:14px;background:var(--y3);color:var(--ink);font-size:14px;line-height:1.5;font-weight:500;letter-spacing:0;text-transform:none}
+.hint[hidden]{display:none}
+.hint::before{content:"i";position:absolute;left:12px;top:12px;width:18px;height:18px;border-radius:50%;background:var(--y);font:800 11px/18px var(--f);font-style:italic;text-align:center}
+.box .hint{background:#fff}
+.tbl+.hint{margin:12px 0 0}
 summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:8px}
 
 .extra-h{margin:36px 4px 14px}
@@ -151,7 +162,9 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
 @media print{
   @page{size:A4;margin:12mm}
   body{background:#fff;font-size:13px}
-  .toc,.top .btns,.extra-h p,details.more>summary::after{display:none}
+  .toc,.top .btns,.extra-h p,details.more>summary::after,.i{display:none}
+  .hint,.hint[hidden]{display:block;font-size:11.5px;padding:8px 10px 8px 32px;break-inside:avoid}
+  .hint::before{left:9px;top:8px;width:15px;height:15px;font-size:9.5px;line-height:15px}
   .wrap{display:block;padding:0;max-width:none}
   .top{padding:0 0 8px;border-radius:0}
   .card{padding:14px 0 6px;margin:0;border-radius:0;border-top:1px solid var(--line)}
@@ -225,25 +238,26 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
       <tbody>
         <tr><th>Оклад или фикс + премия</th><td>Фикс за месяц или смену, премия по плану</td><td>210 000 ₽ в месяц от 22 смен<sup><a href="#s2">2</a></sup></td></tr>
         <tr><th>Гарантированный минимум</th><td>Не меньше гарантии за смену, выше — по формуле</td><td>5 500–7 000 ₽ за смену<sup><a href="#s2">2</a></sup></td></tr>
-        <tr><th class="hl">Процент без аренды</th><td class="hl">Доля выручки минус свои расходы</td><td class="hl">60–80% водителю; в одном парке 60/40 до 7 500 ₽ за смену и 80/20 сверх<sup><a href="#s2">2</a></sup></td></tr>
+        <tr><th class="hl">Процент без аренды</th><td class="hl">Доля выручки минус свои расходы</td><td class="hl">50–80% водителю; в одном парке 60/40 до 7 500 ₽ за смену и 80/20 сверх<sup><a href="#s2">2</a></sup></td></tr>
         <tr><th>Для сравнения: аренда</th><td>Выручка минус аренда, топливо, налог</td><td>3 300 ₽ в сутки за Комфорт+, 4 500–5 500 ₽ за бизнес<sup><a href="#s2">2</a></sup></td></tr>
       </tbody>
     </table>
   </div>
   <div class="grid g2" style="margin-top:18px;align-items:start">
     <div>
-      <h3>Что предлагают 13 работодателей с вакансиями на hh.ru</h3>
+      <h3>Что предлагают 13 работодателей с вакансиями на hh.ru<button class="i" type="button" aria-expanded="false" aria-controls="h6" aria-label="Пояснение">i</button></h3>
       <div class="bars">
         <div class="bar"><span>Без аренды в любом виде</span><i style="--w:84.6%"></i><b>11</b></div>
         <div class="bar"><span>Процент</span><i style="--w:69.2%"></i><b>9</b></div>
         <div class="bar"><span>Аренда</span><i style="--w:61.5%"></i><b>8</b></div>
         <div class="bar"><span>Оклад или гарантия</span><i style="--w:23.1%"></i><b>3</b></div>
       </div>
+      <div class="hint" id="h6" hidden>В текстах вакансий процент есть у 8 работодателей, аренда у 7. Ещё по одному добавили звонки: долю 60/40 в GDel и аренду в TAXINCOME. Если делить без пересечений, 5 работодателей работают только без аренды, 6 держат обе схемы, 2 только сдают в аренду.</div>
       <p class="note">Срез на 12.10.2026, считаю по работодателям<sup><a href="#s1">1</a></sup>. Это канал найма, а не доля схем на рынке: арендные парки ищут водителей в основном не через hh.</p>
     </div>
     <div class="box y">
       <h3>Оформление схему не различает</h3>
-      <p>Почти везде самозанятость или ИП. Штат упоминают 2 из 13 работодателей, в трёх звонках трудовой договор не предлагали<sup><a href="#s1">1</a></sup>. Отпуск и больничный есть только при трудовом договоре, поэтому «соцгарантии» не стоит записывать в плюсы схемы по умолчанию.</p>
+      <p>Почти везде самозанятость или ИП. Штат упоминают 2 из 13 работодателей, в YouPiter по телефону назвали только самозанятость или ИП<sup><a href="#s1">1</a></sup>. Отпуск и больничный есть только при трудовом договоре, поэтому «соцгарантии» не стоит записывать в плюсы схемы по умолчанию.</p>
     </div>
   </div>
 </section>
@@ -278,12 +292,13 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
         <tr><th>Топливо</th><td>По договору: от полной оплаты до 21–41%</td><td>Чаще водитель</td><td>Водитель</td></tr>
         <tr><th>ДТП и штрафы</th><td>Парк, удержания по договору</td><td>По звонкам парк</td><td>В основном водитель</td></tr>
         <tr><th>График</th><td>Парка</td><td>Согласуется с парком</td><td>Свой</td></tr>
-        <tr><th>Слабый спрос</th><td><span class="who p">парк</span></td><td><span class="who b">оба</span></td><td><span class="who d">водитель</span></td></tr>
+        <tr><th>Слабый спрос</th><td><span class="who p">парк</span><button class="i" type="button" aria-expanded="false" aria-controls="h5" aria-label="Пояснение">i</button></td><td><span class="who b">оба</span></td><td><span class="who d">водитель</span></td></tr>
         <tr><th>Сильный день</th><td><span class="who p">в основном парк</span></td><td><span class="who b">оба</span></td><td><span class="who d">водитель</span></td></tr>
         <tr><th>Простой без водителя</th><td><span class="who p">парк</span></td><td><span class="who p">парк</span></td><td><span class="who p">парк</span></td></tr>
       </tbody>
     </table>
   </div>
+  <div class="hint" id="h5" hidden>Пример: гарантия 7 000 ₽ за смену при доле водителя 70% срабатывает, пока смена приносит меньше 10 000 ₽ выручки (~900 ₽ в час при 11 часах). В базовом месяце расчёта она съедает почти весь вклад парка, в слабом даёт минус ~48 тыс. ₽ на машину. Поэтому гарантию обычно дают с условием по часам на линии.</div>
   <p class="note">Аренда перекладывает на водителя риск спроса, но не риск пустой машины. Ремонт, ТО и страховки почти везде на парке в любой схеме<sup><a href="#s1">1</a></sup>.</p>
 </section>
 
@@ -302,7 +317,7 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
   </div>
   <div class="qa">
     <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">3</span>Опытный водитель выбирает свободу</h3><p class="muted" style="margin:0">Он сам решает, когда работать, и оставляет себе всё сверх аренды и расходов.</p></div>
-    <div class="ev">По деньгам аренда выгоднее водителю только при выручке выше <b>~1 260 ₽ в час</b>. При средней загрузке процент даёт ему больше: <b>420 против 291 ₽ в час</b><sup><a href="#calc">₽</a></sup>. Значит, в аренде держит прежде всего самостоятельность.</div>
+    <div class="ev">По деньгам аренда выгоднее водителю только при выручке выше <b>~1 260 ₽ в час</b>. При средней загрузке процент даёт ему больше: <b>420 против 291 ₽ в час</b><sup><a href="#calc">₽</a></sup>. Значит, в аренде держит прежде всего самостоятельность.<button class="i" type="button" aria-expanded="false" aria-controls="h4" aria-label="Пояснение">i</button><div class="hint" id="h4" hidden>Сравнение при одинаковых часах. Арендатор считает месяц: первые 5–6 часов смены уходят на плату за сутки, дальше каждый час даёт ему ~630 ₽ против ~420 ₽ на проценте. Кто работает около 13 часов в смене, догоняет процент по доходу за месяц и при этом сам решает, когда выходить.</div></div>
   </div>
   <div class="qa">
     <div><h3><span class="num" style="width:24px;height:24px;font-size:12px;margin:0 8px 0 0">4</span>Без аренды нужна высокая загрузка</h3><p class="muted" style="margin:0">Выручки должно хватать на выплаты, содержание машин и управление. При простоях это сложнее.</p></div>
@@ -316,7 +331,7 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
     <h3>Почему в Петербурге работы без аренды всё же много</h3>
     <p>Гипотеза: регулирование сделало водителя и машину из реестра дефицитом, и парку выгоднее держать их под своим контролем.</p>
     <ul>
-      <li><b>Запрет для мигрантов с патентами</b> (СПб с 28.07.2025, ЛО с 19.08.2024)<sup><a href="#s4">4</a></sup>: парки снижают порог входа для новых водителей.</li>
+      <li><b>Запрет для мигрантов с патентами</b> (СПб с 08.11.2025, ЛО с 19.08.2024)<sup><a href="#s4">4</a></sup>: парки снижают порог входа для новых водителей.</li>
       <li><b>Локализация без отсрочки с 01.03.2026</b><sup><a href="#s7">7</a></sup>: новые машины дороже, 70% опрошенных НСТ компаний говорят, что водители неохотно их арендуют<sup><a href="#s5">5</a></sup>.</li>
       <li><b>Выделенные полосы с 26.10.2026</b> только для машин, закреплённых за перевозчиком в реестре СПб<sup><a href="#s6">6</a></sup>: час такой машины может стоить дороже.</li>
     </ul>
@@ -331,8 +346,8 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
           <tr><th>580-ФЗ, с 01.09.2023, РФ</th><td>Возить можно только на машине из реестра у перевозчика с разрешением; служба заказа передаёт заказы только им</td></tr>
           <tr><th>116-ФЗ, с 01.03.2026, РФ</th><td>Новые машины в реестр — только локализованные. СПб и ЛО без отсрочки<sup><a href="#s7">7</a></sup></td></tr>
           <tr><th>Квота для самозанятых до 2033</th><td>До 25% нелокализованных машин в реестре, только самозанятые на своих машинах</td></tr>
-          <tr><th>60-пг от 28.07.2025, СПб</th><td>Запрет привлекать иностранцев с патентами к работе в такси, продлён на 2026; проект на 2027 опубликован 10.08.2026<sup><a href="#s4">4</a></sup></td></tr>
-          <tr><th>Постановление от 19.08.2024, ЛО</th><td>Аналогичный запрет в Ленобласти<sup><a href="#s4">4</a></sup></td></tr>
+          <tr><th>Постановление от 28.07.2025, СПб</th><td>Запрет привлекать иностранцев с патентами к работе в такси, действует с 08.11.2025, продлён на 2026; Смольный планирует продлить его на 2027 (10.08.2026)<sup><a href="#s4">4</a></sup></td></tr>
+          <tr><th>Постановление от 19.08.2024, ЛО</th><td>Аналогичный запрет в Ленобласти; о продлении на 2026 в открытых источниках данных не нашёл<sup><a href="#s4">4</a></sup></td></tr>
           <tr><th>Выделенные полосы, СПб</th><td>С 26.10.2026 только такси из реестра такси и реестра перевозчиков СПб; старт 01.10.2026 перенесён<sup><a href="#s6">6</a></sup></td></tr>
         </tbody>
       </table>
@@ -358,16 +373,18 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
         <div class="crow"><span>Слабая загрузка</span><div class="pair"><div class="r"><i style="--w:72%"></i>42,6</div><div class="s"><i style="--w:5%"></i>3,0</div></div></div>
         <div class="crow"><span>Базовая</span><div class="pair"><div class="r"><i style="--w:91%"></i>53,7</div><div class="s"><i style="--w:36%"></i>21,4</div></div></div>
         <div class="crow"><span>Высокая</span><div class="pair"><div class="r"><i style="--w:91%"></i>53,7</div><div class="s"><i style="--w:73%"></i>42,8</div></div></div>
-        <div class="crow"><span>Две смены</span><div class="pair"><div class="r" style="color:var(--muted)">аренда от смен не зависит</div><div class="s"><i style="--w:90%"></i>52,9</div></div></div>
+        <div class="crow"><span>Две смены<button class="i" type="button" aria-expanded="false" aria-controls="h1" aria-label="Пояснение">i</button></span><div class="pair"><div class="r" style="color:var(--muted)">аренда с одним водителем</div><div class="s"><i style="--w:90%"></i>52,9</div></div></div>
       </div>
+      <div class="hint" id="h1" hidden>52,9 тыс. ₽ почти равны аренде при доле водителя 70%. Каждые 5 п. п. доли сдвигают итог примерно на 21 тыс. ₽ в месяц: при 65% водителю парк получает 74,4 тыс., при 80% только 9,8 тыс. Поэтому долю обсуждаю с парком до старта. Обе смены считаю с одинаковой выручкой в час, это ~19 часов машины на линии в сутки. Если арендную машину по 3 300 ₽ берут два сменщика, часов столько же, но парку остаётся ~32 тыс. ₽: плата за сутки та же, а ремонт и медосмотры двух водителей на нём. Вровень с двумя сменами на проценте аренда для двоих выходит при ~4 050 ₽ в сутки.</div>
     </div>
     <div class="grid">
-      <div class="box"><b class="big">~19 суток</b><p class="muted">оплаченной аренды из 30: ниже этого процент выгоднее парку</p></div>
+      <div class="box"><b class="big">~19 суток<button class="i" type="button" aria-expanded="false" aria-controls="h2" aria-label="Пояснение">i</button></b><p class="muted">оплаченной аренды из 30: ниже этого процент выгоднее парку</p><div class="hint" id="h2" hidden>Это порог для одной смены на проценте. Для двух смен он ~29 суток: если арендную машину оплачивают меньше 29 суток из 30, две смены дают парку больше (+5 тыс. ₽ в месяц при 27 сутках, +12 тыс. при 25, +27 тыс. при 20). Условие одно: парк закрывает обе смены водителями.</div></div>
       <div class="box"><b class="big">~1 200 ₽/ч</b><p class="muted">выручки после комиссии, при которой парку всё равно (одна смена); или доля водителя 55%</p></div>
       <div class="box"><b class="big">~1 260 ₽/ч</b><p class="muted">выручки, выше которой водителю выгоднее аренда</p></div>
     </div>
   </div>
-  <p class="note"><b>Иллюстративный расчёт, не данные конкретного парка.</b> Все формулы и допущения — в <a href="https://docs.google.com/spreadsheets/d/1nqWFRAlrbGdSPVm-a-Irh2VEUpYOcEtnNW7HXnalbyg/edit" target="_blank" rel="noopener">Google Таблице расчёта</a>. Ставка аренды и доля водителя взяты из вакансий, остальное — допущения. Если считать 80/20 из объявления буквально, парку почти ничего не остаётся: значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p>
+  <p class="note"><b>Иллюстративный расчёт, не данные конкретного парка.</b><button class="i" type="button" aria-expanded="false" aria-controls="h3" aria-label="Пояснение">i</button> Все формулы и допущения — в <a href="https://docs.google.com/spreadsheets/d/1nqWFRAlrbGdSPVm-a-Irh2VEUpYOcEtnNW7HXnalbyg/edit" target="_blank" rel="noopener">Google Таблице расчёта</a>. Ставка аренды и доля водителя взяты из вакансий, остальное — допущения. Если считать буквально 80% водителю, как у YouPiter, парку почти ничего не остаётся: значит, в реальной схеме есть условие, которого нет в объявлении, и это первый вопрос собственнику.</p>
+  <div class="hint" id="h3" hidden>Откуда 800 ₽ в час: YouPiter на Комфорт+ обещает водителю 6 500–8 000 ₽ за смену при доле 70–80%. При смене 10–12 часов это ~680–1 140 ₽ выручки в час, и я беру нижнюю половину, чтобы не завысить процент. От этой цифры вывод зависит сильнее всего: при 900 ₽ в час аренда выгоднее парку в 1,8 раза, при 1 200 ₽ схемы равны. Ставка 3 300 ₽ минимальная в объявлениях; её дают YouPiter и Приморский, который в тексте вакансии упоминает «Юпитер такси».</div>
   <details class="more">
     <summary><span>Полная таблица и формулы<small>Часы, выручка, расходы, доход водителя за час</small></span></summary>
     <div class="tbl">
@@ -408,8 +425,9 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
   <div class="grid g3">
     <div class="box"><div class="num">1</div><h3>С кем начинать</h3><p>Крупные парки Комфорт+ и выше с диспетчером и учётом по машине и дню. Машины, которые простаивают без арендатора больше ~10 суток в месяц.</p></div>
     <div class="box"><div class="num">2</div><h3>Что проверяем</h3><p>Процент с двумя плановыми сменами против аренды на парах похожих машин. 4–6 недель базы, 8–12 недель сравнения, 15–30 машин в группе.</p></div>
-    <div class="box"><div class="num">3</div><h3>Что измеряем</h3><p><b>Главное:</b> часы на линии на машину в целевые окна. <b>Защитные:</b> вклад машины для парка, доход водителя за час, рейтинг и жалобы, ДТП, удержание на 30-й день.</p></div>
+    <div class="box"><div class="num">3</div><h3>Что измеряем<button class="i" type="button" aria-expanded="false" aria-controls="h7" aria-label="Пояснение">i</button></h3><p><b>Главное:</b> часы на линии на машину в целевые окна. <b>Защитные:</b> вклад машины для парка, доход водителя за час, рейтинг и жалобы, ДТП, удержание на 30-й день.</p></div>
   </div>
+  <div class="hint" style="margin-top:14px" id="h7" hidden>Две смены требуют второго водителя, а водителей не хватает. Поэтому часы считаю по всему парку, а не только по пилотным машинам, и смотрю, откуда пришла вторая смена: новый для платформы водитель, из аренды этого же парка или из другого парка. Водитель, пересевший из другого парка, не прирост для города. Вторую смену проще искать среди подработки и новичков: у процента нет платы за вход, а аренда от 3–7 суток для подработки неудобна.</div>
   <div class="grid g3" style="margin-top:14px">
     <div class="box y"><h3>Масштабировать</h3><p>Часы выросли на согласованный порог в 2 из 3 парков, защитные показатели в норме.</p></div>
     <div class="box"><h3>Доработать</h3><p>Часы выросли, но не прошёл один защитный показатель: меняем долю или схему смен.</p></div>
@@ -419,7 +437,7 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
     <summary><span>Паспорт пилота<small>Роли, риски, данные и первые шаги</small></span></summary>
     <div class="grid g2">
       <div class="box"><h3>Первые шаги</h3><ol><li>Договориться с 2–3 парками о данных по машине и дню.</li><li>Посчитать экономику их машин вместо моих допущений и найти, где аренда простаивает.</li><li>До старта согласовать целевые окна и пороги решения с руководителем и парками.</li></ol></div>
-      <div class="box"><h3>Кто что делает</h3><p><b>Сам:</b> отбор парков, расчёт с собственником, дизайн и ведение пилота, еженедельный разбор.</p><p><b>Согласую с другими командами:</b> стимулы, тарифы и распределение заказов, данные качества, типовые договоры.</p></div>
+      <div class="box"><h3>Кто что делает</h3><p><b>Сам:</b> отбор парков, расчёт с собственником, дизайн и ведение пилота, еженедельный разбор.</p><p><b>Согласую с другими командами:</b> стимулы в рамках существующих механик, данные спроса по часам и зонам, данные качества, типовые договоры.</p></div>
       <div class="box"><h3>Какие данные запросить у парка</h3><p>Выручку до и после комиссии по машине и дню, часы и смены, оплаченные сутки и простой, точную формулу доли и бонусов, топливо, ремонты, ДТП и штрафы, страховки, лизинг, затраты на управление, налоговый режим, стаж и уход водителей.</p></div>
       <div class="box"><h3>Риски</h3><p>Это не A/B-тест: водителей нельзя случайно распределить по схемам, поэтому сравниваю пары машин одной модели и пробега относительно базового периода. Ещё риски: самоотбор водителей, сезон, малая выборка, юридические риски фиксированной оплаты.</p></div>
     </div>
@@ -431,7 +449,7 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
   <span class="tag"><em>Источники</em> и ограничения</span>
   <h2>На чём держатся цифры<sup><a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit" target="_blank" rel="noopener" title="Google Таблица: вакансии, сверка с парками, контакты">1</a></sup></h2>
   <div class="grid g3" style="margin-bottom:18px">
-    <div class="box"><b class="big">58</b><p class="muted">вакансий водителя такси на hh.ru, СПб и ЛО, 12.10.2026; 35 уникальных текстов</p></div>
+    <div class="box"><b class="big">58</b><p class="muted">вакансий водителя такси на hh.ru, СПб и ЛО, 12.10.2026</p></div>
     <div class="box"><b class="big">13</b><p class="muted">работодателей, все в СПб; один дал 15 объявлений, поэтому считаю по работодателям</p></div>
     <div class="box"><b class="big">3</b><p class="muted">звонка в парки 13.10.2026 — примеры практики, а не статистика</p></div>
   </div>
@@ -446,10 +464,10 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
   <details class="more">
     <summary><span>Список источников<small>Семь источников со ссылками</small></span></summary>
     <ol class="src">
-      <li id="s1">Собственный <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit#gid=211088005" target="_blank" rel="noopener">срез вакансий</a> водителя такси на hh.ru, СПб и ЛО: 12.10.2026, тексты перечитаны 13.10.2026; 58 вакансий, 35 уникальных текстов, 13 работодателей. Звонки в YouPiter, GDel и TAXINCOME 13.10.2026: <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit">Google Таблица</a>. Срез показывает канал найма, а не долю схем; три разговора — примеры практики.</li>
+      <li id="s1">Собственный <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit#gid=211088005" target="_blank" rel="noopener">срез вакансий</a> водителя такси на hh.ru, СПб и ЛО: 12.10.2026, тексты перечитаны 13.10.2026; 58 вакансий, 13 работодателей. Звонки в YouPiter, GDel и TAXINCOME 13.10.2026: <a href="https://docs.google.com/spreadsheets/d/1HZOv6RHcPVOMaoUpdybCbrRF6-zl2fkLDFAenAuf84w/edit">Google Таблица</a>. Срез показывает канал найма, а не долю схем; три разговора — примеры практики.</li>
       <li id="s2">Вакансии со ставками: <a href="https://spb.hh.ru/vacancy/138306300">процент и аренда 3 300 ₽, Комфорт+</a>, <a href="https://spb.hh.ru/vacancy/138179737">аренда от 4 500 ₽, бизнес</a>, <a href="https://spb.hh.ru/vacancy/138086094">60/40 и 80/20 сверх</a>, <a href="https://spb.hh.ru/vacancy/137423900">оклад 210 000 ₽</a>, <a href="https://spb.hh.ru/vacancy/138212308">гарантия 5 500–7 000 ₽ за смену</a>.</li>
       <li id="s3">Реестр такси СПб, около 67 тыс. машин и почти 9 тыс. перевозчиков (это разрешения, не водители): <a href="https://www.dp.ru/a/2026/08/06/v-peterburge-pochti-vtroe-viroslo">«Деловой Петербург», 06.08.2026</a>.</li>
-      <li id="s4">Запрет для мигрантов с патентами: <a href="https://www.vedomosti.ru/strana/northwestern/news/2025/12/10/1162106-beglov-prodlil-zapret">«Ведомости», 10.12.2025</a>; проект на 2027: <a href="https://spb.vedomosti.ru/society/articles/2026/08/10/1220119-smolnii-planiruet-prodlit-zapret-na-rabotu-migrantov-v-taksi-i-dostavke-na-2027-god">«Ведомости. Северо-Запад», 10.08.2026</a>; ЛО: <a href="https://www.dp.ru/a/2024/08/22/vlasti-lenoblasti-zapretili">«Деловой Петербург», 22.08.2024</a>.</li>
+      <li id="s4">Запрет для мигрантов с патентами: <a href="https://www.vedomosti.ru/strana/northwestern/news/2025/12/10/1162106-beglov-prodlil-zapret">«Ведомости», 10.12.2025</a>; планы на 2027: <a href="https://spb.vedomosti.ru/society/articles/2026/08/10/1220119-smolnii-planiruet-prodlit-zapret-na-rabotu-migrantov-v-taksi-i-dostavke-na-2027-god">«Ведомости. Северо-Запад», 10.08.2026</a>; ЛО: <a href="https://www.dp.ru/a/2024/08/22/vlasti-lenoblasti-zapretili">«Деловой Петербург», 22.08.2024</a>.</li>
       <li id="s5">Опрос Национального совета такси, май 2026, 100 компаний РФ: 59% говорят о нехватке водителей, 70% — что водители неохотно арендуют машины из перечня. <a href="https://www.autonews.ru/news/6a146c709a7947f5e26be169">Autonews, 26.05.2026</a>. Мнение опрошенных, не доля всех парков.</li>
       <li id="s6">Выделенные полосы: <a href="https://spb.vedomosti.ru/society/news/2026/09/02/1225757-peterburgskim-taksi-s-1-oktyabrya-ogranichat-dostup-k-videlennim-polosam">«Ведомости. Северо-Запад», 02.09.2026</a>; перенос на 26.10.2026: <a href="https://spb.aif.ru/society/v-peterburge-prodlili-perehodnyy-period-dlya-taksi-na-vydelennyh-polosah">АиФ Петербург</a>.</li>
       <li id="s7">Федеральный закон от 23.05.2025 № 116-ФЗ о локализации такси: <a href="https://ppt.ru/obzory/vstupaet-v-silu/federalnyy-zakon-23-05-2025-116-fz">обзор ppt.ru</a>.</li>
@@ -471,6 +489,12 @@ summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-rad
   document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)openTo(a.getAttribute('href'));});
   window.addEventListener('beforeprint',function(){[].forEach.call(document.querySelectorAll('details.more'),function(d){d.open=true;});});
   if(location.hash)openTo(location.hash);
+  // пометки «i»: подсказка раскрывается под строкой
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('button.i');if(!b)return;
+    var h=document.getElementById(b.getAttribute('aria-controls'));if(!h)return;
+    var open=h.hidden;h.hidden=!open;b.setAttribute('aria-expanded',open?'true':'false');
+  });
   // подсветка текущего раздела в оглавлении
   var links=[].slice.call(document.querySelectorAll('.toc a'));
   if('IntersectionObserver' in window&&links.length){
