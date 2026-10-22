@@ -27,7 +27,7 @@
 
   var UNL = false;
   function unlocked() { return UNL; }
-  function unlock() { UNL = true; }
+  function unlock() { UNL = true; if (window.EGGoal) window.EGGoal('contact_unlock', { page: (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '') }); }
 
   /* ---------- styles ---------- */
   var css =
@@ -99,7 +99,7 @@
     }
     function submit() {
       if (inp.value.trim() === ans) { unlock(); close(); cb(); return; }
-      er.textContent = TX.er; inp.value = '';
+      er.textContent = TX.er; inp.value = ''; if (window.EGGoal) window.EGGoal('contact_captcha_fail');
       box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
       p = pair();
       ans = String(p[0] + p[1]);
