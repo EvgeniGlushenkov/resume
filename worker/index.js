@@ -119,7 +119,8 @@ function sanitize(d) {
 /* ---------- файлы сайта, доступные из админки ---------- */
 const FILES = {
   'resume-data.json': 'resume', 'resume-data.en.json': 'resume', 'resume-data.zh.json': 'resume',
-  'landing-data.json': 'landing', 'landing-data.en.json': 'landing', 'landing-data.zh.json': 'landing'
+  'landing-data.json': 'landing', 'landing-data.en.json': 'landing', 'landing-data.zh.json': 'landing',
+  'site-config.json': 'config'
 };
 const DEFAULT_FILE = 'resume-data.json';
 const LANDING_KEYS = ['title', 'logo', 'nav', 'topbar', 'hero', 'about', 'skills', 'results', 'contact', 'footer'];
@@ -151,8 +152,17 @@ function sanitizeLanding(d) {
   if (out.contact && typeof out.contact.title === 'string') out.contact = { ...out.contact, title: cleanHtml(out.contact.title) };
   return out;
 }
-function validateFile(f, d) { return FILES[f] === 'landing' ? validateLanding(d) : validate(d); }
-function sanitizeFile(f, d) { return FILES[f] === 'landing' ? sanitizeLanding(d) : sanitize(d); }
+/* настройки сайта: какие языки включены (русский всегда включён) */
+function validateConfig(d) {
+  if (!d || typeof d !== 'object' || Array.isArray(d)) return 'data_not_object';
+  const L = d.languages;
+  if (!L || typeof L !== 'object') return 'missing_languages';
+  for (const k of ['en', 'zh']) if (typeof L[k] !== 'boolean') return 'bad_language_' + k;
+  return null;
+}
+function sanitizeConfig(d) { return { languages: { ru: true, en: d.languages.en, zh: d.languages.zh } }; }
+function validateFile(f, d) { return FILES[f] === 'landing' ? validateLanding(d) : FILES[f] === 'config' ? validateConfig(d) : validate(d); }
+function sanitizeFile(f, d) { return FILES[f] === 'landing' ? sanitizeLanding(d) : FILES[f] === 'config' ? sanitizeConfig(d) : sanitize(d); }
 
 /* ---------- обработчики ---------- */
 async function authStart(env, req) {

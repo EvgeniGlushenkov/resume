@@ -202,8 +202,21 @@
     body.appendChild(el('p', 'note', 'Всё остальное правится ниже отдельно: сначала блоки главной, потом блоки резюме. Сохранение одной кнопкой для обоих файлов.'));
     return box;
   }
+  function langBlock() {
+    var box = el('div', 'card'); box.appendChild(el('div', 'hd')).appendChild(el('b', '', 'Языки сайта'));
+    var body = el('div', 'body'); box.appendChild(body);
+    [['ru', 'Русский (включён всегда)'], ['en', 'English'], ['zh', '中文 (китайский)']].forEach(function (l) {
+      var w = el('div', 'fld'), lb = el('label', ''), c = el('input'); c.type = 'checkbox'; c.style.width = 'auto'; c.style.marginRight = '8px';
+      c.checked = l[0] === 'ru' ? true : !!D.languages[l[0]]; c.disabled = l[0] === 'ru';
+      c.addEventListener('change', function () { D.languages[l[0]] = c.checked; changed(); });
+      lb.appendChild(c); lb.appendChild(document.createTextNode(l[1])); w.appendChild(lb); body.appendChild(w);
+    });
+    body.appendChild(el('p', 'note', 'Выключенный язык пропадает из переключателя на сайте, а его страницы перенаправляют на русскую версию. Тексты на выключенном языке остаются в файлах и вернутся при включении.'));
+    return box;
+  }
   function draw() {
     var f = $('form'); f.textContent = '';
+    if (FILE === 'site-config.json') { f.appendChild(langBlock()); return; }
     if (isCombined()) {
       f.appendChild(commonBlock());
       f.appendChild(el('h3', 'part', 'Главная страница'));
@@ -223,13 +236,14 @@
     'all:en': ['Всё вместе: главная + резюме (EN)', { L: 'landing-data.en.json', R: 'resume-data.en.json' }],
     'all:zh': ['Всё вместе: главная + резюме (中文)', { L: 'landing-data.zh.json', R: 'resume-data.zh.json' }],
     'resume-data.json': ['Резюме (RU)'], 'resume-data.en.json': ['Resume (EN)'], 'resume-data.zh.json': ['简历 (中文)'],
+    'site-config.json': ['Языки сайта (вкл/выкл)'],
     'landing-data.json': ['Главная (RU)'], 'landing-data.en.json': ['Главная (EN)'], 'landing-data.zh.json': ['Главная (中文)']
   };
   var PAGES = {
     'resume-data.json': '../resume.html?preview=1&v=kam&m=long', 'resume-data.en.json': '../resume-en.html?preview=1&v=kam&m=long', 'resume-data.zh.json': '../resume-zh.html?preview=1&v=kam&m=long',
-    'landing-data.json': '../index.html?preview=1', 'landing-data.en.json': '../en.html?preview=1', 'landing-data.zh.json': '../zh.html?preview=1'
+    'site-config.json': '../index.html?preview=1', 'landing-data.json': '../index.html?preview=1', 'landing-data.en.json': '../en.html?preview=1', 'landing-data.zh.json': '../zh.html?preview=1'
   };
-  var FILE = (function () { var f = null; try { f = sessionStorage.getItem('adm-file'); } catch (e) {} return FILES[f] ? f : 'resume-data.json'; })();
+  var FILE = (function () { var f = null; try { f = sessionStorage.getItem('adm-file'); } catch (e) {} return FILES[f] ? f : 'site-config.json'; })();
   function isCombined() { return !!FILES[FILE][1]; }
   /* список частей: [ключ в D или '', файл]; в обычном режиме D — сам файл */
   function parts() { return isCombined() ? Object.keys(FILES[FILE][1]).map(function (k) { return [k, FILES[FILE][1][k]]; }) : [['', FILE]]; }
