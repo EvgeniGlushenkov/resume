@@ -66,6 +66,8 @@
   fetch(BASE + 'site-config.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
     .then(function (c) { if (!fromAdmin) done(c); }, function () { done(null); });
   if (wait) setTimeout(function () { done(null); }, 3000);
-  function ready() { domReady = true; if (!fromAdmin) apply(cfg || norm(null)); }
+  /* на странице выключенного по умолчанию языка ждём настоящий конфиг: иначе значения по умолчанию
+     отправили бы на русскую версию, даже если язык включён в админке (done() применит всё сам) */
+  function ready() { domReady = true; if (!fromAdmin && (cfg || !wait)) apply(cfg || norm(null)); }
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', ready); else ready();
 })();
