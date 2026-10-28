@@ -7,7 +7,10 @@
      POST /tg                    -> вебхук Telegram
      GET  /data?f=<файл>          -> {data, sha, file}    (нужен токен)
      POST /save {f,data,sha}         -> {ok, commit}   (нужен токен)
-     GET  /health */
+     POST /hit {p,n}             -> 204            (счётчик просмотров со страниц сайта, см. stats.js)
+     GET  /health
+   По расписанию (cron): раз в сутки шлёт владельцу в Telegram статистику за вчера.
+   Команда боту /stats: статистика за сегодня на текущий момент. */
 
 const enc = new TextEncoder();
 const SESSION_TTL = 12 * 3600;        // сессия, секунд
@@ -15,6 +18,8 @@ const REQ_TTL = 300;                  // запрос на вход живёт 5
 const LINK_TTL = 600;                 // прямая ссылка живёт 10 минут
 const MAX_PENDING_PER_10MIN = 6;      // защита от спама в Telegram
 const MAX_BODY = 400 * 1024;
+const STAT_TTL = 100 * 86400;         // дневная статистика хранится 100 суток
+const MAX_HITS_PER_DAY = 800;         // потолок записей в сутки: бесплатный KV разрешает 1000 записей в день
 
 /* ---------- утилиты ---------- */
 const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -236,6 +241,7 @@ async function telegramHook(env, req) {
   if (m && m.text) {
     const from = String(m.from && m.from.id), cmd = m.text.trim().split(/[\s@]/)[0].toLowerCase();
     if (cmd === '/id') { await tg(env, 'sendMessage', { chat_id: m.chat.id, text: 'Ваш Telegram ID: ' + from }); return new Response('ok'); }
+    if (from === owner && cmd === '/stats') { await tg(env, 'sendMessage', { chat_id: m.chat.id, text: await statsReport(env, 0) }); return new Response('ok'); }
     if (from === owner && (cmd === '/admin' || cmd === '/link' || cmd === '/start')) {
       const tok = rand(24);
       await env.AUTH.put('link:' + tok, '1', { expirationTtl: LINK_TTL });
@@ -274,7 +280,68 @@ async function save(env, req) {
   return json(env, req, { ok: true, file: f, commit: j.commit && j.commit.sha, sha: j.content && j.content.sha, data });
 }
 
+/* ---------- счётчик просмотров и ежедневная статистика ----------
+   Хранится только число просмотров и визитов по страницам за день: ни IP, ни cookies, ни отпечатков.
+   Ключ в KV: st:ГГГГ-ММ-ДД -> {v: просмотров, s: визитов, p: {страница: просмотров}}. Сутки считаются по env.STATS_TZ
+   (по умолчанию Europe/Moscow). Запись не атомарна: при редких визитах этого достаточно, при двух просмотрах
+   в одну и ту же миллисекунду один может потеряться. */
+const STAT_PAGES = {
+  index: 'Сайт-визитка (RU)', en: 'Сайт-визитка (EN)', zh: 'Сайт-визитка (中文)',
+  resume: 'Резюме (RU)', 'resume-taxi': 'Резюме для Такси', 'resume-en': 'Резюме (EN)', 'resume-zh': 'Резюме (中文)',
+  'test-yandex-taxi': 'Тестовое Такси (актуальное)', 'taxi-test': 'Тестовое Такси (предыдущее)',
+  'taxi-test-2': 'Тестовое Такси (по документу)', 'taxi-test-archive': 'Тестовое Такси (архив)'
+};
+const BOT_RE = /bot|crawl|spider|slurp|preview|headless|lighthouse|monitor|curl|wget|python|go-http|java\/|node-fetch|axios/i;
+const MONTHS = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const emptyDay = () => ({ v: 0, s: 0, p: {} });
+
+function dayKey(env, ts = Date.now()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: env.STATS_TZ || 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(ts);
+}
+const dayLabel = (key) => { const [, m, d] = key.split('-').map(Number); return `${d} ${MONTHS[m - 1]}`; };
+async function readDay(env, key) {
+  try { const raw = await env.AUTH.get('st:' + key); return raw ? { ...emptyDay(), ...JSON.parse(raw) } : emptyDay(); } catch (e) { return emptyDay(); }
+}
+
+async function hit(env, req) {
+  const h = cors(env, req);
+  if (!h['Access-Control-Allow-Origin']) return new Response(null, { status: 403 });          // только со своего сайта
+  const quiet = (status) => new Response(null, { status, headers: { 'Cache-Control': 'no-store', ...h } });
+  if (BOT_RE.test(req.headers.get('User-Agent') || '')) return quiet(204);                      // боты и превью не считаются
+  let b; try { b = JSON.parse((await req.text()).slice(0, 200)); } catch (e) { return quiet(400); }
+  const p = b && typeof b.p === 'string' ? b.p : '';
+  if (!Object.prototype.hasOwnProperty.call(STAT_PAGES, p)) return quiet(400);                  // только известные страницы
+  const day = dayKey(env);
+  const d = await readDay(env, day);
+  if (d.v >= MAX_HITS_PER_DAY) return quiet(204);                                               // защита квоты записи KV
+  d.v += 1; if (b.n === 1) d.s += 1; d.p[p] = (d.p[p] || 0) + 1;
+  await env.AUTH.put('st:' + day, JSON.stringify(d), { expirationTtl: STAT_TTL });
+  return quiet(204);
+}
+
+/* Текст статистики за день offset суток назад (0 — сегодня, 1 — вчера) и итог за неделю, заканчивающуюся этим днём. */
+async function statsReport(env, offset) {
+  const days = [];
+  for (let i = offset + 6; i >= offset; i--) days.push(dayKey(env, Date.now() - i * 86400000));
+  const data = await Promise.all(days.map((k) => readDay(env, k)));
+  const day = data[data.length - 1], key = days[days.length - 1];
+  const week = data.reduce((a, x) => ({ v: a.v + x.v, s: a.s + x.s }), { v: 0, s: 0 });
+  const title = offset === 0 ? `📊 Сайт сегодня, ${dayLabel(key)} (пока)` : `📊 Сайт за ${dayLabel(key)}${offset === 1 ? ' (вчера)' : ''}`;
+  const lines = [title, ''];
+  if (!day.v) lines.push('Просмотров нет.');
+  else {
+    lines.push(`Просмотров: ${day.v}, визитов: ${day.s}`, '', 'По страницам:');
+    Object.entries(day.p).sort((a, b) => b[1] - a[1]).forEach(([p, n]) => lines.push(`• ${STAT_PAGES[p] || p}: ${n}`));
+  }
+  lines.push('', `За 7 дней: просмотров ${week.v}, визитов ${week.s}`);
+  return lines.join('\n');
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    if (!env.OWNER_TG_ID) return;
+    ctx.waitUntil((async () => tg(env, 'sendMessage', { chat_id: env.OWNER_TG_ID, text: await statsReport(env, 1) }))());
+  },
   async fetch(req, env) {
     const url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(env, req) });
@@ -282,6 +349,7 @@ export default {
       /* вебхук Telegram приходит без Origin; остальное — только с разрешённого сайта */
       if (url.pathname === '/tg' && req.method === 'POST') return await telegramHook(env, req);
       if (url.pathname === '/health') return json(env, req, { ok: true });
+      if (url.pathname === '/hit' && req.method === 'POST') return await hit(env, req);
       if (url.pathname === '/auth/start' && req.method === 'POST') return await authStart(env, req);
       if (url.pathname === '/auth/poll' && req.method === 'GET') return await authPoll(env, req, url);
       if (url.pathname === '/auth/redeem' && req.method === 'POST') return await authRedeem(env, req);
@@ -293,4 +361,4 @@ export default {
     }
   }
 };
-export { validate, sanitize, validateFile, sanitizeFile, FILES };
+export { validate, sanitize, validateFile, sanitizeFile, FILES, dayKey };

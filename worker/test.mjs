@@ -1,5 +1,5 @@
 /* Проверка логики Worker без сети: Telegram и GitHub подменены. Запуск: node worker/test.mjs */
-import worker from './index.js';
+import worker, { dayKey } from './index.js';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 
@@ -95,4 +95,39 @@ const pre = await worker.fetch(new Request('https://w.example/data', { method: '
 
 /* 9. лимит запросов входа */
 let last; for (let i = 0; i < 8; i++) last = await call('/auth/start', { method: 'POST' }); assert.equal(last.status, 429); ok('лимит на запросы входа');
+/* 10. счётчик просмотров и ежедневная статистика */
+const today = dayKey(env), yesterday = dayKey(env, Date.now() - 86400000);
+const stDay = (k) => JSON.parse(kv.get('st:' + k) || 'null');
+const beacon = (b, headers = {}, origin = 'https://site.example') => worker.fetch(new Request('https://w.example/hit', { method: 'POST', body: typeof b === 'string' ? b : JSON.stringify(b), headers: { Origin: origin, 'Content-Type': 'text/plain', ...headers } }), env);
+assert.equal((await beacon({ p: 'index', n: 1 })).status, 204);
+assert.equal((await beacon({ p: 'resume', n: 0 })).status, 204);
+assert.deepEqual(stDay(today), { v: 2, s: 1, p: { index: 1, resume: 1 } }); ok('hit: просмотры и визиты считаются по страницам');
+assert.equal((await beacon({ p: 'index', n: 1 }, { 'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1)' })).status, 204);
+assert.equal((await beacon({ p: 'index', n: 1 }, { 'User-Agent': 'TelegramBot (like TwitterBot)' })).status, 204);
+assert.equal(stDay(today).v, 2); ok('hit: боты и превью ссылок не считаются');
+for (const bad of [{ p: 'constructor' }, { p: '__proto__' }, { p: 'admin/index' }, { p: 5 }, null, 'не json']) assert.equal((await beacon(bad)).status, 400);
+assert.equal(stDay(today).v, 2); ok('hit: неизвестные страницы и мусор отклоняются, ключи не засоряются');
+assert.equal((await beacon({ p: 'index', n: 1 }, {}, 'https://evil.example')).status, 403);
+assert.equal((await worker.fetch(new Request('https://w.example/hit', { method: 'POST', body: '{"p":"index"}' }), env)).status, 403);
+assert.equal(stDay(today).v, 2); ok('hit: чужой Origin и запрос без Origin не считаются');
+{ const before = kv.get('st:' + today); kv.set('st:' + today, JSON.stringify({ v: 800, s: 5, p: { index: 800 } }));
+  assert.equal((await beacon({ p: 'index', n: 1 })).status, 204); assert.equal(stDay(today).v, 800); kv.set('st:' + today, before); } ok('hit: суточный потолок защищает квоту записи KV');
+
+const sendsBefore = tgCalls.length;
+await hook({ message: { from: { id: 999 }, chat: { id: 999 }, text: '/stats' } });
+assert.equal(tgCalls.length, sendsBefore); ok('/stats: чужому пользователю не отвечает');
+await hook({ message: { from: { id: 111 }, chat: { id: 111 }, text: '/stats' } });
+let msg = tgCalls.at(-1); assert.equal(msg.m, 'sendMessage'); assert.equal(msg.b.chat_id, 111);
+assert.match(msg.b.text, /Сайт сегодня.*\(пока\)/); assert.match(msg.b.text, /Просмотров: 2, визитов: 1/);
+assert.match(msg.b.text, /• Сайт-визитка \(RU\): 1/); assert.match(msg.b.text, /• Резюме \(RU\): 1/); assert.match(msg.b.text, /За 7 дней: просмотров 2, визитов 1/); ok('/stats: владельцу — сводка за сегодня');
+
+kv.set('st:' + yesterday, JSON.stringify({ v: 5, s: 3, p: { index: 3, 'test-yandex-taxi': 2 } }));
+const pend = []; await worker.scheduled({}, env, { waitUntil: (p) => pend.push(p) }); await Promise.all(pend);
+msg = tgCalls.at(-1); assert.equal(msg.b.chat_id, '111');
+assert.match(msg.b.text, /Сайт за .*\(вчера\)/); assert.match(msg.b.text, /Просмотров: 5, визитов: 3/);
+assert.ok(msg.b.text.indexOf('Сайт-визитка (RU): 3') < msg.b.text.indexOf('Тестовое Такси (актуальное): 2'), 'страницы по убыванию');
+assert.match(msg.b.text, /За 7 дней: просмотров 5, визитов 3/); ok('cron: ежедневная сводка за вчера уходит владельцу');
+kv.delete('st:' + yesterday); await worker.scheduled({}, env, { waitUntil: (p) => pend.push(p) }); await Promise.all(pend);
+assert.match(tgCalls.at(-1).b.text, /Просмотров нет\./); ok('cron: день без просмотров — короткое сообщение');
+
 console.log('\nВсе проверки пройдены:', n);
