@@ -1,0 +1,13 @@
+{
+  "name": "evgeni-glushenkov-resume",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal resume and portfolio website",
+  "scripts": {
+    "check:json": "node scripts/validate-data.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "test": "node worker/test.mjs",
+    "check": "npm run check:json && npm run check:syntax && npm test"
+  }
+}
