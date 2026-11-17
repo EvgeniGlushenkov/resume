@@ -169,6 +169,8 @@ a{color:inherit}
 @media (max-width:560px){.bar .grp:last-child{width:100%}.hb{flex:1}}
 .gl-veil{filter:blur(6px);cursor:pointer;-webkit-user-select:none;user-select:none}
 .hh{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:9px 20px 9px 10px;border-radius:999px;background:#d6001c;color:#fff;text-decoration:none;font:700 14px/1 var(--f-body);transition:transform .2s ease,background .2s ease}
+.avito-track{display:inline-flex;align-items:center;min-height:44px;margin:10px 0 0 8px;padding:8px 14px;background:#f2eaff;color:#251440;border:1px solid #dfccfc;border-radius:999px;text-decoration:none;font-weight:700}
+.avito-track:hover{text-decoration:underline}
 .hh:hover{background:#b00017;transform:translateY(-2px)}
 .hhb{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#fff;color:#d6001c;font:800 13px/1 var(--f-display);letter-spacing:-.04em}
 </script>
@@ -205,7 +207,7 @@ function cval(k,val){
 function head(V){var P=S.person,nm=P.name.trim(),i=nm.indexOf(' ');
   return '<header class="head"><div>'+(RID?'<div class="rid-top">Отклик № '+esc(RID)+'</div>':'<div class="eyebrow">Резюме / 2026</div>')
   +'<h1 class="name"><span>'+esc(i>0?nm.slice(0,i):nm)+'</span><span>'+esc(i>0?nm.slice(i+1):'')+'</span></h1>'
-  +'<p class="pos">'+t(V.position)+'</p><p class="hl">'+t(V.headline)+'</p>'+hhBtn()+'</div><div class="side-head">'
+  +'<p class="pos">'+t(V.position)+'</p><p class="hl">'+t(V.headline)+'</p>'+hhBtn()+(v==='kam'?'<a class="avito-track" href="avito.html">Карьерный трек «Авито» ↗</a>':'')+'</div><div class="side-head">'
   +(P.photo?'<figure class="photo"><img src="'+P.photo+'" alt="'+esc(nm)+'"></figure>':'')
   +'<div class="card contacts">'+LAB.filter(function(l){return P[l[1]]}).map(function(l){return '<div class="crow"><span class="clabel">'+l[0]+'</span><span class="cval">'+cval(l[1],P[l[1]])+'</span></div>'}).join('')+'</div></div></header>'}
 function job(j){var V=S.versions[v],b='';
