@@ -42,6 +42,10 @@ summary { cursor: pointer; font-weight: 650; }
 .agenda [open] summary::after { content: '−'; }
 .agenda summary::-webkit-details-marker { display: none; }
 .agenda summary small { display: block; font-weight: 400; color: #56665c; }
+.agenda .slide-script { border-bottom: 1px solid #dbe2dc; }
+.agenda .slide-script summary { padding: 10px 2px; font-size: .96rem; font-weight: 600; }
+.agenda .slide-script p { margin: 8px 0; line-height: 1.55; }
+.agenda .slide-script > a { display: inline-block; margin: 2px 0 10px; font-size: .86rem; }
 .time { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 66px; text-align: center; font-size: .96rem; padding: 8px; border-radius: 12px; background: var(--green); }
 .agenda details:nth-child(2) .time { background: #d6effe; }
 .agenda details:nth-child(3) .time { background: var(--lavender); }
