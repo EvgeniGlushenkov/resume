@@ -133,6 +133,7 @@ caseSlides.forEach(({title}, i) => chooser.add(new Option((i + 1) + ' / 16 · ' 
 function renderSlide(number) {
   const slide = caseSlides[number - 1];
   chooser.value = number;
+  byId('player-counter').textContent = String(number).padStart(2, '0') + ' / ' + String(caseSlides.length).padStart(2, '0');
   byId('slide-image').src = 'avito-case/slide-' + String(number).padStart(2, '0') + '.webp';
   byId('slide-image').alt = 'Слайд ' + number + '. ' + slide.title;
   byId('slide-note').textContent = slide.note;
@@ -148,10 +149,51 @@ function renderSlide(number) {
     return link;
   }));
 }
-function chooseSlide(n) { location.hash = 'slide-' + n; }
+function chooseSlide(n) {
+  const number = Math.max(1, Math.min(n, caseSlides.length));
+  history.replaceState(null, '', '#slide-' + number);
+  renderSlide(number);
+}
 chooser.addEventListener('change', () => chooseSlide(Number(chooser.value)));
 byId('prev-slide').addEventListener('click', () => chooseSlide(Number(chooser.value) - 1));
 byId('next-slide').addEventListener('click', () => chooseSlide(Number(chooser.value) + 1));
+byId('player-back').addEventListener('click', () => chooseSlide(Number(chooser.value) - 1));
+byId('player-forward').addEventListener('click', () => chooseSlide(Number(chooser.value) + 1));
+let slideTimer;
+function stopSlideShow() {
+  clearInterval(slideTimer);
+  slideTimer = undefined;
+  byId('play-slides').hidden = false;
+  byId('pause-slides').hidden = true;
+}
+function advanceSlide() {
+  const current = Number(chooser.value);
+  if (current >= caseSlides.length) { stopSlideShow(); return; }
+  chooseSlide(current + 1);
+}
+byId('play-slides').addEventListener('click', () => {
+  if (Number(chooser.value) >= caseSlides.length) chooseSlide(1);
+  byId('play-slides').hidden = true;
+  byId('pause-slides').hidden = false;
+  slideTimer = setInterval(advanceSlide, 7000);
+});
+byId('pause-slides').addEventListener('click', stopSlideShow);
+byId('fullscreen-player').addEventListener('click', async () => {
+  if (document.fullscreenElement) await document.exitFullscreen();
+  else await byId('player').requestFullscreen();
+});
+document.addEventListener('keydown', event => {
+  if (!document.fullscreenElement || event.target.matches('input,select,textarea,button')) return;
+  if (event.key === 'ArrowRight') advanceSlide();
+  if (event.key === 'ArrowLeft') chooseSlide(Number(chooser.value) - 1);
+  if (event.key === 'Escape') stopSlideShow();
+});
+let touchStartX = 0;
+byId('player-stage').addEventListener('touchstart', event => { touchStartX = event.changedTouches[0].screenX; }, {passive:true});
+byId('player-stage').addEventListener('touchend', event => {
+  const distance = event.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(distance) > 55) chooseSlide(Number(chooser.value) + (distance < 0 ? 1 : -1));
+}, {passive:true});
 
 function syncView() {
   const hash = location.hash.slice(1);
