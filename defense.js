@@ -2,36 +2,132 @@
 
 const byId = id => document.getElementById(id);
 const duration = 25 * 60;
+const segmentNames = [
+  'Самопрезентация',
+  'Вопрос 2 · Рынок и тренды',
+  'Вопрос 3 · Продавцы и рекламные услуги',
+  'Клиенты и план работы в Авито Услугах'
+];
+const durationInputs = [...document.querySelectorAll('[data-duration]')];
+const segmentButtons = [...document.querySelectorAll('[data-segment]')];
+let segmentDurations = durationInputs.map(input => Number(input.value));
+let currentSegment = 0;
+let segmentRemaining = segmentDurations[0];
+let segmentDeadline = 0;
+let autoNext = true;
 let remaining = duration;
 let deadline = 0;
 let tick;
+let lastSavedSecond = -1;
+
+function formatTime(seconds) {
+  const safeSeconds = Math.max(0, seconds);
+  return [Math.floor(safeSeconds / 60), safeSeconds % 60]
+    .map(value => String(value).padStart(2, '0')).join(':');
+}
+
+function readableDuration(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const leftover = seconds % 60;
+  return leftover ? minutes + ':' + String(leftover).padStart(2, '0') : String(minutes);
+}
+
+function updateSegmentSummary() {
+  const allocated = segmentDurations.reduce((total, value) => total + value, 0);
+  const reserve = duration - allocated;
+  const parts = segmentDurations.map(readableDuration).join(' + ');
+  byId('segment-summary').textContent = reserve >= 0
+    ? parts + ' минут · запас ' + readableDuration(reserve)
+    : parts + ' минут · на ' + readableDuration(-reserve) + ' больше лимита 25 минут';
+}
+
+function saveClock() {
+  try {
+    sessionStorage.setItem(timerKey, JSON.stringify({
+      deadline, remaining, currentSegment, segmentDeadline, segmentRemaining, autoNext, segmentDurations
+    }));
+  } catch {}
+}
+
+function renderSegments() {
+  byId('segment-title').textContent = segmentNames[currentSegment];
+  segmentButtons.forEach((button, index) => {
+    if (index === currentSegment) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
+  });
+  updateSegmentSummary();
+}
+
+function advanceSegment() {
+  if (currentSegment >= segmentNames.length - 1) {
+    segmentRemaining = 0;
+    segmentDeadline = 0;
+    return;
+  }
+  currentSegment += 1;
+  segmentRemaining = segmentDurations[currentSegment];
+  segmentDeadline = deadline ? Date.now() + segmentRemaining * 1000 : 0;
+  renderSegments();
+}
 
 function paintClock() {
-  const seconds = deadline ? Math.max(0, Math.ceil((deadline - Date.now()) / 1000)) : remaining;
-  byId('clock').textContent = [Math.floor(seconds / 60), seconds % 60].map(value => String(value).padStart(2, '0')).join(':');
-  byId('mini-clock').querySelector('b').textContent = byId('clock').textContent;
-  if (seconds === 0 && deadline) {
+  const now = Date.now();
+  const totalSeconds = deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : remaining;
+  let stageSeconds = segmentDeadline ? Math.max(0, Math.ceil((segmentDeadline - now) / 1000)) : segmentRemaining;
+  let changed = false;
+
+  if (deadline && totalSeconds === 0) {
     clearInterval(tick);
+    tick = undefined;
     deadline = 0;
     remaining = 0;
+    segmentDeadline = 0;
+    segmentRemaining = 0;
+    stageSeconds = 0;
     byId('timer').textContent = 'Начать заново';
-    saveClock();
+    changed = true;
+  } else if (segmentDeadline && stageSeconds === 0) {
+    segmentDeadline = 0;
+    segmentRemaining = 0;
+    changed = true;
+    if (autoNext && deadline && currentSegment < segmentNames.length - 1) {
+      advanceSegment();
+      stageSeconds = segmentRemaining;
+    }
   }
+
+  byId('clock').textContent = formatTime(totalSeconds);
+  byId('segment-clock').textContent = formatTime(stageSeconds);
+  byId('mini-clock').querySelector('b').textContent = formatTime(totalSeconds);
+  if (changed || totalSeconds !== lastSavedSecond) saveClock();
+  lastSavedSecond = totalSeconds;
 }
 
-const timerKey = 'avito.case.timer.v1';
-function saveClock() {
-  try { sessionStorage.setItem(timerKey, JSON.stringify({deadline, remaining})); } catch {}
-}
+const timerKey = 'avito.case.timer.v2';
 try {
   const saved = JSON.parse(sessionStorage.getItem(timerKey));
   if (saved && Number.isFinite(saved.deadline) && Number.isFinite(saved.remaining)) {
     deadline = saved.deadline;
     remaining = saved.remaining;
+    if (Number.isInteger(saved.currentSegment) && saved.currentSegment >= 0 && saved.currentSegment < segmentNames.length) {
+      currentSegment = saved.currentSegment;
+    }
+    if (Array.isArray(saved.segmentDurations) && saved.segmentDurations.length === durationInputs.length) {
+      segmentDurations = saved.segmentDurations.map((value, index) => {
+        const allowed = [...durationInputs[index].options].map(option => Number(option.value));
+        return allowed.includes(value) ? value : Number(durationInputs[index].value);
+      });
+      durationInputs.forEach((input, index) => { input.value = String(segmentDurations[index]); });
+    }
+    segmentRemaining = Number.isFinite(saved.segmentRemaining) ? saved.segmentRemaining : segmentDurations[currentSegment];
+    segmentDeadline = Number.isFinite(saved.segmentDeadline) ? saved.segmentDeadline : 0;
+    autoNext = saved.autoNext !== false;
+    byId('auto-next').checked = autoNext;
     byId('timer').textContent = deadline ? 'Пауза' : remaining === duration ? 'Начать отсчёт' : remaining ? 'Продолжить' : 'Начать заново';
     if (deadline) tick = setInterval(paintClock, 250);
   }
 } catch {}
+renderSegments();
 paintClock();
 const mini = byId('mini-clock');
 new IntersectionObserver(([entry]) => {
@@ -41,11 +137,21 @@ new IntersectionObserver(([entry]) => {
 byId('timer').addEventListener('click', () => {
   if (deadline) {
     remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+    segmentRemaining = Math.max(0, Math.ceil((segmentDeadline - Date.now()) / 1000));
     deadline = 0;
+    segmentDeadline = 0;
     clearInterval(tick);
+    tick = undefined;
     byId('timer').textContent = 'Продолжить';
   } else {
-    deadline = Date.now() + (remaining || duration) * 1000;
+    if (remaining === 0) {
+      remaining = duration;
+      currentSegment = 0;
+      segmentRemaining = segmentDurations[0];
+      renderSegments();
+    }
+    deadline = Date.now() + remaining * 1000;
+    segmentDeadline = Date.now() + segmentRemaining * 1000;
     tick = setInterval(paintClock, 250);
     byId('timer').textContent = 'Пауза';
   }
@@ -55,12 +161,43 @@ byId('timer').addEventListener('click', () => {
 
 byId('reset').addEventListener('click', () => {
   clearInterval(tick);
+  tick = undefined;
   remaining = duration;
   deadline = 0;
+  segmentDeadline = 0;
+  currentSegment = 0;
+  segmentRemaining = segmentDurations[0];
   byId('timer').textContent = 'Начать отсчёт';
+  renderSegments();
   saveClock();
   paintClock();
 });
+
+byId('auto-next').addEventListener('change', event => {
+  autoNext = event.target.checked;
+  saveClock();
+});
+
+segmentButtons.forEach(button => button.addEventListener('click', () => {
+  currentSegment = Number(button.dataset.segment);
+  segmentRemaining = segmentDurations[currentSegment];
+  segmentDeadline = deadline ? Date.now() + segmentRemaining * 1000 : 0;
+  renderSegments();
+  saveClock();
+  paintClock();
+}));
+
+durationInputs.forEach(input => input.addEventListener('change', () => {
+  const index = Number(input.dataset.duration);
+  segmentDurations[index] = Number(input.value);
+  if (currentSegment === index) {
+    segmentRemaining = segmentDurations[index];
+    segmentDeadline = deadline ? Date.now() + segmentRemaining * 1000 : 0;
+  }
+  updateSegmentSummary();
+  saveClock();
+  paintClock();
+}));
 
 const currency = new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB', maximumFractionDigits: 2, minimumFractionDigits: 0});
 const fields = ['spend','jobs','unit'].map(byId);
