@@ -1,6 +1,8 @@
 :root { --ink: #172721; --green: #d4f4c2; --lavender: #eee9fb; }
 body { color: var(--ink); }
 button, input { font: inherit; }
+.top-links { display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:center; gap:6px 18px; }
+.top-links a { color:var(--ink); font-weight:700; text-decoration-thickness:1px; }
 button, .primary { cursor: pointer; border: 1px solid #b8c3bc; background: white; color: var(--ink); border-radius: 30px; padding: .58em 1em; font-weight: 650; }
 .primary, button.primary { background: var(--ink); color: white; border-color: var(--ink); text-decoration: none; }
 button:disabled { cursor: default; opacity: .45; }
@@ -124,6 +126,7 @@ body[data-mode="prepare"] [data-only="present"], [hidden] { display:none !import
 #player:fullscreen .player-arrow { opacity:.55; width:64px; height:80px; }
 #player:fullscreen .player-bar { padding:12px; }
 @media(max-width:600px){
+ .top-links { justify-content:flex-start; gap:6px 14px; font-size:.89rem; }
  .demand div { grid-template-columns:minmax(0,1fr) auto; gap:4px; }
  .demand div i { grid-row:2; }
  .demand div b { grid-column:2; grid-row:1; }
